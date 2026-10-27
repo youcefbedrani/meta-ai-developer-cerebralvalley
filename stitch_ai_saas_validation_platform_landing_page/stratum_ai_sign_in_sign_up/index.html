@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sign in — Stratum AI</title>
+<meta name="description" content="Sign in or create your Stratum AI founder workspace." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   TOKENS (shared with the landing page)
+   ============================================================ */
+:root{
+  --plum:#41175e;
+  --ink:#41175e;
+  --ink-2:rgba(65,23,94,.72);
+  --ink-3:rgba(65,23,94,.52);
+  --muted:#9a8aa6;
+  --line:#efebeb;
+  --line-2:#f4f1f5;
+  --bg:#ffffff;
+  --bg-soft:#fbf9f9;
+  --lav:#f4f1f5;
+  --coral:#f77373;
+  --magenta:#c762f6;
+  --violet:#814bee;
+  --green:#18b26b;
+  --red:#d24f4f;
+  --grad:linear-gradient(104deg,#f77373 0%,#c762f6 50%,#814bee 100%);
+  --grad-soft:linear-gradient(141deg,#f773731a 0%,#c762f61a 50%,#814bee1a 100%);
+  --grad-dark:linear-gradient(110deg,#440660 0%,#33075f 50%,#390d91 100%);
+  --hard:8px 8px 0 3px #efebeb;
+  --hard-sm:5px 5px 0 2px #efebeb;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--bg-soft);color:var(--ink);font-family:"Inter",system-ui,sans-serif;font-optical-sizing:auto;
+  font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+svg{display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+::selection{background:#c762f633;color:var(--plum)}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* reveal (rise + blur in) */
+.rv{opacity:0;transform:translateY(28px);filter:blur(8px);transition:opacity .9s var(--ease),transform 1s var(--ease),filter .9s var(--ease);transition-delay:var(--d,0s)}
+.loaded .rv{opacity:1;transform:none;filter:none}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);min-height:100vh;max-width:1440px;margin:0 auto;background:var(--bg);border-inline:1px solid var(--line)}
+.left{position:relative;display:flex;flex-direction:column;padding:28px 48px;overflow:hidden}
+.rails{position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(90deg,transparent 0 79px,#f4eff6 79px 80px);
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 70%);mask-image:linear-gradient(180deg,#000 0%,transparent 70%)}
+.top{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;letter-spacing:-.03em}
+.logo{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:#fff;border:1px solid var(--line);box-shadow:0 3px 0 #f1ecf3}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:var(--ink-2);padding:8px 12px;border-radius:9px;transition:background .25s,color .25s}
+.back:hover{background:var(--lav);color:var(--ink)}
+.back .ic{width:15px;height:15px;transition:transform .35s var(--ease)}
+.back:hover .ic{transform:translateX(-3px)}
+
+.form-wrap{position:relative;flex:1;display:flex;align-items:center;justify-content:center;padding:48px 0}
+.form-box{width:100%;max-width:420px}
+
+/* ============================================================
+   FORM
+   ============================================================ */
+.status{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink-2);
+  background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box;border:1px solid transparent;box-shadow:0 6px 18px -10px #c762f6aa}
+.status i{width:7px;height:7px;border-radius:50%;background:var(--green);animation:live 1.8s infinite}
+@keyframes live{0%{box-shadow:0 0 0 0 #18b26b66}100%{box-shadow:0 0 0 8px #18b26b00}}
+h1{font-size:clamp(32px,3.6vw,42px);line-height:1.05;letter-spacing:-.05em;font-weight:600;margin:18px 0 8px}
+.lead{margin:0 0 26px;color:var(--ink-2);font-size:16px}
+.swap{display:inline-block;transition:opacity .3s var(--ease),transform .4s var(--ease),filter .3s}
+.swap.out{opacity:0;transform:translateY(-8px);filter:blur(4px)}
+
+.toggle{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:12px;background:var(--lav);border:1px solid #ebe3f1;margin-bottom:22px}
+.toggle button{position:relative;z-index:1;padding:10px 0;font-size:14px;font-weight:500;color:var(--ink-3);transition:color .3s}
+.toggle button.on{color:var(--ink)}
+.toggle .knob{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:9px;background:#fff;box-shadow:0 2px 6px rgba(65,23,94,.12);transition:transform .5s var(--ease)}
+.signup .toggle .knob{transform:translateX(100%)}
+
+.socials{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.soc{display:flex;align-items:center;justify-content:center;gap:10px;height:46px;border-radius:10px;background:#fff;border:1px solid var(--line);
+  font-size:14px;font-weight:500;box-shadow:var(--hard-sm);transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.soc:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 2px #efebeb}
+.soc svg{width:18px;height:18px}
+.divider{display:flex;align-items:center;gap:12px;margin:24px 0 20px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.field{margin-bottom:16px}
+.field-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+label{font-size:13px;font-weight:600;color:var(--ink)}
+.link{font-size:13px;font-weight:500;color:var(--violet);transition:opacity .25s}
+.link:hover{opacity:.75}
+.inp{position:relative;display:flex;align-items:center}
+.inp > .ic{position:absolute;left:14px;width:17px;height:17px;color:var(--muted);transition:color .25s;pointer-events:none}
+.inp input{width:100%;height:48px;border-radius:10px;border:1px solid var(--line);background:var(--bg-soft);padding:0 44px 0 42px;
+  font:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .25s,box-shadow .25s,background .25s}
+.inp input::placeholder{color:#b8abc3}
+.inp input:focus{background:#fff;border-color:#c9a8f3;box-shadow:0 0 0 4px #c762f61f}
+.inp:focus-within > .ic{color:var(--violet)}
+.field.bad input{border-color:#f0a3a3;box-shadow:0 0 0 4px #f773731a}
+.err{font-size:12px;color:var(--red);margin-top:6px;display:none}
+.field.bad .err{display:block}
+.eye{position:absolute;right:8px;width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--muted);transition:background .25s,color .25s}
+.eye:hover{background:var(--lav);color:var(--ink)}
+.eye .ic{width:17px;height:17px}
+
+/* fields only shown in sign-up mode */
+.only-up{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .5s var(--ease),opacity .4s var(--ease)}
+.only-up > div{overflow:hidden}
+.signup .only-up{grid-template-rows:1fr;opacity:1}
+.signup .only-in{display:none}
+
+.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:9px}
+.meter i{height:4px;border-radius:4px;background:var(--lav);transition:background .35s}
+.meter-l{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;padding-bottom:2px}
+.meter-l b{font-weight:600}
+
+.check{display:flex;align-items:flex-start;gap:10px;font-size:13px;font-weight:400;color:var(--ink-2);cursor:pointer;margin:4px 0 20px;user-select:none}
+.check input{position:absolute;opacity:0;pointer-events:none}
+.box{width:18px;height:18px;border-radius:5px;flex:none;display:grid;place-items:center;border:1.5px solid #d9cde3;background:#fff;margin-top:1px;transition:all .3s var(--ease)}
+.box .ic{width:11px;height:11px;stroke-width:3;color:#fff;transform:scale(0);transition:transform .3s var(--ease)}
+.check input:checked + .box{background:var(--plum);border-color:var(--plum)}
+.check input:checked + .box .ic{transform:scale(1)}
+.check input:focus-visible + .box{box-shadow:0 0 0 4px #c762f633}
+.check a{color:var(--violet);font-weight:500}
+
+.btn{position:relative;width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;height:50px;padding:0 6px 0 20px;border-radius:10px;
+  font-size:15px;font-weight:500;letter-spacing:-.01em;background:var(--plum);color:#fff;overflow:hidden;
+  box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 10px 24px -10px rgba(65,23,94,.6);transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 16px 30px -12px rgba(65,23,94,.65)}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.18) 50%,transparent 70%);transform:translateX(-100%);transition:transform .9s var(--ease)}
+.btn:hover::after{transform:translateX(100%)}
+.btn .chip{width:38px;height:38px;border-radius:8px;display:grid;place-items:center;overflow:hidden;position:relative;background:rgba(255,255,255,.14)}
+.btn .chip .ic{width:16px;height:16px;transition:transform .45s var(--ease)}
+.btn .chip .ic + .ic{position:absolute;transform:translateX(-26px)}
+.btn:hover .chip .ic:first-child{transform:translateX(26px)}
+.btn:hover .chip .ic + .ic{transform:translateX(0)}
+.btn .spin{display:none;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn.loading .chip .ic{display:none}
+.btn.loading .spin{display:block}
+.btn.done{background:var(--green)}
+
+.alt{text-align:center;font-size:14px;color:var(--ink-2);margin:22px 0 0}
+.alt button{color:var(--violet);font-weight:600}
+.alt button:hover{text-decoration:underline}
+.toast{display:flex;gap:10px;align-items:center;font-size:13px;padding:11px 14px;border-radius:10px;background:#18b26b12;border:1px solid #18b26b33;color:#0f7a49;margin-top:16px;
+  opacity:0;transform:translateY(8px);transition:all .45s var(--ease);pointer-events:none;height:0;padding-block:0;overflow:hidden;margin-top:0}
+.toast.show{opacity:1;transform:none;height:auto;padding-block:11px;margin-top:16px}
+.toast .ic{width:16px;height:16px}
+
+.foot{position:relative;display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--ink-3)}
+.foot div{display:flex;gap:16px}
+.foot a:hover{color:var(--ink)}
+.foot .safe{display:inline-flex;align-items:center;gap:7px}
+.foot .safe .ic{width:14px;height:14px;color:var(--violet)}
+
+/* ============================================================
+   RIGHT SHOWCASE PANEL
+   ============================================================ */
+.right{position:relative;padding:16px}
+.panel{position:sticky;top:16px;height:calc(100vh - 32px);min-height:640px;border-radius:22px;background:var(--grad-dark);color:#fff;overflow:hidden;isolation:isolate;
+  display:flex;flex-direction:column;justify-content:space-between;padding:44px}
+.bloom{position:absolute;width:640px;height:640px;left:50%;top:44%;transform:translate(-50%,-50%);border-radius:50%;z-index:-1;
+  background:radial-gradient(closest-side,#c762f6 0%,#814bee88 40%,transparent 75%);filter:blur(30px);opacity:.7;animation:breathe 8s ease-in-out infinite}
+@keyframes breathe{50%{transform:translate(-50%,-50%) scale(1.12);opacity:.9}}
+.gridbg{position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 10%,transparent 72%);mask-image:radial-gradient(ellipse at center,#000 10%,transparent 72%)}
+.panel-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pill-d{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
+.pill-d i{width:6px;height:6px;border-radius:50%;background:#f1c6ff;box-shadow:0 0 0 3px #f1c6ff33}
+
+/* isometric stack */
+.scene{position:relative;flex:1;display:grid;place-items:center;perspective:2400px;min-height:300px}
+.tilt{transform-style:preserve-3d;transition:transform .8s var(--ease)}
+.plane{position:relative;width:380px;height:380px;transform-style:preserve-3d;transform:rotateX(58deg) rotateZ(-42deg)}
+.floor{position:absolute;inset:-40%;border-radius:50%;
+  background-image:linear-gradient(rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.09) 1px,transparent 1px);background-size:40px 40px;
+  -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 100%);mask-image:radial-gradient(closest-side,#000 30%,transparent 100%)}
+.p3{position:absolute;transform-style:preserve-3d}
+.float{animation:floatZ 6s ease-in-out infinite;animation-delay:var(--fd,0s)}
+@keyframes floatZ{0%,100%{transform:translateZ(var(--z,0px))}50%{transform:translateZ(calc(var(--z,0px) + 18px))}}
+.layer{width:260px;height:260px;border-radius:22px;border:1px solid rgba(255,255,255,.28);
+  background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));box-shadow:-30px 34px 50px rgba(10,0,30,.35)}
+.layer.l2{background:linear-gradient(135deg,rgba(247,115,115,.35),rgba(199,98,246,.25))}
+.layer.l3{background:linear-gradient(135deg,#fff,#f4ecfb);border-color:#fff;display:grid;place-items:center;color:var(--plum)}
+.layer.l3 .in{text-align:center}
+.layer.l3 b{display:block;font-size:56px;letter-spacing:-.06em;line-height:1}
+.layer.l3 small{font-size:12px;color:var(--ink-3);font-weight:500}
+.chip3{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap;
+  background:#fff;color:var(--plum);box-shadow:-14px 16px 28px rgba(10,0,30,.3)}
+.chip3 .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px #18b26b22}
+.chip3 .ic{width:14px;height:14px;color:var(--violet)}
+
+/* rotating testimonial */
+.quotes{position:relative;min-height:170px}
+.q{position:absolute;inset:0;opacity:0;transform:translateY(16px);filter:blur(6px);transition:opacity .7s var(--ease),transform .8s var(--ease),filter .7s var(--ease)}
+.q.on{opacity:1;transform:none;filter:none}
+.q p{margin:0 0 18px;font-size:clamp(18px,1.6vw,22px);line-height:1.4;letter-spacing:-.02em;font-weight:500}
+.who{display:flex;align-items:center;gap:12px}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:14px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25)}
+.who b{display:block;font-size:14px}
+.who small{font-size:12px;color:rgba(255,255,255,.65)}
+.who .tag{margin-left:auto;font-size:11px;font-weight:600;padding:4px 9px;border-radius:6px;background:rgba(255,255,255,.14)}
+.dots{display:flex;gap:6px;margin-top:22px}
+.dots button{width:22px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);overflow:hidden;position:relative}
+.dots button i{position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left}
+.dots button.on i{animation:fill var(--dur,5s) linear forwards}
+@keyframes fill{to{transform:scaleX(1)}}
+.stars{display:flex;gap:2px;color:#ffc65c;margin-bottom:14px}
+.stars svg{width:15px;height:15px;fill:currentColor;stroke:none}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .right{display:none}
+}
+@media (max-width:560px){
+  .left{padding:20px 16px}
+  .form-wrap{padding:32px 0}
+  .socials{grid-template-columns:1fr}
+  .foot{justify-content:center;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .rv{opacity:1;transform:none;filter:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f77373"/><stop offset=".5" stop-color="#c762f6"/><stop offset="1" stop-color="#814bee"/></linearGradient>
+  </defs>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.6 3.4M6.6 6.6C3.9 8.3 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M3 3l18 18M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17M16 7h6v6"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></symbol>
+  <symbol id="i-logo" viewBox="0 0 32 32"><path d="M16 4 4 10l12 6 12-6z" fill="url(#g1)" stroke="none"/><path d="m4 16 12 6 12-6" stroke="url(#g1)" stroke-width="2.6" fill="none"/><path d="m4 22 12 6 12-6" stroke="url(#g1)" stroke-width="2.6" fill="none" opacity=".55"/></symbol>
+</svg>
+
+<div class="shell" id="shell">
+
+  <!-- ================= LEFT: FORM ================= -->
+  <div class="left">
+    <div class="rails"></div>
+    <div class="top rv">
+      <a href="../stratum_ai_saas_discovery_market_validation_platform/index.html" class="brand"><span class="logo"><svg width="22" height="22"><use href="#i-logo"/></svg></span>Stratum</a>
+      <a href="../stratum_ai_saas_discovery_market_validation_platform/index.html" class="back"><svg class="ic"><use href="#i-back"/></svg>Back to site</a>
+    </div>
+
+    <div class="form-wrap">
+      <div class="form-box">
+        <span class="status rv" style="--d:.05s"><i></i>Telemetry live · 42k sources indexed</span>
+        <h1 class="rv" style="--d:.12s"><span class="swap" id="title">Welcome back to <span class="grad-text">Stratum</span></span></h1>
+        <p class="lead rv" style="--d:.18s"><span class="swap" id="subtitle">Access your market validation workspace.</span></p>
+
+        <div class="toggle rv" style="--d:.24s" role="tablist">
+          <span class="knob"></span>
+          <button class="on" data-mode="signin" role="tab" aria-selected="true">Sign in</button>
+          <button data-mode="signup" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <div class="socials rv" style="--d:.3s">
+          <button class="soc" type="button">
+            <svg viewBox="0 0 24 24"><path fill="#24292f" d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>
+            GitHub
+          </button>
+          <button class="soc" type="button">
+            <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6h-4a12 12 0 0 0 0 10.8z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z"/></svg>
+            Google
+          </button>
+        </div>
+
+        <div class="divider rv" style="--d:.34s">or continue with email</div>
+
+        <form id="authForm" class="rv" style="--d:.38s" novalidate>
+          <div class="only-up"><div>
+            <div class="field" id="f-name">
+              <div class="field-h"><label for="name">Full name</label></div>
+              <div class="inp"><svg class="ic"><use href="#i-user"/></svg><input id="name" name="name" type="text" autocomplete="name" placeholder="Ada Founder" /></div>
+              <div class="err">Tell us what to call you.</div>
+            </div>
+          </div></div>
+
+          <div class="field" id="f-email">
+            <div class="field-h"><label for="email">Work email</label></div>
+            <div class="inp"><svg class="ic"><use href="#i-mail"/></svg><input id="email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required /></div>
+            <div class="err">Enter a valid email address.</div>
+          </div>
+
+          <div class="field" id="f-pass">
+            <div class="field-h"><label for="password">Password</label><button type="button" class="link only-in" id="forgot">Forgot password?</button></div>
+            <div class="inp">
+              <svg class="ic"><use href="#i-lock"/></svg>
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
+              <button type="button" class="eye" id="eye" aria-label="Show password"><svg class="ic"><use href="#i-eye"/></svg></button>
+            </div>
+            <div class="err">Password must be at least 8 characters.</div>
+            <div class="only-up"><div>
+              <div class="meter" id="meter"><i></i><i></i><i></i><i></i></div>
+              <div class="meter-l"><span>Use 8+ chars with a number &amp; symbol</span><b id="meterLabel"></b></div>
+            </div></div>
+          </div>
+
+          <label class="check only-in"><input type="checkbox" checked /><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>Remember this device for 30 days</label>
+          <div class="only-up"><div>
+            <label class="check" id="f-terms"><input type="checkbox" id="terms" /><span class="box"><svg class="ic"><use href="#i-check"/></svg></span>
+              <span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>. Your ideas never train shared models.</span></label>
+          </div></div>
+
+          <button class="btn" id="submit" type="submit">
+            <span class="swap" id="cta">Sign in to workspace</span>
+            <span class="chip"><svg class="ic"><use href="#i-arrow"/></svg><svg class="ic"><use href="#i-arrow"/></svg><span class="spin"></span></span>
+          </button>
+          <div class="toast" id="toast" role="status"><svg class="ic"><use href="#i-check"/></svg><span id="toastText"></span></div>
+        </form>
+
+        <p class="alt rv" style="--d:.44s"><span id="altText">New to Stratum?</span> <button type="button" id="altBtn">Create a free account</button></p>
+      </div>
+    </div>
+
+    <div class="foot rv" style="--d:.5s">
+      <span class="safe"><svg class="ic"><use href="#i-shield"/></svg>Encrypted &amp; private · SOC 2 Type II · 99.99% uptime</span>
+      <div><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Status</a></div>
+    </div>
+  </div>
+
+  <!-- ================= RIGHT: SHOWCASE ================= -->
+  <aside class="right" aria-hidden="true">
+    <div class="panel">
+      <div class="bloom"></div><div class="gridbg"></div>
+      <div class="panel-top rv" style="--d:.2s">
+        <span class="pill-d"><i></i>Find it. Prove it. Then build it.</span>
+      </div>
+
+      <div class="scene" id="scene">
+        <div class="tilt" id="tilt">
+          <div class="plane">
+            <div class="floor"></div>
+            <div class="p3 float" style="left:60px;top:60px;--z:0px;--fd:0s"><div class="layer"></div></div>
+            <div class="p3 float" style="left:60px;top:60px;--z:46px;--fd:-.4s"><div class="layer l2"></div></div>
+            <div class="p3 float" style="left:60px;top:60px;--z:92px;--fd:-.8s"><div class="layer l3"><div class="in">
+              <svg width="40" height="40" style="margin:0 auto 10px"><use href="#i-logo"/></svg>
+              <b>92</b><small>Opportunity fit / 100</small></div></div></div>
+            <div class="p3 float" style="left:300px;top:20px;--z:150px;--fd:-2s"><span class="chip3"><i class="dot"></i>Waitlist CTR 14.2%</span></div>
+            <div class="p3 float" style="left:-70px;top:250px;--z:130px;--fd:-3.4s"><span class="chip3"><svg class="ic"><use href="#i-link"/></svg>42 live citations</span></div>
+            <div class="p3 float" style="left:250px;top:330px;--z:110px;--fd:-1.2s"><span class="chip3"><svg class="ic"><use href="#i-trend"/></svg>88% go confidence</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rv" style="--d:.35s">
+        <div class="stars"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></div>
+        <div class="quotes" id="quotes">
+          <div class="q on"><p>“Stratum killed my second idea in 48 hours. My third reached $11k MRR in 90 days.”</p>
+            <div class="who"><span class="av">JV</span><div><b>Julian Vance</b><small>Founder, PromptPulse</small></div><span class="tag">$11k MRR</span></div></div>
+          <div class="q"><p>“The cited sources are gold. We signed 6 paid pilots before writing a single line of backend.”</p>
+            <div class="who"><span class="av">ER</span><div><b>Elena Rostova</b><small>Co-founder, SyncBridge</small></div><span class="tag">6 pilots</span></div></div>
+          <div class="q"><p>“The Competitor Matrix paid for our subscription 100× over. We saw the price change coming.”</p>
+            <div class="who"><span class="av">MC</span><div><b>Marcus Chen</b><small>Solo dev, FormFast</small></div><span class="tag">$24k MRR</span></div></div>
+        </div>
+        <div class="dots" id="qdots"><button class="on"><i></i></button><button><i></i></button><button><i></i></button></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('loaded')));
+
+  /* ---- Mode switching (sign in / sign up) ---- */
+  const shell = document.getElementById('shell');
+  const tabs = [...document.querySelectorAll('.toggle button')];
+  const $ = id => document.getElementById(id);
+  const COPY = {
+    signin: { title: 'Welcome back to <span class="grad-text">Stratum</span>', sub: 'Access your market validation workspace.',
+              cta: 'Sign in to workspace', alt: 'New to Stratum?', altBtn: 'Create a free account', doc: 'Sign in — Stratum AI' },
+    signup: { title: 'Start validating <span class="grad-text">for free</span>', sub: 'Create your founder workspace in under 60 seconds. No credit card.',
+              cta: 'Create founder account', alt: 'Already have an account?', altBtn: 'Sign in', doc: 'Create account — Stratum AI' },
+  };
+  let mode = 'signin';
+  const swap = (el, html) => {
+    el.classList.add('out');
+    setTimeout(() => { el.innerHTML = html; el.classList.remove('out'); }, reduce ? 0 : 220);
+  };
+  const setMode = (m, push = true) => {
+    if (m === mode) return;
+    mode = m;
+    const c = COPY[m];
+    shell.classList.toggle('signup', m === 'signup');
+    tabs.forEach(t => { const on = t.dataset.mode === m; t.classList.toggle('on', on); t.setAttribute('aria-selected', on); });
+    swap($('title'), c.title); swap($('subtitle'), c.sub); swap($('cta'), c.cta);
+    $('altText').textContent = c.alt; $('altBtn').textContent = c.altBtn;
+    $('password').autocomplete = m === 'signup' ? 'new-password' : 'current-password';
+    document.title = c.doc;
+    document.querySelectorAll('.field.bad').forEach(f => f.classList.remove('bad'));
+    $('toast').classList.remove('show');
+    if (push) history.replaceState(null, '', m === 'signup' ? '#signup' : '#signin');
+  };
+  tabs.forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
+  $('altBtn').addEventListener('click', () => setMode(mode === 'signin' ? 'signup' : 'signin'));
+  const fromUrl = () => (location.hash === '#signup' || new URLSearchParams(location.search).get('mode') === 'signup') ? 'signup' : 'signin';
+  setMode(fromUrl(), false);
+  addEventListener('hashchange', () => setMode(fromUrl(), false));
+
+  /* ---- Password visibility ---- */
+  $('eye').addEventListener('click', () => {
+    const p = $('password'), show = p.type === 'password';
+    p.type = show ? 'text' : 'password';
+    $('eye').innerHTML = `<svg class="ic"><use href="#i-${show ? 'eye-off' : 'eye'}"/></svg>`;
+    $('eye').setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+
+  /* ---- Password strength meter ---- */
+  const LEVELS = [['', '#f4f1f5'], ['Weak', '#f77373'], ['Fair', '#f5a524'], ['Good', '#c762f6'], ['Strong', '#18b26b']];
+  $('password').addEventListener('input', e => {
+    const v = e.target.value;
+    let s = 0;
+    if (v.length >= 8) s++;
+    if (/[A-Z]/.test(v) && /[a-z]/.test(v)) s++;
+    if (/\d/.test(v)) s++;
+    if (/[^A-Za-z0-9]/.test(v)) s++;
+    if (v && !s) s = 1;
+    const [label, color] = LEVELS[s];
+    document.querySelectorAll('#meter i').forEach((b, i) => b.style.background = i < s ? color : '');
+    $('meterLabel').textContent = label; $('meterLabel').style.color = color;
+  });
+
+  /* ---- Validation + simulated submit ---- */
+  const fail = (id, bad) => { $(id).classList.toggle('bad', bad); return bad; };
+  ['name', 'email', 'password'].forEach(id => $(id).addEventListener('input', () => $(id).closest('.field').classList.remove('bad')));
+  $('authForm').addEventListener('submit', e => {
+    e.preventDefault();
+    let bad = false;
+    if (mode === 'signup') bad = fail('f-name', !$('name').value.trim()) || bad;
+    bad = fail('f-email', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('email').value)) || bad;
+    bad = fail('f-pass', $('password').value.length < 8) || bad;
+    if (mode === 'signup' && !$('terms').checked) {
+      $('f-terms').animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 300 });
+      bad = true;
+    }
+    if (bad) return;
+    const btn = $('submit');
+    btn.classList.add('loading'); btn.disabled = true;
+    setTimeout(() => {
+      btn.classList.remove('loading'); btn.classList.add('done');
+      $('cta').textContent = mode === 'signup' ? 'Workspace created' : 'Signed in';
+      $('toastText').textContent = mode === 'signup'
+        ? 'Account created — your first opportunity scan is ready to set up.'
+        : 'Welcome back — redirecting to your workspace…';
+      $('toast').classList.add('show');
+    }, 1300);
+  });
+  $('forgot').addEventListener('click', () => {
+    $('toastText').textContent = $('email').value ? `If an account exists for ${$('email').value}, a reset link is on its way.` : 'Enter your email above, then click “Forgot password?” again.';
+    $('toast').classList.add('show');
+  });
+
+  /* ---- Showcase: rotating testimonials ---- */
+  const qs = [...document.querySelectorAll('#quotes .q')], dots = [...document.querySelectorAll('#qdots button')];
+  let qi = 0, timer;
+  const showQ = i => {
+    qi = i;
+    qs.forEach((q, k) => q.classList.toggle('on', k === i));
+    dots.forEach((d, k) => { d.classList.remove('on'); void d.offsetWidth; d.classList.toggle('on', k === i); });
+    clearTimeout(timer);
+    if (!reduce) timer = setTimeout(() => showQ((qi + 1) % qs.length), 5000);
+  };
+  dots.forEach((d, i) => d.addEventListener('click', () => showQ(i)));
+  showQ(0);
+
+  /* ---- Showcase: pointer parallax ---- */
+  const scene = $('scene'), tilt = $('tilt');
+  if (!reduce && matchMedia('(pointer:fine)').matches) {
+    scene.closest('.panel').addEventListener('pointermove', e => {
+      const r = scene.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      tilt.style.transform = `rotateX(${-y * 8}deg) rotateY(${x * 10}deg)`;
+    });
+    scene.closest('.panel').addEventListener('pointerleave', () => tilt.style.transform = '');
+  }
+})();
+</script>
+</body>
+</html>

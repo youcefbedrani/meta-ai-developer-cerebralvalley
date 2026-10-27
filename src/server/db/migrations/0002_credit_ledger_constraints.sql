@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX "credit_ledger_grant_unique_idx" ON "credit_ledger" USING btree ("user_id","reference_id") WHERE "credit_ledger"."reason" = 'monthly_grant';--> statement-breakpoint
+CREATE UNIQUE INDEX "credit_ledger_refund_unique_idx" ON "credit_ledger" USING btree ("user_id","reference_id") WHERE "credit_ledger"."reason" = 'refund';

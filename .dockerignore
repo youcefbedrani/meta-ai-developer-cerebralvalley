@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.env
+.env.*
+!.env.example
+!.env.production.example
+backups
+stitch_ai_saas_validation_platform_landing_page
+*.log
