@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#dce1ff","surface":"#131317","error-container":"#93000a","tertiary-fixed-dim":"#23e373","inverse-on-surface":"#303035","on-primary-fixed":"#00164d","surface-variant":"#353439","outline-variant":"#434654","primary-fixed-dim":"#b5c4ff","tertiary-fixed":"#64ff92","surface-dim":"#131317","on-secondary-container":"#b9aaff","on-secondary-fixed":"#1c0062","on-tertiary-container":"#003113","on-primary":"#00297b","outline":"#8d90a0","secondary-fixed-dim":"#cabeff","on-tertiary":"#003917","secondary":"#cabeff","background":"#131317","surface-container":"#1f1f24","on-error-container":"#ffdad6","tertiary":"#23e373","on-surface-variant":"#c3c5d7","surface-tint":"#b5c4ff","on-error":"#690005","on-secondary":"#31009a","inverse-surface":"#e4e1e8","secondary-fixed":"#e6deff","tertiary-container":"#00a750","error":"#ffb4ab","on-secondary-fixed-variant":"#4816cb","secondary-container":"#4816cb","primary":"#b5c4ff","primary-container":"#648aff","on-surface":"#e4e1e8","surface-container-high":"#2a292e","on-tertiary-fixed-variant":"#005224","inverse-primary":"#1a53d6","on-background":"#e4e1e8","on-primary-container":"#00236d","surface-bright":"#39393e","surface-container-highest":"#353439","on-tertiary-fixed":"#00210b","surface-container-lowest":"#0e0e12","on-primary-fixed-variant":"#003cad","surface-container-low":"#1b1b20"},borderRadius:{DEFAULT:"1rem",lg:"2rem",xl:"3rem",full:"9999px"},spacing:{gutter:"1.5rem","space-lg":"1.5rem","gutter-sm":"1rem","space-xl":"2.5rem","space-md":"1rem","space-xs":"0.25rem","margin-sm":"1rem",margin:"2rem","space-sm":"0.5rem"},fontFamily:{"headline-sm":["Inter"],"headline-lg":["Inter"],caption:["Inter"],"label-sm":["Inter"],"display-xl":["Inter"],"body-lg":["Inter"],"body-md":["Inter"],"headline-lg-mobile":["Inter"],"label-md":["Inter"],"display-xl-mobile":["Inter"],"body-sm":["Inter"],"headline-md":["Inter"]},fontSize:{"headline-sm":["18px",{lineHeight:"26px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.02em",fontWeight:"600"}],caption:["10px",{lineHeight:"12px",letterSpacing:"0.05em",fontWeight:"500"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.04em",fontWeight:"600"}],"display-xl":["56px",{lineHeight:"64px",letterSpacing:"-0.03em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"400"}],"body-md":["14px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"400"}],"headline-lg-mobile":["26px",{lineHeight:"34px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["13px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"500"}],"display-xl-mobile":["38px",{lineHeight:"46px",letterSpacing:"-0.025em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"18px",letterSpacing:"0.01em",fontWeight:"400"}],"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface min-h-screen relative overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container"><div class="pointer-events-none fixed inset-0 z-0 overflow-hidden"><div class="absolute -top-40 left-1/4 h-[500px] w-[500px] rounded-full bg-secondary-container/15 blur-[128px]"></div><div class="absolute top-1/3 -right-20 h-[600px] w-[600px] rounded-full bg-primary-container/15 blur-[140px]"></div><div class="absolute -bottom-40 left-1/3 h-[500px] w-[500px] rounded-full bg-secondary-container/10 blur-[130px]"></div></div><header class="fixed top-0 left-0 w-full z-50 bg-[#07070b]/80 backdrop-blur-md border-b border-white/[0.08]"><div class="h-20 w-full max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><img alt="Stratum AI Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UE65ie3_tp-_AfJ-XKqDg1cdmkBtvkiPRdNtugX6lu9ppPret-WjBccG3yKQzl8zA76mIAQm3BXk4g8sD_woWfcfVKtqFyOsots2honNxyiZfLOXM-XulQvQFpj66EOXstbFs4DnIdDL-nNhlyA6w1HUQ4HMS4GRkv0CRlHXVc7dCz_KIHXdGV0uouZtNZoLp1WIrkeukm6CufF3J_GcV1jFFI1kQZ4mZuWYdz04MlTXbRApwBy8xDhRY"/><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Stratum AI</span></div><nav class="hidden lg:flex items-center gap-space-lg" data-active-classes="text-on-surface font-semibold"><a aria-current="page" class="transition-colors duration-200 text-on-surface font-semibold" data-path="features" href="#">Features</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors duration-200" data-path="how-it-works" href="#">How it works</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors duration-200" data-path="capabilities" href="#">Capabilities</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors duration-200" data-path="pricing" href="#">Pricing</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors duration-200" data-path="blog" href="#">Blog</a></nav><div class="flex items-center gap-space-md"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors duration-200 hidden sm:inline-flex" data-path="login" href="#">Log in</a><a class="inline-flex items-center gap-space-xs rounded-full bg-gradient-to-r from-[#7c5cff] to-[#4f7cff] px-space-md py-space-xs text-white font-label-md text-label-md shadow-[0_4px_16px_rgba(79,124,255,0.35)] hover:shadow-[0_6px_24px_rgba(79,124,255,0.5)] hover:brightness-110 transition-all duration-200" data-path="signup" href="#"><span>Start free</span><span class="material-symbols-outlined text-[16px]">arrow_forward</span></a><div class="pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-white/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNqtPjr_PLTjfdXmy7O9xKYM8uj9rMQ0fKgfEWiiuctO6LLEWEkeHQKh6FlTrwcTBntSl59XSd-oIQSFLUOQJUn_a_nEEiIDwWWe4PCSy0Xv0UC_BLmp3mmKqYH8aQYji1DK2XzMLB0xeQqvCqFrcULP2qTc6qLYUEtbILJl-aNrEOBCU31KveczcxFT4Qa-fNovQiFmE8Js1_iQIlVGdKgdJGVGinqL1wC3paOk3oBGNmMcm4oy3wzg"/></div></div></div></header><main class="relative z-10 w-full pt-20 bg-transparent min-h-[calc(100vh-80px)]"><div class="flex flex-col w-full">
+<!-- HERO SECTION -->
+<section class="relative w-full max-w-7xl mx-auto px-margin pt-space-xl pb-24 overflow-visible">
+<!-- Ambient Backdrop Light -->
+<div class="pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 w-[850px] h-[480px] bg-gradient-to-b from-[#7c5cff]/20 via-[#4f7cff]/10 to-transparent blur-[120px] rounded-full -z-10"></div>
+<div class="flex flex-col items-center text-center max-w-4xl mx-auto">
+<!-- Eyebrow Pill -->
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/70 backdrop-blur-md shadow-sm mb-space-lg">
+<span class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_#23e373] animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface">New · Live market research with cited sources</span>
+</div>
+<!-- Main Display Headline -->
+<h1 class="font-display-xl text-display-xl lg:text-[68px] lg:leading-[74px] text-on-surface tracking-tight mb-space-md">
+        Find your next SaaS idea.<br/>
+<span class="bg-gradient-to-r from-[#cabeff] via-[#b5c4ff] to-[#64ff92] bg-clip-text text-transparent">Validate it before you build.</span>
+</h1>
+<!-- Subheadline -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-space-xl">
+        Discover real opportunities, research competitors with cited sources, and test customer demand — all in one AI workspace built exclusively for software founders.
+      </p>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center justify-center gap-space-md mb-space-xl">
+<a class="inline-flex items-center gap-space-xs rounded-full bg-gradient-to-r from-[#7c5cff] to-[#4f7cff] px-space-xl py-3.5 text-white font-headline-sm text-headline-sm shadow-[0_8px_32px_rgba(79,124,255,0.45)] hover:shadow-[0_12px_40px_rgba(124,92,255,0.6)] hover:scale-[1.02] transition-all duration-200" href="#pricing">
+<span>Start validating free</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+<a class="inline-flex items-center gap-space-xs rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest px-space-lg py-3.5 text-on-surface font-label-md text-label-md shadow-sm transition-all duration-200" href="#how-it-works">
+<span class="material-symbols-outlined text-[18px] text-primary">play_circle</span>
+<span>See how it works</span>
+</a>
+</div>
+<!-- Floating Feature Metric Badges -->
+<div class="flex flex-wrap items-center justify-center gap-space-sm mb-space-xl">
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container/60 backdrop-blur-md shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary">verified</span>
+<span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider">Evidence-backed research</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container/60 backdrop-blur-md shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">hub</span>
+<span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider">Competitor insights</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container/60 backdrop-blur-md shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">science</span>
+<span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider">Validation experiments</span>
+</div>
+</div>
+</div>
+<!-- Product Dashboard Mockup Window -->
+<div class="relative w-full max-w-6xl mx-auto rounded-lg bg-surface-container-lowest/90 backdrop-blur-2xl shadow-2xl p-space-sm sm:p-space-md">
+<!-- Glow Underlay -->
+<div class="pointer-events-none absolute -inset-4 bg-gradient-to-r from-[#7c5cff]/20 via-[#4f7cff]/20 to-[#23e373]/10 blur-2xl -z-10 rounded-xl"></div>
+<!-- Window Chrome -->
+<div class="flex items-center justify-between pb-space-sm mb-space-md bg-surface-container-low/40 px-space-md py-2.5 rounded-DEFAULT">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-error/70"></div>
+<div class="w-3 h-3 rounded-full bg-primary/40"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary/70"></div>
+<span class="ml-space-sm font-label-sm text-label-sm text-outline">stratum://workspace/omniquery-data-sync</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded-full bg-tertiary/10 text-tertiary font-caption text-caption flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Live Telemetry Active
+          </span>
+<span class="material-symbols-outlined text-outline text-[18px]">more_horiz</span>
+</div>
+</div>
+<!-- Dashboard Interior Matrix -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Main Project View (Col 1-8) -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<!-- Active Opportunity Banner -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container/80 flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-DEFAULT bg-primary-container/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[28px]">sync_alt</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">OmniQuery - B2B Data Sync</h3>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-caption text-caption">B2B SaaS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Automated real-time bidirectional schema sync between Postgres & Salesforce for mid-market RevOps.</p>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-caption text-caption text-outline uppercase tracking-wider">Opportunity Fit</span>
+<span class="font-display-xl text-[36px] leading-[40px] text-tertiary font-bold">92<span class="text-on-surface-variant text-[16px]">/100</span></span>
+</div>
+</div>
+<!-- 4 Critical Metrics Matrix -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm">
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/60 flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-outline">Demand Evidence</span>
+<div class="my-2">
+<span class="font-headline-lg text-headline-lg text-on-surface tabular-nums">91</span>
+<span class="font-label-sm text-label-sm text-tertiary block font-semibold">Strong signal</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full w-[91%]"></div>
+</div>
+</div>
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/60 flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-outline">Competition</span>
+<div class="my-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">Low-Med</span>
+<span class="font-label-sm text-label-sm text-primary block font-semibold">Defensible niche</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[42%]"></div>
+</div>
+</div>
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/60 flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-outline">Feasibility</span>
+<div class="my-2">
+<span class="font-headline-lg text-headline-lg text-on-surface tabular-nums">84</span>
+<span class="font-label-sm text-label-sm text-secondary block font-semibold">Solo MVP: 3 wks</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full w-[84%]"></div>
+</div>
+</div>
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/60 flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-outline">Target ACV</span>
+<div class="my-2">
+<span class="font-headline-lg text-headline-lg text-on-surface tabular-nums">$120</span>
+<span class="font-label-sm text-label-sm text-outline-variant block font-semibold">per seat / mo</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full w-[65%]"></div>
+</div>
+</div>
+</div>
+<!-- Live Cited Sources Panel -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container/50">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Verified Live Citations (42 extracted)</span>
+</div>
+<span class="font-caption text-caption text-outline">Refreshed 14m ago</span>
+</div>
+<div class="space-y-space-xs">
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/40 hover:bg-surface-container-high/80 transition-colors flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-6 h-6 rounded bg-[#ff4500]/20 text-[#ff4500] font-caption flex items-center justify-center font-bold text-[10px]">r/</span>
+<div class="truncate">
+<p class="font-body-sm text-body-sm text-on-surface truncate">"We are spending 14 hours every Friday manually matching custom fields between HubSpot and Postgres..."</p>
+<span class="font-caption text-caption text-outline">Reddit · r/SaaS · 284 upvotes · 48 replies</span>
+</div>
+</div>
+<span class="font-caption text-caption text-tertiary px-space-xs py-0.5 rounded bg-tertiary/10 shrink-0 font-medium">+High Pain</span>
+</div>
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/40 hover:bg-surface-container-high/80 transition-colors flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="w-6 h-6 rounded bg-primary/20 text-primary font-caption flex items-center justify-center font-bold text-[10px]">G2</span>
+<div class="truncate">
+<p class="font-body-sm text-body-sm text-on-surface truncate">"Legacy enterprise ETL tools charge $24k/yr upfront and lack sub-minute webhooks for field updates."</p>
+<span class="font-caption text-caption text-outline">G2 Review · Verified Director of Sales Ops · 2★ Review</span>
+</div>
+</div>
+<span class="font-caption text-caption text-primary px-space-xs py-0.5 rounded bg-primary/10 shrink-0 font-medium">Pricing Wedge</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Experiment & Signal Sidebar (Col 9-12) -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<!-- Live Validation Funnel -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container/70 flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Validation Test Funnel</span>
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+</div>
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Cold Traffic Views</span>
+<span class="text-on-surface font-semibold tabular-nums">1,420</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Waitlist Signups</span>
+<span class="text-tertiary font-bold tabular-nums">202 (14.2% CTR)</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-2 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-tertiary h-full rounded-full w-[72%]"></div>
+</div>
+<div class="flex items-center justify-between font-caption text-caption text-outline pt-1">
+<span>Industry Avg: 3.4%</span>
+<span class="text-tertiary font-semibold">4.1x Outperformance</span>
+</div>
+</div>
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/50 flex items-center gap-space-sm mt-space-xs">
+<span class="material-symbols-outlined text-secondary text-[22px]">calendar_today</span>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface font-bold block">18 Discovery Interviews</span>
+<span class="font-caption text-caption text-outline">12 booked via automated Calendly flow</span>
+</div>
+</div>
+</div>
+<!-- AI Synthesis Recommendation -->
+<div class="p-space-md rounded-DEFAULT bg-gradient-to-br from-[#7c5cff]/15 via-surface-container/80 to-surface-container flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">AI Synthesis</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface mb-space-sm">
+                "Direct competitive vacuum in the sub-$200/mo self-serve market. Recommend building the Postgres-to-CRM micro connector first before general webhook engines."
+              </p>
+</div>
+<button class="w-full py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:brightness-110 transition-all font-semibold shadow-sm">
+              Generate 2-Week MVP Spec
+            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TRUST BAR SECTION -->
+<section class="w-full py-space-xl bg-surface-container-lowest/60">
+<div class="max-w-7xl mx-auto px-margin flex flex-col items-center">
+<span class="font-caption text-caption uppercase tracking-[0.2em] text-outline mb-space-lg text-center">
+        Empowering ambitious builders, indie hackers, and high-velocity engineering teams
+      </span>
+<div class="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-space-md items-center justify-items-center opacity-60">
+<div class="flex items-center gap-2 text-on-surface font-bold text-[18px] tracking-wider"><span class="material-symbols-outlined text-primary">blur_on</span>AURA</div>
+<div class="flex items-center gap-2 text-on-surface font-bold text-[18px] tracking-wider"><span class="material-symbols-outlined text-secondary">token</span>NOVAFLOW</div>
+<div class="flex items-center gap-2 text-on-surface font-bold text-[18px] tracking-wider"><span class="material-symbols-outlined text-tertiary">polyline</span>KITESCALE</div>
+<div class="flex items-center gap-2 text-on-surface font-bold text-[18px] tracking-wider"><span class="material-symbols-outlined text-primary-fixed">change_history</span>VECTRA</div>
+<div class="flex items-center gap-2 text-on-surface font-bold text-[18px] tracking-wider"><span class="material-symbols-outlined text-on-surface-variant">code_blocks</span>SYNTAX</div>
+<div class="flex items-center gap-2 text-on-surface font-bold text-[18px] tracking-wider"><span class="material-symbols-outlined text-secondary-fixed">stream</span>OMNIPULSE</div>
+</div>
+</div>
+</section>
+<!-- FEATURE BENTO GRID SECTION -->
+<section class="w-full max-w-7xl mx-auto px-margin py-24" id="features">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/80 mb-space-sm">
+<span class="material-symbols-outlined text-[14px] text-primary">grid_view</span>
+<span class="font-label-sm text-label-sm text-on-surface">Precision Tooling</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg lg:text-[40px] lg:leading-[48px] text-on-surface tracking-tight mb-space-sm">
+        Everything you need to discover and prove market demand
+      </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+        No more building for 6 months into the void. Use rigorous real-time telemetry to discover gaps and close early paying users.
+      </p>
+</div>
+<!-- 4 Bento Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg">
+<!-- Bento 1: Large Personalized AI Idea Finder (8 cols) -->
+<div class="md:col-span-8 rounded-lg bg-surface-container-low/70 backdrop-blur-xl p-space-xl flex flex-col justify-between shadow-xl">
+<div class="mb-space-lg">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary material-symbols-outlined">explore</span>
+<span class="font-caption text-caption uppercase tracking-wider text-primary font-semibold px-2 py-1 rounded-full bg-primary/10">Engine v4.2</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Personalized Opportunity Discovery</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+            Input your technical strengths, target vertical, and budget. Stratum isolates high-margin voids with verified willingness to pay.
+          </p>
+</div>
+<!-- Interactive stacked preview -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/80">
+<span class="font-caption text-caption text-outline uppercase block mb-1">Target Niche</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold block mb-space-sm">DevOps / Kubernetes Cost</span>
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface-variant">B2B SaaS</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-lowest text-tertiary">Score: 94</span>
+</div>
+</div>
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/80">
+<span class="font-caption text-caption text-outline uppercase block mb-1">Time To MVP</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold block mb-space-sm">18 Days Solo Build</span>
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface-variant">NextJS + Go</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-lowest text-primary">Low Stack Friction</span>
+</div>
+</div>
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/80">
+<span class="font-caption text-caption text-outline uppercase block mb-1">Monetization Floor</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold block mb-space-sm">$89 - $299 / month</span>
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface-variant">Usage-based</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-lowest text-secondary">High LTV</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento 2: Live Market Research (4 cols) -->
+<div class="md:col-span-4 rounded-lg bg-surface-container-low/70 backdrop-blur-xl p-space-xl flex flex-col justify-between shadow-xl">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary material-symbols-outlined">link</span>
+<span class="font-caption text-caption text-tertiary font-bold px-2 py-0.5 rounded-full bg-tertiary/10">100% Sourced</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Cited Market Proof</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+            Never trust hallucinated market sizes. Every user pain point maps to real URLs, SEC filings, and public forums.
+          </p>
+</div>
+<div class="space-y-space-xs">
+<div class="p-space-xs px-space-sm rounded-DEFAULT bg-surface-container-high/60 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface truncate">G2: 89 enterprise negative reviews</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">open_in_new</span>
+</div>
+<div class="p-space-xs px-space-sm rounded-DEFAULT bg-surface-container-high/60 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface truncate">ProductHunt: 3 discontinued rivals</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">open_in_new</span>
+</div>
+<div class="p-space-xs px-space-sm rounded-DEFAULT bg-surface-container-high/60 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface truncate">GitHub Issues: 412 open requests</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">open_in_new</span>
+</div>
+</div>
+</div>
+<!-- Bento 3: Competitor Analyzer (4 cols) -->
+<div class="md:col-span-4 rounded-lg bg-surface-container-low/70 backdrop-blur-xl p-space-xl flex flex-col justify-between shadow-xl">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary material-symbols-outlined">dataset</span>
+<span class="font-caption text-caption text-secondary font-bold px-2 py-0.5 rounded-full bg-secondary/10">Churn Radar</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Competitor Matrix</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+            Automatically track incumbents, pricing tier modifications, feature sunsetting, and unaddressed 1-star complaints.
+          </p>
+</div>
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/70 space-y-2">
+<div class="flex items-center justify-between text-[11px] text-outline pb-1">
+<span>Competitor</span>
+<span>Weakness Discovered</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface">DataLoom</span>
+<span class="text-error font-medium">Enterprise Lockout ($3k min)</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface">Fivetran</span>
+<span class="text-error font-medium">No bi-directional writeback</span>
+</div>
+</div>
+</div>
+<!-- Bento 4: Evidence vs Assumptions (8 cols) -->
+<div class="md:col-span-8 rounded-lg bg-surface-container-low/70 backdrop-blur-xl p-space-xl flex flex-col justify-between shadow-xl">
+<div class="mb-space-md">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary material-symbols-outlined">rule</span>
+<span class="font-caption text-caption text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10">Tri-Layer Logic</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Evidence vs. Assumptions Separation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+            Stratum separates what is mathematically verified from predictive assumptions and gut feelings, eliminating confirmation bias.
+          </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/60">
+<div class="flex items-center gap-1.5 mb-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-label-sm text-label-sm text-tertiary font-bold uppercase">Empirical Fact</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">Customer spends 14 hrs/wk on custom sync scripts (Reddit cite).</p>
+</div>
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/60">
+<div class="flex items-center gap-1.5 mb-1">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase">Model Projection</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">Estimated initial TAM: $48M mid-market Salesforce dev tools.</p>
+</div>
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/60">
+<div class="flex items-center gap-1.5 mb-1">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-label-sm text-label-sm text-outline font-bold uppercase">Hypothesis</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">Users will connect production databases on self-hosted plans.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- HOW IT WORKS SECTION -->
+<section class="w-full py-24 bg-surface-container-lowest/70" id="how-it-works">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Left Sticky Narrative (5 cols) -->
+<div class="lg:col-span-5 lg:sticky lg:top-28">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/80 mb-space-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">conversion_path</span>
+<span class="font-label-sm text-label-sm text-on-surface">Validation Engine</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg lg:text-[44px] lg:leading-[52px] text-on-surface tracking-tight mb-space-md">
+            From vague idea to validated plan
+          </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-space-lg">
+            A battle-tested 6-step loop that turns uncertain thoughts into a hardened roadmap backed by real paying customer commitments.
+          </p>
+<div class="p-space-md rounded-DEFAULT bg-surface-container/60 mb-space-lg">
+<div class="flex items-center gap-space-sm mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">psychology</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Founder Methodology Playbook</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Engineered with insights from over 850+ solo launches and Y Combinator early validation frameworks.
+            </p>
+</div>
+<a class="inline-flex items-center gap-space-xs rounded-full bg-surface-container-high hover:bg-surface-container-highest px-space-lg py-3 text-on-surface font-label-md text-label-md transition-colors" href="#pricing">
+<span>Explore full validation methodology</span>
+<span class="material-symbols-outlined text-[16px] text-primary">arrow_forward</span>
+</a>
+</div>
+<!-- Right Timeline (7 cols) -->
+<div class="lg:col-span-7 space-y-space-md">
+<!-- Step 1 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 flex items-start gap-space-md shadow-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary font-headline-sm flex items-center justify-center shrink-0">1</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Discover Recurring Friction</h3>
+<span class="px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary font-caption text-caption">Telemetry</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Stratum continually parses live discourse on Reddit, X, GitHub, and niche forums to find repeated customer complaints and workarounds.
+              </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 flex items-start gap-space-md shadow-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary font-headline-sm flex items-center justify-center shrink-0">2</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Research & Citations</h3>
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-caption text-caption">Verification</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                The crawler pulls current competitor pricing sheets, negative G2/Capterra reviews, and customer willingness-to-pay signals.
+              </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 flex items-start gap-space-md shadow-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary font-headline-sm flex items-center justify-center shrink-0">3</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Validate in Public</h3>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-caption text-caption">Live Tests</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Generate high-converting micro-landing page copy, value-proposition hooks, and targeted outbound questions for customer interviews.
+              </p>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 flex items-start gap-space-md shadow-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary font-headline-sm flex items-center justify-center shrink-0">4</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Lean Technical Plan</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface font-caption text-caption">PRD + Architecture</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Converts market evidence into a lean specification document, enforcing a 3-week feature ceiling to eliminate scope creep.
+              </p>
+</div>
+</div>
+<!-- Step 5 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 flex items-start gap-space-md shadow-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary font-headline-sm flex items-center justify-center shrink-0">5</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Track Signal Velocity</h3>
+<span class="px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary font-caption text-caption">Analytics</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Measure waitlist conversion percentage, intent-to-pay pledges, and interview request rates on a single consolidated live board.
+              </p>
+</div>
+</div>
+<!-- Step 6 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 flex items-start gap-space-md shadow-md">
+<div class="w-10 h-10 rounded-full bg-tertiary/20 text-tertiary font-headline-sm flex items-center justify-center shrink-0">6</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Empowered Go / No-Go Decision</h3>
+<span class="px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary font-caption text-caption font-bold">Launch Confidence</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Stratum calculates an aggregate Confidence Score. If metrics fail the hurdle rate, pivot instantly before writing wasteful lines of code.
+              </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FEATURES SHOWCASE: VALIDATION WORKSPACE -->
+<section class="w-full max-w-7xl mx-auto px-margin py-24">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/80 mb-space-sm">
+<span class="material-symbols-outlined text-[14px] text-primary">description</span>
+<span class="font-label-sm text-label-sm text-on-surface">Validation Workspace</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg lg:text-[40px] lg:leading-[48px] text-on-surface tracking-tight mb-space-sm">
+        Everything you need before writing a line of code
+      </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+        A structured, auto-updating dossier that proves why your target market will pay on day one.
+      </p>
+</div>
+<!-- Structured Validation Dossier Preview -->
+<div class="w-full rounded-lg bg-surface-container-low/90 backdrop-blur-xl p-space-lg sm:p-space-xl shadow-2xl mb-space-xl">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between pb-space-md mb-space-lg bg-surface-container/60 p-space-md rounded-DEFAULT gap-space-md">
+<div>
+<span class="font-caption text-caption text-outline uppercase tracking-wider block mb-1">Document: Stratum Synthesis V3</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Market Opportunity Dossier: SyncForge Dev Engine</h3>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="px-space-md py-1 rounded-full bg-tertiary/10 text-tertiary font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Go-Decision: 88% Confidence
+          </span>
+<button class="px-space-md py-1.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors">
+            Export PDF & Markdown
+          </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Persona & ICP -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/60">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">account_circle</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Ideal Customer Persona (ICP)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+            Solo DevRel Engineers & RevOps technical leads in Series A-C startups running hybrid stacks (Postgres + Supabase).
+          </p>
+<div class="space-y-1 font-caption text-caption">
+<div class="text-outline">Budget Discretion: <span class="text-on-surface font-semibold">$500/mo corporate card</span></div>
+<div class="text-outline">Main Headache: <span class="text-on-surface font-semibold">Schema drift breaks reports</span></div>
+</div>
+</div>
+<!-- Risk Matrix -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/60">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-error text-[18px]">warning</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Identified Risk Factors</span>
+</div>
+<div class="space-y-2">
+<div class="p-space-xs rounded bg-surface-container-low font-body-sm text-body-sm">
+<span class="text-error font-medium block">Risk 1: Security Hesitancy</span>
+<span class="text-on-surface-variant font-caption text-caption">Solution: Provide self-hosted Docker agent with zero data egress.</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-low font-body-sm text-body-sm">
+<span class="text-primary font-medium block">Risk 2: Rate Limits</span>
+<span class="text-on-surface-variant font-caption text-caption">Solution: Implement local queueing with SQLite caching.</span>
+</div>
+</div>
+</div>
+<!-- Immediate Action Plan -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container-high/60">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="material-symbols-outlined text-tertiary text-[18px]">checklist</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Next 72-Hour Sprint</span>
+</div>
+<ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary shrink-0">check</span>
+<span>Deploy one-page value test to ProductHunt Discussions</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary shrink-0">check</span>
+<span>Direct outreach to 25 G2 reviewers complaining of pricing</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline shrink-0">radio_button_unchecked</span>
+<span>Publish open-source benchmark CLI script on GitHub</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- 3 Highlight Sub-Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<span class="w-10 h-10 rounded-full bg-primary/10 text-primary material-symbols-outlined flex items-center justify-center mb-space-sm">auto_stories</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Structured Reports</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Export comprehensive investor and co-founder ready PDFs containing raw survey signals, TAM calculations, and pricing recommendations.
+          </p>
+</div>
+</div>
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<span class="w-10 h-10 rounded-full bg-tertiary/10 text-tertiary material-symbols-outlined flex items-center justify-center mb-space-sm">campaign</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Validation Lab</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Create high-converting landing page variants with integrated Stripe pre-orders and email waitlists in under five minutes.
+          </p>
+</div>
+</div>
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<span class="w-10 h-10 rounded-full bg-secondary/10 text-secondary material-symbols-outlined flex items-center justify-center mb-space-sm">cut</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">MVP Scope Limiter</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Our strict feature classifier automatically cuts nice-to-haves from your backlog so you launch a testable build in weeks, not quarters.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- TESTIMONIALS SECTION -->
+<section class="w-full py-24 bg-surface-container-lowest/60">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="flex flex-col items-center text-center max-w-2xl mx-auto mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/80 mb-space-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">star</span>
+<span class="font-label-sm text-label-sm text-on-surface">Proven Results</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg lg:text-[40px] lg:leading-[48px] text-on-surface tracking-tight mb-space-sm">
+          Saved founders 4+ months of building dead ends
+        </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Hear from engineers and entrepreneurs who used Stratum to pinpoint real buyer demand.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Testimonial 1 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 backdrop-blur-md flex flex-col justify-between shadow-md">
+<p class="font-body-md text-body-md text-on-surface mb-space-lg leading-relaxed">
+            "Before Stratum, I spent 8 months building a social bookmarking tool nobody wanted. Stratum killed my second idea in 48 hours because evidence showed zero willingness to pay. My third idea reached $11k MRR in 90 days."
+          </p>
+<div class="flex items-center justify-between pt-space-sm bg-surface-container-high/30 p-space-sm rounded-DEFAULT">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Portrait photo of a young modern tech founder with glasses and confident expression in a minimal dark studio setting with cobalt subtle backlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVbzSL65-V5R1QJuuHR_Fm2lz8s7qj8hbdzrQJ27xlOuyKBhddt6hboZsKZtmK6ghG69IcFWdZszAieeiZuFft96vhh1VeR4UCDC5SGMfeQdGqHEM3CNMTJHS5WlbfZri5FNGqafanBaAG8bHM0dqF44r7GdqDvyCgIdgDkgHKxdy4nQxlOSyB6TC6F-WL0vGlckNFb3rGHdqvVlAtNqf9e3gX80sV9t_qK4JomF_49K2iih1_1Ef4iw"/>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">Julian Vance</span>
+<span class="font-caption text-caption text-outline">Founder, PromptPulse</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary font-label-sm text-label-sm font-semibold tabular-nums">$11k MRR</span>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 backdrop-blur-md flex flex-col justify-between shadow-md">
+<p class="font-body-md text-body-md text-on-surface mb-space-lg leading-relaxed">
+            "The cited sources are gold. Seeing literal quotes from enterprise buyers complaining about Zapier's pricing helped us shape our exact pitch. We secured 6 paid pilot contracts before writing a single line of backend logic."
+          </p>
+<div class="flex items-center justify-between pt-space-sm bg-surface-container-high/30 p-space-sm rounded-DEFAULT">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Close-up professional headshot of an energetic female technical entrepreneur with soft studio lighting and dark minimalist atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW3hUD3TFYXMK6LqiUq9A4k2t9wYK8hkUGjFLbLRlgn7tw88RZ6IKeFGqoeRafgi21ETCMRf-efKxdOY5Di5swDvdQ33UeDqbXMqxiFLBvi7yOmDje3xtuKXbdGApt4aqqTr4JyTbWx0-K55H7tnGrITCzc1qiO8WXVcznMNAK3AkZTJrTd8wVbTRQcwI6XcICuriBL9JmnExFMwV0-zYjkV1PYmKlasc6SXGK-lTp5uAhspfQxTOQMw"/>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">Elena Rostova</span>
+<span class="font-caption text-caption text-outline">Co-founder, SyncBridge</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">6 Pilots Signed</span>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/80 backdrop-blur-md flex flex-col justify-between shadow-md">
+<p class="font-body-md text-body-md text-on-surface mb-space-lg leading-relaxed">
+            "The Competitor Matrix and Churn Radar alone paid for our subscription 100x over. We knew our competitor was raising prices on their free tier 3 weeks before it happened and drafted our migration tool ahead of time."
+          </p>
+<div class="flex items-center justify-between pt-space-sm bg-surface-container-high/30 p-space-sm rounded-DEFAULT">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Portrait photo of a thoughtful male software engineer in a modern dark creative tech space with slight purple rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXHfs2UyQy4wZkUHctCWnbYNEBXEQJ32tXm8v2LecAOuB0i0v7vF_vhtZa7P8oeh9FTLpkis414_WqqaijYh-himfX2-2Sk90tkbmu0IaAzPiRlOgh7mK3FugSwYGPW4o-_IkLp-SYPgzc9ldOrBvrSK5YZ-XHhm3VCzH5qkpnWsYk-L6scCoIsNBJ5gKQp-CKPQKlCV_biPPknTEINX8GwBFkB-Rn4SVH5GSOeF59rLviiry6UaeKIA"/>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">Marcus Chen</span>
+<span class="font-caption text-caption text-outline">Solo Dev, FormFast</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm font-semibold tabular-nums">$24k MRR</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ADVANCED CAPABILITIES GRID -->
+<section class="w-full max-w-7xl mx-auto px-margin py-24" id="capabilities">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/80 mb-space-sm">
+<span class="material-symbols-outlined text-[14px] text-secondary">tune</span>
+<span class="font-label-sm text-label-sm text-on-surface">Precision Suite</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg lg:text-[40px] lg:leading-[48px] text-on-surface tracking-tight mb-space-sm">
+        Advanced capabilities built for speed
+      </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+        Every capability is engineered to eliminate noise, stop over-engineering, and enforce fast feedback loops.
+      </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+<!-- Capability 1 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center material-symbols-outlined mb-space-sm">science</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Validation Lab</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Spin up micro waitlist experiments with customizable conversion triggers, email capture, and automated follow-ups.
+          </p>
+</div>
+<div class="px-space-sm py-1.5 rounded bg-surface-container text-outline text-[12px] flex items-center justify-between">
+<span>Stripe & LemonSqueezy Ready</span>
+<span class="text-tertiary">Active</span>
+</div>
+</div>
+<!-- Capability 2 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-10 h-10 rounded-full bg-secondary/10 text-secondary flex items-center justify-center material-symbols-outlined mb-space-sm">keyboard_command_key</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">⌘K Command Search</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Query entire market sectors, competitors, or citation archives instantly with keyboard shortcuts tailored for power users.
+          </p>
+</div>
+<div class="px-space-sm py-1.5 rounded bg-surface-container text-outline text-[12px] flex items-center justify-between">
+<span class="font-mono">⌘ + K anywhere</span>
+<span class="text-primary font-semibold">< 12ms latency</span>
+</div>
+</div>
+<!-- Capability 3 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-10 h-10 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center material-symbols-outlined mb-space-sm">terminal</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">MVP Roadmap Generator</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Converts raw user demand into prioritized GitHub issues, user stories, and database schema recommendations for day-one builds.
+          </p>
+</div>
+<div class="px-space-sm py-1.5 rounded bg-surface-container text-outline text-[12px] flex items-center justify-between">
+<span>Linear & GitHub sync</span>
+<span class="text-on-surface">1-click export</span>
+</div>
+</div>
+<!-- Capability 4 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary flex items-center justify-center material-symbols-outlined mb-space-sm">folder_open</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Unified Project Workspace</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Keep customer interview transcripts, web citations, competitor teardowns, and survey responses indexed in one single place.
+          </p>
+</div>
+<div class="px-space-sm py-1.5 rounded bg-surface-container text-outline text-[12px] flex items-center justify-between">
+<span>Cross-source search</span>
+<span class="text-secondary">Zero context loss</span>
+</div>
+</div>
+<!-- Capability 5 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-10 h-10 rounded-full bg-outline/20 text-on-surface flex items-center justify-center material-symbols-outlined mb-space-sm">visibility</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Usage Transparency</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            No surprise overages or hidden token drains. Real-time counter detailing web crawls, sentiment analysis, and search credits.
+          </p>
+</div>
+<div class="px-space-sm py-1.5 rounded bg-surface-container text-outline text-[12px] flex items-center justify-between">
+<span>Deterministic billing</span>
+<span class="text-tertiary">Real-time stats</span>
+</div>
+</div>
+<!-- Capability 6 -->
+<div class="p-space-lg rounded-DEFAULT bg-surface-container-low/70 flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center material-symbols-outlined mb-space-sm">lock</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Private by Default</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Your ideas, custom prompts, and validation data are strictly isolated. We never train public foundation models on user workspaces.
+          </p>
+</div>
+<div class="px-space-sm py-1.5 rounded bg-surface-container text-outline text-[12px] flex items-center justify-between">
+<span>Zero telemetry leakage</span>
+<span class="text-primary font-semibold">SOC2 Compliant</span>
+</div>
+</div>
+</div>
+</section>
+<!-- PRICING SECTION -->
+<section class="w-full py-24 bg-surface-container-lowest/80" id="pricing">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/80 mb-space-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">payments</span>
+<span class="font-label-sm text-label-sm text-on-surface">Simple & Transparent</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg lg:text-[40px] lg:leading-[48px] text-on-surface tracking-tight mb-space-sm">
+          Simple plans for every stage
+        </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-space-lg">
+          Validate your first SaaS concept without friction. Upgrade only when you start active experiments.
+        </p>
+<!-- Billing Toggle Pill -->
+<div class="inline-flex items-center p-1 rounded-full bg-surface-container-high" id="pricing-toggle-wrap">
+<button class="px-space-md py-1.5 rounded-full text-white bg-primary-container font-label-sm text-label-sm font-semibold transition-all" id="toggle-monthly">Monthly</button>
+<button class="px-space-md py-1.5 rounded-full text-on-surface-variant font-label-sm text-label-sm hover:text-on-surface transition-all flex items-center gap-1" id="toggle-annual">
+<span>Annual</span>
+<span class="text-[10px] text-tertiary font-bold px-1.5 py-0.2 rounded-full bg-tertiary/10">Save 25%</span>
+</button>
+</div>
+</div>
+<!-- 3 Tier Cards -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg items-stretch">
+<!-- Starter Plan -->
+<div class="p-space-xl rounded-lg bg-surface-container-low/80 backdrop-blur-md flex flex-col justify-between shadow-md">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">Starter</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-caption text-caption">Free Tier</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">Ideal for exploring early concepts and testing market viability.</p>
+<div class="flex items-baseline gap-1 mb-space-lg">
+<span class="font-display-xl text-[44px] text-on-surface font-bold">$0</span>
+<span class="font-body-sm text-body-sm text-outline">/ forever</span>
+</div>
+<ul class="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant mb-space-xl">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> 2 SaaS opportunity searches / mo</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Live cited research (Reddit & X)</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Basic competitor mapping</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-outline text-[18px]">close</span> No automated validation experiments</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-outline text-[18px]">close</span> Community support only</li>
+</ul>
+</div>
+<a class="w-full py-3 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md text-center transition-all font-semibold" href="#">
+            Get started free
+          </a>
+</div>
+<!-- Founder Plan (Highlighted) -->
+<div class="relative p-space-xl rounded-lg bg-surface-container/90 backdrop-blur-xl flex flex-col justify-between shadow-2xl">
+<!-- Glow Halo -->
+<div class="pointer-events-none absolute -inset-1 rounded-xl bg-gradient-to-b from-[#7c5cff]/40 via-[#4f7cff]/20 to-transparent blur-md -z-10"></div>
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">Founder</span>
+<span class="px-space-sm py-0.5 rounded-full bg-gradient-to-r from-[#7c5cff] to-[#4f7cff] text-white font-caption text-caption font-bold shadow-sm">
+                Most Popular
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">Full access for solo founders actively validating and launching.</p>
+<div class="flex items-baseline gap-1 mb-space-lg">
+<span class="font-display-xl text-[44px] text-on-surface font-bold tabular-nums" id="price-founder">$19</span>
+<span class="font-body-sm text-body-sm text-outline">/ month</span>
+</div>
+<ul class="space-y-space-sm font-body-sm text-body-sm text-on-surface mb-space-xl">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Unlimited opportunity searches</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Full Citation Engine (G2, Capterra, SEC)</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> 3 Live Validation Lab micro-funnels</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Automated PRD & MVP scope generator</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Exportable investor validation dossiers</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Fast Discord founder community access</li>
+</ul>
+</div>
+<a class="w-full py-3.5 rounded-full bg-gradient-to-r from-[#7c5cff] to-[#4f7cff] text-white font-headline-sm text-headline-sm text-center shadow-[0_8px_24px_rgba(79,124,255,0.4)] hover:brightness-110 hover:scale-[1.01] transition-all" href="#">
+            Start 14-day trial
+          </a>
+</div>
+<!-- Studio Plan -->
+<div class="p-space-xl rounded-lg bg-surface-container-low/80 backdrop-blur-md flex flex-col justify-between shadow-md">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">Studio</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-caption text-caption">Venture Teams</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">For venture studios, agencies, and prolific portfolio builders.</p>
+<div class="flex items-baseline gap-1 mb-space-lg">
+<span class="font-display-xl text-[44px] text-on-surface font-bold tabular-nums" id="price-studio">$49</span>
+<span class="font-body-sm text-body-sm text-outline">/ month</span>
+</div>
+<ul class="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant mb-space-xl">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Everything in Founder plan</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Up to 15 concurrent project workspaces</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Unlimited live validation landing pages</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Custom domains & white-label reports</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Direct API & webhook signal feeds</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-tertiary text-[18px]">check</span> Dedicated priority validation strategist</li>
+</ul>
+</div>
+<a class="w-full py-3 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md text-center transition-all font-semibold" href="#">
+            Choose Studio
+          </a>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ ACCORDION SECTION -->
+<section class="w-full max-w-4xl mx-auto px-margin py-24">
+<div class="flex flex-col items-center text-center mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/80 mb-space-sm">
+<span class="material-symbols-outlined text-[14px] text-primary">help</span>
+<span class="font-label-sm text-label-sm text-on-surface">Frequently Asked Questions</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg lg:text-[40px] text-on-surface tracking-tight mb-space-sm">
+        Clear answers before you start
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        Have questions about data sources, telemetry accuracy, or privacy? We have you covered.
+      </p>
+</div>
+<div class="space-y-space-md" id="faq-container">
+<!-- FAQ 1 -->
+<div class="rounded-DEFAULT bg-surface-container-low/80 overflow-hidden shadow-sm">
+<button class="faq-btn w-full p-space-md flex items-center justify-between text-left font-headline-sm text-headline-sm text-on-surface hover:bg-surface-container-high/50 transition-colors">
+<span>How does Stratum find and verify market sources?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content px-space-md pb-space-md font-body-md text-body-md text-on-surface-variant hidden">
+          Stratum crawls verified public feeds, real-time developer discords, GitHub issue backlogs, SEC filings, and software review platforms like G2 and Capterra. Every quote or sentiment point includes the direct original URL, domain metadata, and timestamp.
+        </div>
+</div>
+<!-- FAQ 2 -->
+<div class="rounded-DEFAULT bg-surface-container-low/80 overflow-hidden shadow-sm">
+<button class="faq-btn w-full p-space-md flex items-center justify-between text-left font-headline-sm text-headline-sm text-on-surface hover:bg-surface-container-high/50 transition-colors">
+<span>Are my project ideas kept private and safe?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content px-space-md pb-space-md font-body-md text-body-md text-on-surface-variant hidden">
+          Yes, 100%. We practice strict tenant isolation. Your ideas, interview transcripts, and validation notes are never used to train public LLM models, and team members cannot access your workspace without explicit authorization.
+        </div>
+</div>
+<!-- FAQ 3 -->
+<div class="rounded-DEFAULT bg-surface-container-low/80 overflow-hidden shadow-sm">
+<button class="faq-btn w-full p-space-md flex items-center justify-between text-left font-headline-sm text-headline-sm text-on-surface hover:bg-surface-container-high/50 transition-colors">
+<span>What happens in the Validation Lab?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content px-space-md pb-space-md font-body-md text-body-md text-on-surface-variant hidden">
+          The Validation Lab enables you to deploy lightweight pre-launch micro-landing pages in seconds. It connects to your own custom domain or a private Stratum subdomain, collecting real email signups and testing intent-to-pay pledges via pre-order checkout.
+        </div>
+</div>
+<!-- FAQ 4 -->
+<div class="rounded-DEFAULT bg-surface-container-low/80 overflow-hidden shadow-sm">
+<button class="faq-btn w-full p-space-md flex items-center justify-between text-left font-headline-sm text-headline-sm text-on-surface hover:bg-surface-container-high/50 transition-colors">
+<span>Can I downgrade or cancel at any time?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content px-space-md pb-space-md font-body-md text-body-md text-on-surface-variant hidden">
+          Yes. There are zero lock-ins. You can cancel with a single click from your workspace settings. If you cancel, your saved validation reports and data exports remain accessible forever under the free Starter plan.
+        </div>
+</div>
+<!-- FAQ 5 -->
+<div class="rounded-DEFAULT bg-surface-container-low/80 overflow-hidden shadow-sm">
+<button class="faq-btn w-full p-space-md flex items-center justify-between text-left font-headline-sm text-headline-sm text-on-surface hover:bg-surface-container-high/50 transition-colors">
+<span>How does the 3-week MVP Scope Limiter work?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content px-space-md pb-space-md font-body-md text-body-md text-on-surface-variant hidden">
+          Our AI analyzes customer pain urgency against engineering complexity. Any feature that doesn't directly address the primary burning problem identified in customer interviews is strictly relegated to a "Phase 2" backlog, ensuring you ship your core value wedge fast.
+        </div>
+</div>
+<!-- FAQ 6 -->
+<div class="rounded-DEFAULT bg-surface-container-low/80 overflow-hidden shadow-sm">
+<button class="faq-btn w-full p-space-md flex items-center justify-between text-left font-headline-sm text-headline-sm text-on-surface hover:bg-surface-container-high/50 transition-colors">
+<span>How accurate is the Opportunity Score?</span>
+<span class="material-symbols-outlined text-outline transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content px-space-md pb-space-md font-body-md text-body-md text-on-surface-variant hidden">
+          The Opportunity Score is calibrated against historical outcomes from over 850 indie and micro-SaaS launches. It combines demand signal volume, competitive saturation, price elasticity, and build complexity into a composite metric from 0 to 100.
+        </div>
+</div>
+</div>
+</section>
+<!-- FINAL CALL TO ACTION BANNER -->
+<section class="w-full max-w-7xl mx-auto px-margin py-20 mb-space-xl">
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#1b1b26] via-[#12121a] to-[#0d0d12] p-space-xl sm:p-24 shadow-2xl flex flex-col items-center text-center">
+<!-- Intense Radial Bloom & Subtle Matrix Pattern -->
+<div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(124,92,255,0.25)_0%,_rgba(79,124,255,0.1)_45%,_transparent_75%)] -z-0"></div>
+<!-- Floating Milestone Chips Background -->
+<div class="pointer-events-none absolute top-12 left-10 hidden lg:flex items-center gap-2 px-space-md py-1 rounded-full bg-surface-container/60 backdrop-blur-md opacity-70">
+<span class="material-symbols-outlined text-tertiary text-[16px]">trending_up</span>
+<span class="font-caption text-caption text-on-surface">Waitlist CTR: 18.4%</span>
+</div>
+<div class="pointer-events-none absolute bottom-12 right-12 hidden lg:flex items-center gap-2 px-space-md py-1 rounded-full bg-surface-container/60 backdrop-blur-md opacity-70">
+<span class="material-symbols-outlined text-primary text-[16px]">verified</span>
+<span class="font-caption text-caption text-on-surface">14 Paying Pre-orders</span>
+</div>
+<div class="relative z-10 max-w-3xl flex flex-col items-center">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/70 backdrop-blur-md mb-space-md">
+<span class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_#23e373]"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Immediate Access Available</span>
+</div>
+<h2 class="font-display-xl text-display-xl lg:text-[54px] lg:leading-[60px] text-on-surface tracking-tight mb-space-md">
+          Stop guessing.<br/>Start validating with cold hard data.
+        </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mb-space-xl">
+          Join thousands of founders saving months of wasted engineering effort. Set up your first opportunity scan in under 60 seconds.
+        </p>
+<div class="flex flex-wrap items-center justify-center gap-space-md">
+<a class="inline-flex items-center gap-space-xs rounded-full bg-gradient-to-r from-[#7c5cff] to-[#4f7cff] px-space-xl py-4 text-white font-headline-sm text-headline-sm shadow-[0_8px_32px_rgba(79,124,255,0.45)] hover:shadow-[0_12px_44px_rgba(124,92,255,0.65)] hover:scale-[1.02] transition-all" href="#pricing">
+<span>Start validating free</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+<a class="inline-flex items-center gap-space-xs rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest px-space-lg py-4 text-on-surface font-label-md text-label-md transition-colors" href="#features">
+<span>Explore all features</span>
+</a>
+</div>
+<span class="font-caption text-caption text-outline mt-space-lg block">
+          No credit card required · Free tier available forever · Instant setup
+        </span>
+</div>
+</div>
+</section>
+<!-- INLINE CLIENT SCRIPT -->
+<script>
+    // FAQ Accordion Interaction
+    document.querySelectorAll('.faq-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        const icon = button.querySelector('.material-symbols-outlined');
+        const isHidden = content.classList.contains('hidden');
+        
+        document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.faq-btn .material-symbols-outlined').forEach(i => i.classList.remove('rotate-180'));
+
+        if (isHidden) {
+          content.classList.remove('hidden');
+          icon.classList.add('rotate-180');
+        }
+      });
+    });
+
+    // Pricing Monthly/Annual Toggle
+    const toggleMonthly = document.getElementById('toggle-monthly');
+    const toggleAnnual = document.getElementById('toggle-annual');
+    const priceFounder = document.getElementById('price-founder');
+    const priceStudio = document.getElementById('price-studio');
+
+    if (toggleMonthly && toggleAnnual && priceFounder && priceStudio) {
+      toggleAnnual.addEventListener('click', () => {
+        toggleAnnual.classList.add('bg-primary-container', 'text-white');
+        toggleAnnual.classList.remove('text-on-surface-variant');
+        toggleMonthly.classList.remove('bg-primary-container', 'text-white');
+        toggleMonthly.classList.add('text-on-surface-variant');
+        
+        priceFounder.textContent = '$14';
+        priceStudio.textContent = '$36';
+      });
+
+      toggleMonthly.addEventListener('click', () => {
+        toggleMonthly.classList.add('bg-primary-container', 'text-white');
+        toggleMonthly.classList.remove('text-on-surface-variant');
+        toggleAnnual.classList.remove('bg-primary-container', 'text-white');
+        toggleAnnual.classList.add('text-on-surface-variant');
+
+        priceFounder.textContent = '$19';
+        priceStudio.textContent = '$49';
+      });
+    }
+  </script>
+</div></main><footer class="relative z-10 w-full bg-surface-container-lowest/80 backdrop-blur-xl border-t border-white/[0.08] mt-space-xl"><div class="max-w-7xl mx-auto px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-gutter mb-space-xl"><div class="lg:col-span-2 flex flex-col gap-space-md"><div class="flex items-center gap-space-sm"><img alt="Stratum AI Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UE65ie3_tp-_AfJ-XKqDg1cdmkBtvkiPRdNtugX6lu9ppPret-WjBccG3yKQzl8zA76mIAQm3BXk4g8sD_woWfcfVKtqFyOsots2honNxyiZfLOXM-XulQvQFpj66EOXstbFs4DnIdDL-nNhlyA6w1HUQ4HMS4GRkv0CRlHXVc7dCz_KIHXdGV0uouZtNZoLp1WIrkeukm6CufF3J_GcV1jFFI1kQZ4mZuWYdz04MlTXbRApwBy8xDhRY"/><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Stratum AI</span></div><p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm">Find your next SaaS idea. Validate it before you build.</p><div class="flex flex-col gap-space-xs mt-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Stay ahead of shifts</span><div class="flex items-center gap-space-xs max-w-sm rounded-full bg-surface-container-low border border-white/10 p-1 focus-within:border-primary transition-colors"><input class="w-full bg-transparent px-space-md font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Enter your work email" type="email"/><button class="rounded-full bg-primary-container px-space-md py-1.5 font-label-sm text-label-sm text-on-primary-container hover:bg-primary transition-colors duration-200 shrink-0" type="button">Subscribe</button></div></div></div><div class="flex flex-col gap-space-sm"><h4 class="font-label-md text-label-md text-on-surface font-semibold">Product</h4><ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-on-surface transition-colors"><a data-path="opportunity-scanner" href="#">Opportunity Scanner</a></li><li class="hover:text-on-surface transition-colors"><a data-path="demand-signals" href="#">Demand Signals</a></li><li class="hover:text-on-surface transition-colors"><a data-path="market-matrix" href="#">Market Matrix</a></li><li class="hover:text-on-surface transition-colors"><a data-path="ai-synthesis" href="#">AI Synthesis</a></li></ul></div><div class="flex flex-col gap-space-sm"><h4 class="font-label-md text-label-md text-on-surface font-semibold">Resources</h4><ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-on-surface transition-colors"><a data-path="documentation" href="#">Documentation</a></li><li class="hover:text-on-surface transition-colors"><a data-path="market-reports" href="#">Market Reports</a></li><li class="hover:text-on-surface transition-colors"><a data-path="validation-playbook" href="#">Validation Playbook</a></li><li class="hover:text-on-surface transition-colors"><a data-path="api-reference" href="#">API Reference</a></li></ul></div><div class="flex flex-col gap-space-sm"><h4 class="font-label-md text-label-md text-on-surface font-semibold">Company</h4><ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-on-surface transition-colors"><a data-path="about" href="#">About Us</a></li><li class="hover:text-on-surface transition-colors"><a data-path="careers" href="#">Careers</a></li><li class="hover:text-on-surface transition-colors"><a data-path="press" href="#">Press Kit</a></li><li class="hover:text-on-surface transition-colors"><a data-path="contact" href="#">Contact</a></li></ul></div><div class="flex flex-col gap-space-sm"><h4 class="font-label-md text-label-md text-on-surface font-semibold">Legal</h4><ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-on-surface transition-colors"><a data-path="privacy-policy" href="#">Privacy Policy</a></li><li class="hover:text-on-surface transition-colors"><a data-path="terms-of-service" href="#">Terms of Service</a></li><li class="hover:text-on-surface transition-colors"><a data-path="security" href="#">Security</a></li><li class="hover:text-on-surface transition-colors"><a data-path="gdpr" href="#">GDPR Compliance</a></li></ul></div></div><div class="pt-space-md border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between gap-space-sm text-center sm:text-left"><p class="font-caption text-caption text-outline">© 2025 Stratum AI Inc. All telemetry and market vectors reserved.</p><div class="flex items-center gap-space-md font-caption text-caption text-outline"><a class="hover:text-on-surface transition-colors" href="#">Status</a><a class="hover:text-on-surface transition-colors" href="#">Security Operations</a><a class="hover:text-on-surface transition-colors" href="#">Cookie Preferences</a></div></div></div></footer></body></html>

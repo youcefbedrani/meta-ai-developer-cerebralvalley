@@ -1,0 +1,206 @@
+PROMPT 2: Reel 2, "Stop watching, start building"
+Make Reel 2 in src/reels/Reel2.tsx, id "reel2-stop-watching", using the scene library and style
+from the project setup. Anchor every scene to the voiceover words.
+
+VOICEOVER TEXT:
+"Another YouTube video. Another course. Another mentor saying the opposite of the last one.
+And you still haven't started.
+You don't need more advice. You need one clear path and someone to walk it with you.
+From your first idea to your first customer, step by step, with AI by your side.
+Stop watching. Start building."
+
+HOOK TEXT ON SCREEN (first 2.5 seconds):
+"You've watched [200 hours] of 'how to build a SaaS'…" with "200 hours" in red.
+Under it, a fake video player progress bar fills in fast and a counter rolls 0 -> 200h.
+
+SCENES (light world until "You need one clear path"):
+1. "Another YouTube video." -> a generic video player card (no YouTube logo, just a red play
+   button style shape and a neutral thumbnail "How I made $10k MRR") slides in.
+2. "Another course." -> a course card "SaaS Masterclass – Module 1/48" stacks on top.
+3. "Another mentor saying the opposite of the last one." -> two speech bubbles from two
+   avatars appear face to face: "Build fast!" vs "Don't build yet!", then "Raise money!" vs
+   "Never raise!", contradicting arrows clash in the middle.
+4. Build-up: from scenes 1 to 3, cards keep piling up into a messy tower of thumbnails,
+   tabs and notes (use NotificationChaos with video/course cards instead of chat cards).
+5. "And you still haven't started." -> everything freezes, the pile blurs, one small card in
+   the middle: "Project: My SaaS – 0% complete", progress bar empty, red.
+6. "You don't need more advice." -> the whole pile gets swiped away with a big whoosh,
+   clean light screen, KineticTitle "No more [advice]."
+7. "You need one clear path and someone to walk it with you." -> switch to DARK world.
+   A glowing blue path line draws itself from bottom to top, with a small glowing orb
+   (the AI, GlowOrb mini) traveling along it like a guide.
+8. "From your first idea to your first customer, step by step," -> on that path, step
+   nodes light up one by one with icons and labels:
+   "Idea" (lightbulb) -> "Validate" (check) -> "Research" (search) -> "Build" (hammer)
+   -> "Launch" (rocket) -> "First customer" (user-check), pop sfx on each.
+9. "with AI by your side." -> AppDemo showing the guided roadmap screenshot (or a fake
+   roadmap UI) with the AI chat bubble saying "Next step: talk to 5 potential users. Here's
+   who to contact."
+10. "Stop watching." -> hard cut, black, white text "Stop [watching]." with the video player
+    icon cracking/collapsing.
+11. "Start building." -> hard cut, "Start [building]." in blue with a big glow and a rocket icon
+    launching upward.
+
+END CARD (2.5s): LogoCTA with tagline "Your SaaS starts here" and pill "startum.ai".
+
+Render to /out/reel2-stop-watching.mp4. Same checks as before.
+PROMPT 3: Reel 3, "POV: You have an idea at 2 a.m."
+Make Reel 3 in src/reels/Reel3.tsx, id "reel3-2am-idea", using the scene library and style
+from the project setup. Anchor every scene to the voiceover words.
+
+SPECIAL MOOD FOR THIS REEL: night time. The "light world" is replaced by a dark bedroom mood
+(deep blue-black #070914, a faint phone-screen glow lighting the scene). The solution part then
+becomes the brighter, cleaner Startum dark world with strong blue glow.
+
+VOICEOVER TEXT:
+"You can't sleep. This could be the one.
+But is it? Does anyone actually have this problem? Who are your competitors? What should you charge?
+Most people never find out. The idea just… dies in their notes app.
+Not this time.
+Type it in, and see what real people say, who you're up against, and whether it's worth building."
+
+HOOK TEXT ON SCREEN (first 2.5 seconds):
+"POV: it's [2 a.m.] and you just had 'the' SaaS idea" with "2 a.m." in blue.
+A digital clock "01:59" flips to "02:00" with a tiny click, and a lightbulb icon switches on
+with a glow burst.
+
+SCENES:
+1. "You can't sleep." -> PhoneMockup3D lying in the dark, screen lights up the area, clock "02:00".
+2. "This could be the one." -> the lightbulb grows, glowing, text "This could be [the one]."
+   with sparkle particles.
+3. "But is it?" -> the glow flickers, text "But is it?" in white, slight camera shake.
+4. "Does anyone actually have this problem?" -> question card 1 pops in (icon: users, "Real
+   problem?") with a red "?" badge.
+5. "Who are your competitors?" -> question card 2 ("Competitors?", icon: swords/target).
+6. "What should you charge?" -> question card 3 ("Price?", icon: dollar). The three
+   question cards orbit around the lightbulb, more "?" multiplying around, pressure building.
+7. "Most people never find out." -> all question marks fade, lightbulb dims.
+8. "The idea just… dies in their notes app." -> phone screen shows a notes-app style list
+   (generic, no Apple branding): "grocery list", "gym plan", "SaaS idea!!! 02:00" ... the note
+   scrolls down and disappears under newer notes, timestamps aging "2 weeks ago", "3 months
+   ago", "1 year ago". The lightbulb turns grey and goes out (soft error sfx).
+9. "Not this time." -> TurnMoment: hard black cut, then "Not [this time]." punches in blue with
+   a big glow, whoosh. Switch to Startum dark world.
+10. "Type it in," -> PromptBox: "AI meal planner for busy parents" typed letter by letter,
+    send button pulses (typing + click sfx).
+11. "and see what real people say," -> AppDemo / fake UI: quote cards from forums slide in
+    ("I waste 2 hours a week planning meals" – Reddit-style card with no real logo,
+    "Would pay for this!" ...), each with an upvote count counting up.
+12. "who you're up against," -> competitor cards row: 3 competitor cards with name, price,
+    rating and a "weak spot" tag in red ("No family plans").
+13. "and whether it's worth building." -> big validation score ring filling to "87/100"
+    in green with the label "Worth building ✓" (success sfx).
+
+END CARD (2.5s): LogoCTA with tagline "Don't let your idea die in your notes" and pill
+"startum.ai".
+
+Render to /out/reel3-2am-idea.mp4. Same checks as before.
+PROMPT 4: Reel 4, "Solo founder, full team"
+Make Reel 4 in src/reels/Reel4.tsx, id "reel4-full-team", using the scene library and style
+from the project setup. Anchor every scene to the voiceover words.
+
+VOICEOVER TEXT:
+"Researcher. Marketer. Copywriter. Designer. Strategist.
+Big startups hire all of them.
+You? You're one person with a laptop and a dream.
+Startum gives you the whole team: it researches your market, writes your copy, designs your
+first screens and plans your launch.
+You bring the idea. We'll help with everything else."
+
+HOOK TEXT ON SCREEN (first 2.5 seconds):
+"Building alone? You're [not anymore]." with "not anymore" in blue.
+A single avatar circle in the center, then 5 faint empty avatar slots appear around it.
+
+SCENES (light world until "Startum gives you"):
+1. "Researcher." "Marketer." "Copywriter." "Designer." "Strategist." -> very fast rhythm: on
+   each word a role card snaps in (avatar + role title + icon: search, megaphone, pen,
+   palette, chess/target), forming a grid of 5 "team member" cards. Pop sfx on each,
+   perfectly on the word.
+2. "Big startups hire all of them." -> the cards align into an org chart under a big
+   building/office icon, a salary counter runs up "$600,000 / year" in red.
+3. "You?" -> hard cut, the org chart blurs away, a single small avatar alone in the center
+   of an empty light screen. Text "You?".
+4. "You're one person with a laptop and a dream." -> a laptop icon appears in front of the
+   avatar, with a tiny thought bubble containing a lightbulb. Quiet moment, slow push in.
+5. "Startum gives you the whole team:" -> switch to DARK world with whoosh. The Startum logo
+   appears in the center, and the 5 role cards come back as glowing AI agent cards
+   (blue outline, small orb avatar) orbiting the logo.
+6. "it researches your market," -> the Researcher card zooms to full screen showing a market
+   research UI: market size chart growing, trend line going up, "Market: $2.4B" counter.
+7. "writes your copy," -> the Copywriter card zooms: a landing page headline being typed
+   automatically "Get 5-star reviews on autopilot", with a subheadline and CTA button
+   appearing.
+8. "designs your first screens" -> the Designer card zooms: 3 app screen wireframes assemble
+   piece by piece (blocks snapping in), then fill with color.
+9. "and plans your launch." -> the Strategist card zooms: a launch timeline with checkpoints
+   "Waitlist", "Beta", "Product Hunt", "First 100 users" lighting up one by one.
+10. "You bring the idea." -> the solo avatar comes back holding a glowing lightbulb, in the
+    center, the 5 AI agents line up behind it like a team photo.
+11. "We'll help with everything else." -> all cards light up together in blue with a
+    success sfx, text "We'll help with [everything else]."
+
+END CARD (2.5s): LogoCTA with tagline "Your startup team in one place" and pill "startum.ai".
+
+Render to /out/reel4-full-team.mp4. Same checks as before.
+PROMPT 5: Reel 5, "Two founders, one idea" (story)
+Make Reel 5 in src/reels/Reel5.tsx, id "reel5-two-founders", using the scene library and style
+from the project setup. Anchor every scene to the voiceover words.
+
+SPECIAL STRUCTURE: this is a story with two characters, told with the SplitScreen scene.
+- Founder A = top half, colored with a cold/grey tone, label chip "Founder A".
+- Founder B = bottom half, colored with the blue brand tone, label chip "Founder B".
+Characters are simple flat avatar illustrations (circle head + shoulders, no real people),
+A in grey, B in blue. Keep it clean and readable.
+
+VOICEOVER TEXT:
+"Founder A starts coding on day one. Six months later: a finished product… and silence.
+Founder B spends the first week checking: what people complain about, who's already out there,
+what they'd pay.
+She builds only what matters, gets a waitlist before launch…
+and opens on day one with people already waiting.
+Same idea. The difference? Founder B checked first.
+Be Founder B."
+
+HOOK TEXT ON SCREEN (first 2.5 seconds):
+"Same idea. Two founders. Two very [different endings]." Two avatars appear side by side,
+both with the same lightbulb above their heads, then a vertical/horizontal split line draws
+between them.
+
+SCENES:
+1. "Founder A starts coding on day one." -> top half grows to full screen: Founder A at a
+   laptop, code editor typing fast, a "Day 1" chip.
+2. "Six months later: a finished product…" -> calendar pages fly off "Day 1 -> Day 180", the
+   app UI assembles fully and looks polished, "Launch" button clicked.
+3. "…and silence." -> dashboard "Users: 0", a tumbleweed-like flat line, all sound drops
+   except a single soft tone, colors desaturate, slow zoom out. Founder A's lightbulb dims.
+4. "Founder B spends the first week checking:" -> cut to Founder B's half growing to full
+   screen, "Week 1" chip, Founder B with the Startum app on her laptop (blue glow).
+5. "what people complain about," -> complaint quote cards fly in ("I hate doing this
+   manually", "Why is there no tool for this?") with red highlights on the pain words.
+6. "who's already out there," -> 3 competitor cards with weak spots tagged.
+7. "what they'd pay." -> a price slider sliding to "$29/mo" and a "73% would pay" stat counter.
+8. "She builds only what matters," -> a feature list where most items get crossed out and
+   only 3 key features stay highlighted in blue with checkmarks.
+9. "gets a waitlist before launch…" -> a waitlist counter climbing fast "0 -> 1,248" with
+   small avatar bubbles stacking up (notification sfx ticking).
+10. "and opens on day one with people already waiting." -> launch moment: "Launch" button
+    clicked, notifications explode "New signup", "New customer $29", "New signup"...
+    revenue counter jumps, success sfx, confetti in brand colors.
+11. "Same idea." -> SplitScreen again: A top (grey, "0 users"), B bottom (blue, "1,248
+    waitlist"), both with the same lightbulb icon.
+12. "The difference? Founder B checked first." -> A's half fades/darkens, B's half expands and
+    glows, text "Founder B checked [first]." with the check icon drawing itself.
+13. "Be Founder B." -> DARK world, big centered "Be [Founder B]." with strong blue glow and
+    a punchy whoosh-hit.
+
+END CARD (2.5s): LogoCTA with tagline "Check first. Build smart." and pill "startum.ai".
+
+Render to /out/reel5-two-founders.mp4. Same checks as before.
+PROMPT 6: Render all and final check
+Render all 5 reels with scripts/render-all.ts to /out. Then for each reel:
+1. Extract one frame every second with ffmpeg and look at them: check no text overflow, no
+   empty frames, safe zone respected, captions readable.
+2. Check the audio: voice clear, music under it, SFX on the right moments.
+3. Give me a list of the 5 files with their exact durations.
+Also export one cover image per reel (the most striking frame of the hook) to /out/covers/
+as 1080x1920 PNG.

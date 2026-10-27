@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-fixed":"#dce1ff","surface":"#131317","error-container":"#93000a","tertiary-fixed-dim":"#23e373","inverse-on-surface":"#303035","on-primary-fixed":"#00164d","surface-variant":"#353439","outline-variant":"#434654","primary-fixed-dim":"#b5c4ff","tertiary-fixed":"#64ff92","surface-dim":"#131317","on-secondary-container":"#b9aaff","on-secondary-fixed":"#1c0062","on-tertiary-container":"#003113","on-primary":"#00297b","outline":"#8d90a0","secondary-fixed-dim":"#cabeff","on-tertiary":"#003917","secondary":"#cabeff","background":"#131317","surface-container":"#1f1f24","on-error-container":"#ffdad6","tertiary":"#23e373","on-surface-variant":"#c3c5d7","surface-tint":"#b5c4ff","on-error":"#690005","on-secondary":"#31009a","inverse-surface":"#e4e1e8","secondary-fixed":"#e6deff","tertiary-container":"#00a750","error":"#ffb4ab","on-secondary-fixed-variant":"#4816cb","secondary-container":"#4816cb","primary":"#b5c4ff","primary-container":"#648aff","on-surface":"#e4e1e8","surface-container-high":"#2a292e","on-tertiary-fixed-variant":"#005224","inverse-primary":"#1a53d6","on-background":"#e4e1e8","on-primary-container":"#00236d","surface-bright":"#39393e","surface-container-highest":"#353439","on-tertiary-fixed":"#00210b","surface-container-lowest":"#0e0e12","on-primary-fixed-variant":"#003cad","surface-container-low":"#1b1b20"},borderRadius:{DEFAULT:"1rem",lg:"2rem",xl:"3rem",full:"9999px"},spacing:{gutter:"1.5rem","space-lg":"1.5rem","gutter-sm":"1rem","space-xl":"2.5rem","space-md":"1rem","space-xs":"0.25rem","margin-sm":"1rem",margin:"2rem","space-sm":"0.5rem"},fontFamily:{"headline-sm":["Inter"],"headline-lg":["Inter"],caption:["Inter"],"label-sm":["Inter"],"display-xl":["Inter"],"body-lg":["Inter"],"body-md":["Inter"],"headline-lg-mobile":["Inter"],"label-md":["Inter"],"display-xl-mobile":["Inter"],"body-sm":["Inter"],"headline-md":["Inter"]},fontSize:{"headline-sm":["18px",{lineHeight:"26px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.02em",fontWeight:"600"}],caption:["10px",{lineHeight:"12px",letterSpacing:"0.05em",fontWeight:"500"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.04em",fontWeight:"600"}],"display-xl":["56px",{lineHeight:"64px",letterSpacing:"-0.03em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"400"}],"body-md":["14px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"400"}],"headline-lg-mobile":["26px",{lineHeight:"34px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["13px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"500"}],"display-xl-mobile":["38px",{lineHeight:"46px",letterSpacing:"-0.025em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"18px",letterSpacing:"0.01em",fontWeight:"400"}],"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"600"}]}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-background font-body-md text-on-surface min-h-screen relative flex items-center justify-center p-space-md"><div class="pointer-events-none fixed inset-0 z-0 overflow-hidden"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-secondary-container/15 blur-[140px]"></div></div><main class="relative z-10 w-full max-w-md bg-transparent"><div class="flex flex-col w-full items-center justify-center py-space-sm relative">
+<!-- Subtle Matrix Accent Grids behind the card -->
+<div class="absolute -top-16 left-1/2 -translate-x-1/2 w-[340px] h-[340px] rounded-full bg-secondary-container/20 blur-[100px] pointer-events-none -z-10"></div>
+<div class="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[280px] h-[280px] rounded-full bg-primary-container/15 blur-[90px] pointer-events-none -z-10"></div>
+<!-- Main Glassmorphic Auth Modal -->
+<div class="w-full bg-surface-container-low/90 backdrop-blur-2xl rounded-[24px] p-space-lg sm:p-margin shadow-2xl relative overflow-hidden transition-all duration-300">
+<!-- Top Subtle Linear Sheen -->
+<div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-outline-variant/40 to-transparent"></div>
+<!-- Header & Brand Logo -->
+<div class="flex flex-col items-center text-center">
+<div class="relative group mb-space-sm">
+<div class="absolute inset-0 rounded-full bg-primary-container/20 blur-md transition-all group-hover:blur-lg"></div>
+<img alt="Stratum AI Logo" class="w-14 h-14 rounded-full relative z-10 object-cover shadow-md" src="https://lh3.googleusercontent.com/aida/AEtjO1UE65ie3_tp-_AfJ-XKqDg1cdmkBtvkiPRdNtugX6lu9ppPret-WjBccG3yKQzl8zA76mIAQm3BXk4g8sD_woWfcfVKtqFyOsots2honNxyiZfLOXM-XulQvQFpj66EOXstbFs4DnIdDL-nNhlyA6w1HUQ4HMS4GRkv0CRlHXVc7dCz_KIHXdGV0uouZtNZoLp1WIrkeukm6CufF3J_GcV1jFFI1kQZ4mZuWYdz04MlTXbRApwBy8xDhRY"/>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-high/80 mb-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-tertiary uppercase tracking-wider">Telemetry Live</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight mt-1">
+        Welcome to Stratum
+      </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+        Access your market validation workspace
+      </p>
+</div>
+<!-- Mode Selector Segmented Control -->
+<div class="mt-space-lg p-1 bg-surface-container-lowest/80 rounded-full flex relative select-none">
+<button class="flex-1 py-1.5 rounded-full font-label-md text-label-md text-on-surface font-semibold bg-surface-container-high shadow-sm transition-all duration-200 text-center" id="tab-signin" onclick="setAuthMode('signin')" type="button">
+        Sign In
+      </button>
+<button class="flex-1 py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all duration-200 text-center" id="tab-signup" onclick="setAuthMode('signup')" type="button">
+        Create Account
+      </button>
+</div>
+<!-- Social Authentication Single-Click Row -->
+<div class="grid grid-cols-2 gap-space-sm mt-space-md">
+<!-- GitHub Button -->
+<button class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors duration-150 group" type="button">
+<svg class="w-4 h-4 fill-current text-on-surface-variant group-hover:text-on-surface transition-colors" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill-rule="evenodd"></path>
+</svg>
+<span class="font-label-md text-label-md">GitHub</span>
+</button>
+<!-- Google Button -->
+<button class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors duration-150 group" type="button">
+<svg class="w-4 h-4 fill-current text-on-surface-variant group-hover:text-on-surface transition-colors" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"></path>
+</svg>
+<span class="font-label-md text-label-md">Google</span>
+</button>
+</div>
+<!-- Divider -->
+<div class="relative my-space-lg flex items-center justify-center">
+<div class="w-full h-px bg-outline-variant/30"></div>
+<span class="absolute px-3 bg-surface-container-low font-caption text-caption text-outline tracking-wider uppercase">
+        or continue with email
+      </span>
+</div>
+<!-- Credentials Form -->
+<form class="space-y-space-md" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<div class="space-y-1">
+<label class="block font-label-sm text-label-sm text-on-surface-variant font-medium" for="work-email">
+          Work Email
+        </label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-outline text-[18px] pointer-events-none">
+            mail
+          </span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-sm text-body-sm rounded-full outline-none transition-all duration-200 focus:bg-surface-container" id="work-email" name="email" placeholder="founder@venture.io" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<label class="block font-label-sm text-label-sm text-on-surface-variant font-medium" for="password">
+            Password
+          </label>
+<button class="font-label-sm text-label-sm text-primary hover:text-primary-fixed transition-colors" id="forgot-link" type="button">
+            Forgot password?
+          </button>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-outline text-[18px] pointer-events-none">
+            lock
+          </span>
+<input class="w-full pl-10 pr-10 py-2.5 bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-sm text-body-sm rounded-full outline-none transition-all duration-200 focus:bg-surface-container" id="password" name="password" placeholder="••••••••••••" required="" type="password"/>
+<button class="absolute right-3.5 text-outline hover:text-on-surface-variant transition-colors flex items-center" onclick="togglePasswordVisibility()" type="button">
+<span class="material-symbols-outlined text-[18px]" id="eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Persistent Session & Dynamic Role Info -->
+<div class="flex items-center justify-between pt-1">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input checked="" class="rounded bg-surface-container-lowest text-primary focus:ring-0 focus:outline-none w-4 h-4 cursor-pointer accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+            Remember this device for 30 days
+          </span>
+</label>
+</div>
+<!-- CTA Primary Submit Button -->
+<button class="w-full mt-space-sm py-3 px-6 rounded-full bg-gradient-to-r from-secondary-container via-primary-container to-inverse-primary text-on-primary font-headline-sm text-label-md font-semibold tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-primary-container/25 hover:shadow-primary-container/40 hover:opacity-95 active:scale-[0.99] transition-all duration-200" id="submit-cta" type="submit">
+<span>Sign in to workspace</span>
+<span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+</form>
+<!-- Bottom Privacy Assurance & Compliance Badge -->
+<div class="mt-space-lg pt-space-md border-t border-outline-variant/20 flex flex-col items-center gap-2 text-center">
+<div class="inline-flex items-center gap-1.5 text-outline">
+<span class="material-symbols-outlined text-[15px] text-tertiary">lock_reset</span>
+<span class="font-caption text-caption text-on-surface-variant font-medium">
+          Encrypted & Private · Your ideas never train shared models
+        </span>
+</div>
+<div class="flex items-center gap-4 text-outline font-caption text-caption">
+<a class="hover:text-on-surface transition-colors" href="#compliance">SOC2 Type II</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-on-surface transition-colors" href="#sla">99.99% Enterprise Uptime</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-on-surface transition-colors" href="#terms">Privacy Terms</a>
+</div>
+</div>
+</div>
+<!-- Dynamic Logic Script -->
+<script>
+    function setAuthMode(mode) {
+      const tabSignIn = document.getElementById('tab-signin');
+      const tabSignUp = document.getElementById('tab-signup');
+      const submitCta = document.getElementById('submit-cta');
+      const forgotLink = document.getElementById('forgot-link');
+
+      if (mode === 'signup') {
+        tabSignUp.className = 'flex-1 py-1.5 rounded-full font-label-md text-label-md text-on-surface font-semibold bg-surface-container-high shadow-sm transition-all duration-200 text-center';
+        tabSignIn.className = 'flex-1 py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all duration-200 text-center';
+        submitCta.innerHTML = '<span>Create founder account</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span>';
+        if (forgotLink) forgotLink.classList.add('hidden');
+      } else {
+        tabSignIn.className = 'flex-1 py-1.5 rounded-full font-label-md text-label-md text-on-surface font-semibold bg-surface-container-high shadow-sm transition-all duration-200 text-center';
+        tabSignUp.className = 'flex-1 py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all duration-200 text-center';
+        submitCta.innerHTML = '<span>Sign in to workspace</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span>';
+        if (forgotLink) forgotLink.classList.remove('hidden');
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const pwd = document.getElementById('password');
+      const icon = document.getElementById('eye-icon');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        pwd.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    }
+  </script>
+</div></main></body></html>
