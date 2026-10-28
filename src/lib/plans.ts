@@ -80,6 +80,8 @@ export const CREDIT_COSTS = {
   /** A spoken idea pitch turned into a project. */
   voice_pitch: 2,
   landing_copy: 3,
+  /** Screenshot review of a landing page or a competitor's page (Muse Spark vision). */
+  page_review: 3,
   business_model: 5,
   mvp_plan: 8,
   /** Validation Autopilot: the agent's own reasoning. The tools it runs (research, plans…) charge their own price. */

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { VOICE_UPLOAD_MAX_MB } from "@/lib/voice";
 import { getCurrentUser } from "@/server/auth/current-user";
 import { transcribeInterview } from "@/server/services/voice";
-import { errorResponse, readAudioFile, sameOrigin } from "../shared";
+import { errorResponse, readAudioFile, sameOrigin } from "@/server/upload-routes";
 
 export const dynamic = "force-dynamic";
 // Long interviews: several 9-minute segments transcribed in turn, then the analysis.

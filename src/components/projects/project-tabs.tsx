@@ -11,6 +11,7 @@ const TABS = [
   { slug: "competitors", label: "Competitors" },
   { slug: "language", label: "Market voices" },
   { slug: "validation", label: "Validation" },
+  { slug: "review", label: "Page review" },
   { slug: "plan", label: "Plan" },
   { slug: "brand", label: "Brand" },
   { slug: "design", label: "Design" },

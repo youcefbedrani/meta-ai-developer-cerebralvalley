@@ -44,7 +44,17 @@ type CallOptions<S extends z.ZodType> = {
   /** Used only when AI_PROVIDER=mock (development/tests): returns canned, clearly-labelled output. */
   mock: () => z.input<S>;
   maxOutputTokens?: number;
+  /** Images sent with the prompt (vision), e.g. a page screenshot. */
+  images?: { data: Buffer; mediaType: string }[];
 };
+
+/** The prompt as the SDK takes it: a plain string, or one user message with the images attached. */
+function promptInput(prompt: string, images?: { data: Buffer; mediaType: string }[]) {
+  if (!images?.length) return { prompt };
+  return {
+    messages: [{ role: "user" as const, content: [{ type: "text" as const, text: prompt }, ...images.map((i) => ({ type: "image" as const, image: i.data, mediaType: i.mediaType }))] }],
+  };
+}
 
 /** Writes one usage row and counts its cost against the platform's daily spend cap. */
 export async function logUsage(entry: {
@@ -134,7 +144,7 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
         generateText({
           model: resolved.model,
           system,
-          prompt,
+          ...promptInput(prompt, opts.images),
           maxOutputTokens: outputCap(resolved.provider, maxOutputTokens),
           maxRetries: retriesFor(resolved.provider),
           abortSignal: AbortSignal.timeout(TIMEOUT_MS),
@@ -145,7 +155,7 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
       const result = await generateText({
         model: resolved.model,
         system,
-        prompt: opts.prompt,
+        ...promptInput(opts.prompt, opts.images),
         output: Output.object({ schema: opts.schema }),
         maxOutputTokens: outputCap(resolved.provider, maxOutputTokens),
         maxRetries: retriesFor(resolved.provider),

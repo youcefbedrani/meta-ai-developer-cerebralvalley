@@ -1561,3 +1561,30 @@ export const brandAssets = pgTable(
   },
   (t) => [index("brand_assets_project_idx").on(t.projectId, t.createdAt)],
 );
+
+/* -------------------------------------------------------------------------- */
+/* Page review (Muse Spark vision)                                            */
+/* -------------------------------------------------------------------------- */
+
+export const pageReviewModeEnum = pgEnum("page_review_mode", ["own", "competitor"]);
+
+/** A screenshot reviewed by Muse Spark: the founder's landing page (conversion critique) or a competitor's page (teardown). */
+export const pageReviews = pgTable(
+  "page_reviews",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    mode: pageReviewModeEnum("mode").notNull(),
+    imageKey: text("image_key").notNull(),
+    width: integer("width").notNull(),
+    height: integer("height").notNull(),
+    result: jsonb("result").$type<Record<string, unknown>>().notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index("page_reviews_project_idx").on(t.projectId, t.createdAt)],
+);
