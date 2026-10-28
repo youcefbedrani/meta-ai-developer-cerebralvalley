@@ -7,8 +7,10 @@ export const RESEARCH_QUEUE = "research";
 export type ResearchJobData = { jobId: string };
 export const PAIN_MINING_QUEUE = "pain-mining";
 export type PainMiningJobData = { sessionId: string; attempt: number };
+export const AUTOPILOT_QUEUE = "autopilot";
+export type AutopilotJobData = { runId: string };
 
-const g = globalThis as unknown as { __researchQueue?: Queue<ResearchJobData>; __miningQueue?: Queue<PainMiningJobData> };
+const g = globalThis as unknown as { __researchQueue?: Queue<ResearchJobData>; __miningQueue?: Queue<PainMiningJobData>; __autopilotQueue?: Queue<AutopilotJobData> };
 
 /** BullMQ needs connections with maxRetriesPerRequest: null. */
 export function createQueueConnection(): Redis {
@@ -39,4 +41,16 @@ export async function enqueuePainMining(data: PainMiningJobData): Promise<void> 
   if (miningOverride) return miningOverride(data);
   g.__miningQueue ??= new Queue<PainMiningJobData>(PAIN_MINING_QUEUE, { connection: createQueueConnection() });
   await g.__miningQueue.add("run", data, { jobId: `${data.sessionId}-${data.attempt}`, attempts: 1, removeOnComplete: 200, removeOnFail: 500 });
+}
+
+let autopilotOverride: ((data: AutopilotJobData) => Promise<void>) | null = null;
+/** Tests only. */
+export function __setAutopilotEnqueueOverride(fn: typeof autopilotOverride) {
+  autopilotOverride = fn;
+}
+
+export async function enqueueAutopilot(data: AutopilotJobData): Promise<void> {
+  if (autopilotOverride) return autopilotOverride(data);
+  g.__autopilotQueue ??= new Queue<AutopilotJobData>(AUTOPILOT_QUEUE, { connection: createQueueConnection() });
+  await g.__autopilotQueue.add("run", data, { jobId: data.runId, attempts: 1, removeOnComplete: 200, removeOnFail: 500 });
 }

@@ -14,6 +14,7 @@ import {
   uuid,
   vector,
 } from "drizzle-orm/pg-core";
+import type { AutopilotEvent, AutopilotVerdict } from "@/lib/validation/autopilot";
 
 /* -------------------------------------------------------------------------- */
 /* Helpers                                                                    */
@@ -1465,4 +1466,36 @@ export const copilotMessages = pgTable(
     createdAt: createdAt(),
   },
   (t) => [index("copilot_messages_thread_idx").on(t.threadId, t.createdAt)],
+);
+
+/* -------------------------------------------------------------------------- */
+/* Validation Autopilot                                                       */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One autonomous validation run: a Muse Spark agent picks Startum tools (research, web search, plans…),
+ * records every step in `trace` for the live view, and ends with a cited Build / Pivot / Drop verdict.
+ */
+export const autopilotRuns = pgTable(
+  "autopilot_runs",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    status: jobStatusEnum("status").notNull().default("queued"),
+    goal: text("goal"),
+    trace: jsonb("trace").$type<AutopilotEvent[]>().notNull().default([]),
+    verdict: jsonb("verdict").$type<AutopilotVerdict>(),
+    error: text("error"),
+    creditsReserved: integer("credits_reserved").notNull().default(0),
+    startedAt: timestamp("started_at", { withTimezone: true }),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index("autopilot_runs_project_idx").on(t.projectId, t.createdAt)],
 );

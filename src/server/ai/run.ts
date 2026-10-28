@@ -1,5 +1,5 @@
 import "server-only";
-import { generateText, NoObjectGeneratedError, Output } from "ai";
+import { generateText, NoObjectGeneratedError, Output, stepCountIs, type StepResult, type StopCondition, type ToolSet } from "ai";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { getDb, schema } from "@/server/db/client";
@@ -286,6 +286,80 @@ export async function callText(opts: {
     if (err instanceof AIInvalidOutputError) throw err;
     if (budget) await settleTokens(budget, 0);
     await logUsage({ ...opts, provider: resolved.provider, model: resolved.modelId, tokensIn: 0, tokensOut: 0, durationMs: Date.now() - started, status: "error", errorCode: err instanceof Error ? err.name : "unknown" });
+    console.error(`[ai] ${opts.operation} failed:`, err instanceof Error ? `${err.name}: ${err.message}` : err);
+    throw new AIProviderError();
+  }
+}
+
+/** A whole agent run, tools included (research tools wait on the worker for minutes). */
+const AGENT_TIMEOUT_MS = 25 * 60_000;
+
+/**
+ * A tool-calling agent loop: the model calls `tools` until `stopWhen` (or `maxSteps`) ends it. One budget
+ * reservation for the run; every model step is logged as its own usage row so the cost stays visible.
+ * `onStep` runs after each step (the caller records the live trace there).
+ */
+export async function callAgent<TOOLS extends ToolSet>(opts: {
+  userId: UserId | null;
+  projectId?: string | null;
+  operation: string;
+  tier: ModelTier;
+  system: string;
+  prompt: string;
+  tools: TOOLS;
+  maxSteps: number;
+  stopWhen?: StopCondition<TOOLS>;
+  maxOutputTokens: number;
+  onStep: (step: StepResult<TOOLS>) => Promise<void>;
+  /** Used only when AI_PROVIDER=mock: plays a scripted run instead of calling a model. */
+  mock: () => Promise<void>;
+}): Promise<{ text: string; steps: number; tokensIn: number; tokensOut: number }> {
+  const resolved = resolveModel(opts.tier);
+  const budget = await reserveBudget(opts.userId, opts.system, opts.prompt, opts.maxOutputTokens * opts.maxSteps);
+
+  if ("mock" in resolved) {
+    if (budget) await settleTokens(budget, 0);
+    await opts.mock();
+    return { text: "", steps: 0, tokensIn: 0, tokensOut: 0 };
+  }
+
+  let stepStarted = Date.now();
+  const used = { in: 0, out: 0 };
+  try {
+    const result = await generateText({
+      model: resolved.model,
+      system: opts.system,
+      prompt: opts.prompt,
+      tools: opts.tools,
+      stopWhen: opts.stopWhen ? [stepCountIs(opts.maxSteps), opts.stopWhen] : stepCountIs(opts.maxSteps),
+      maxOutputTokens: outputCap(resolved.provider, opts.maxOutputTokens),
+      maxRetries: retriesFor(resolved.provider),
+      abortSignal: AbortSignal.timeout(AGENT_TIMEOUT_MS),
+      providerOptions: providerOptionsFor(resolved, { tier: opts.tier, operation: opts.operation, userId: opts.userId }),
+      onStepFinish: async (step) => {
+        const tokensIn = step.usage.inputTokens ?? 0;
+        const tokensOut = step.usage.outputTokens ?? 0;
+        used.in += tokensIn;
+        used.out += tokensOut;
+        await logUsage({
+          ...opts,
+          provider: resolved.provider,
+          model: resolved.modelId,
+          tokensIn,
+          tokensOut,
+          cachedIn: step.usage.inputTokenDetails?.cacheReadTokens ?? 0,
+          durationMs: Date.now() - stepStarted,
+          status: "success",
+        });
+        await opts.onStep(step);
+        stepStarted = Date.now();
+      },
+    });
+    if (budget) await settleTokens(budget, used.in + used.out);
+    return { text: result.text, steps: result.steps.length, tokensIn: used.in, tokensOut: used.out };
+  } catch (err) {
+    if (budget) await settleTokens(budget, used.in + used.out);
+    await logUsage({ ...opts, provider: resolved.provider, model: resolved.modelId, tokensIn: 0, tokensOut: 0, durationMs: Date.now() - stepStarted, status: "error", errorCode: err instanceof Error ? err.name : "unknown" });
     console.error(`[ai] ${opts.operation} failed:`, err instanceof Error ? `${err.name}: ${err.message}` : err);
     throw new AIProviderError();
   }
