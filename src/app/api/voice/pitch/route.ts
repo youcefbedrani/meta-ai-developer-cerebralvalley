@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { VOICE_PITCH_MAX_MB } from "@/lib/voice";
 import { getCurrentUser } from "@/server/auth/current-user";
 import { pitchToProject } from "@/server/services/voice";
-import { errorResponse, readAudioFile, sameOrigin } from "../shared";
+import { errorResponse, readAudioFile, sameOrigin } from "@/server/upload-routes";
 
 export const dynamic = "force-dynamic";
 
