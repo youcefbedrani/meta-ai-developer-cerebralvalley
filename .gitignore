@@ -51,3 +51,4 @@ firebase-debug.log
 *.swp
 /.data/
 /.next-check/
+/.next-shots/

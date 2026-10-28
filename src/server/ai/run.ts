@@ -114,7 +114,7 @@ async function reserveBudget(userId: UserId | null, system: string, prompt: stri
  * Does not touch credits (callers that bill use `runWithCredits`).
  */
 export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>): Promise<z.output<S>> {
-  const resolved = resolveModel(opts.tier);
+  const resolved = resolveModel(opts.tier, opts.operation);
   const started = Date.now();
   const maxOutputTokens = opts.maxOutputTokens ?? 16_000;
   const budget = await reserveBudget(opts.userId, opts.system, opts.prompt, maxOutputTokens);
@@ -267,7 +267,7 @@ export async function callText(opts: {
   verbosity?: "low" | "medium" | "high";
   mock: () => string;
 }): Promise<TextResult> {
-  const resolved = resolveModel(opts.tier);
+  const resolved = resolveModel(opts.tier, opts.operation);
   const started = Date.now();
   const promptText = opts.messages.map((m) => m.content).join("\n");
   const budget = await reserveBudget(opts.userId, opts.system, promptText, opts.maxOutputTokens);
@@ -327,7 +327,7 @@ export async function callAgent<TOOLS extends ToolSet>(opts: {
   /** Used only when AI_PROVIDER=mock: plays a scripted run instead of calling a model. */
   mock: () => Promise<void>;
 }): Promise<{ text: string; steps: number; tokensIn: number; tokensOut: number }> {
-  const resolved = resolveModel(opts.tier);
+  const resolved = resolveModel(opts.tier, opts.operation);
   const budget = await reserveBudget(opts.userId, opts.system, opts.prompt, opts.maxOutputTokens * opts.maxSteps);
 
   if ("mock" in resolved) {
