@@ -47,3 +47,5 @@ firebase-debug.log
 
 # demo/test account credentials (local only)
 /seed/*.json
+.e2e/
+*.swp

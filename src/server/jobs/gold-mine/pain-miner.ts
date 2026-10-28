@@ -12,7 +12,8 @@ import { unsafeToUserId } from "@/server/data/user-id";
 import { getDiscussionReaders, readerFor, type Discussion } from "@/server/discussions";
 import { MOCK_DISCUSSION_LINES } from "@/server/discussions/mock";
 import { quoteAppearsIn } from "@/server/jobs/research/verify";
-import { getSearchProvider } from "@/server/search";
+import { communityFor, platformFor } from "@/server/discussions/web";
+import { getSearchProvider, type SearchResult } from "@/server/search";
 
 export const EMOTION_TERMS = ["problem", "struggle", "frustrated", '"I wish"', "hate", '"anyone else"'];
 const DISCUSSION_HOSTS = /(^|\.)(reddit\.com|news\.ycombinator\.com|stackexchange\.com|stackoverflow\.com|indiehackers\.com|quora\.com)$/;
@@ -41,6 +42,20 @@ export function isDiscussionUrl(raw: string): boolean {
   } catch {
     return false;
   }
+}
+
+/** Shortest search excerpt worth mining when the full page text isn't available. */
+const MIN_EXCERPT_CHARS = 150;
+
+/**
+ * A thread built from what the search provider returned, for sites that block direct reading (Reddit): its full
+ * page text, or else its excerpt. Quotes are still verified against this text, so they stay verbatim.
+ */
+export function fromSearchResult(r: SearchResult): Discussion | null {
+  const text = r.rawContent?.trim() || (r.snippet.trim().length >= MIN_EXCERPT_CHARS ? r.snippet.trim() : "");
+  if (!text) return null;
+  const url = new URL(r.url);
+  return { url: r.url, platform: platformFor(url.hostname), community: communityFor(url), title: r.title || null, postedAt: r.publishedAt, engagement: null, text };
 }
 
 export function quoteHash(quote: string): string {
@@ -72,7 +87,7 @@ export async function runPainMining(sessionId: string, attempt: number): Promise
     const readers = getDiscussionReaders();
     if (!readers.length) throw new ConfigError("search", ["DISCUSSION_SOURCES (no discussion source enabled)"]);
     const search = getSearchProvider();
-    const settled = await Promise.allSettled(buildDiscussionQueries(session.niche).map((q) => search.search(q, { maxResults: 5 })));
+    const settled = await Promise.allSettled(buildDiscussionQueries(session.niche).map((q) => search.search(q, { maxResults: 5, rawContent: true })));
     if (settled.every((s) => s.status === "rejected")) throw new MiningError("Web search failed. Your credits were refunded — please try again later.");
     const seen = new Set<string>();
     const candidates = settled
@@ -92,7 +107,8 @@ export async function runPainMining(sessionId: string, attempt: number): Promise
     for (const c of candidates) {
       const reader = readerFor(c.url, readers);
       if (!reader) continue;
-      const d = await reader.read(c.url);
+      // Sites that block direct fetching (Reddit) fall back to the text the search provider read.
+      const d = (await reader.read(c.url)) ?? fromSearchResult(c);
       if (!d || !d.text.trim()) continue;
       if (d.engagement !== null && d.engagement < MIN_COMMENTS_PER_THREAD) continue;
       threads.push({ ...d, postedAt: d.postedAt ?? c.publishedAt, text: d.text.slice(0, THREAD_TEXT_LIMIT) });

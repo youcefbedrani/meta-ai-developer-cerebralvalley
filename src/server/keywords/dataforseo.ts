@@ -52,7 +52,11 @@ export class DataForSeoKeywords implements KeywordDataProvider {
       body: JSON.stringify([{ keywords: keywords.map((k) => k.toLowerCase().slice(0, 80)), location_code: this.locationCode, language_code: this.languageCode, date_from: from.toISOString().slice(0, 10) }]),
       signal: AbortSignal.timeout(30_000),
     });
-    if (!res.ok) throw new Error(`DataForSEO HTTP ${res.status}`);
+    if (!res.ok) {
+      // Error bodies carry the reason (e.g. 40104 "verify your account"); keep it in the message.
+      const body = (await res.json().catch(() => null)) as { status_code?: number; status_message?: string } | null;
+      throw new Error(`DataForSEO HTTP ${res.status}${body?.status_message ? ` (${body.status_code}): ${body.status_message}` : ""}`);
+    }
     const data = responseSchema.parse(await res.json());
     const task = data.tasks[0];
     if (data.status_code !== 20000 || !task || task.status_code !== 20000) {
