@@ -7,9 +7,10 @@ import { getBalance } from "@/server/billing/credits";
 import { getProject } from "@/server/data/projects";
 import { getLatestAutopilotRun } from "@/server/services/autopilot";
 
-export default async function ProjectAutopilotPage({ params }: PageProps<"/app/projects/[id]/autopilot">) {
+export default async function ProjectAutopilotPage({ params, searchParams }: PageProps<"/app/projects/[id]/autopilot">) {
   const user = await requireOnboardedUser();
   const { id } = await params;
+  const goal = (await searchParams).goal;
   const project = await getProject(user.id, id);
   if (!project) notFound();
   const [run, balance] = await Promise.all([getLatestAutopilotRun(user.id, id), getBalance(user.id)]);
@@ -21,6 +22,7 @@ export default async function ProjectAutopilotPage({ params }: PageProps<"/app/p
   return (
     <AutopilotPanel
       projectId={id}
+      initialGoal={typeof goal === "string" ? goal.slice(0, 500) : ""}
       run={
         run
           ? {

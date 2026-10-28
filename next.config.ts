@@ -14,7 +14,8 @@ const nextConfig: NextConfig = {
     const common = [
       { key: "X-Content-Type-Options", value: "nosniff" },
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+      // Microphone: voice pitches are recorded in the browser on our own pages.
+      { key: "Permissions-Policy", value: "camera=(), microphone=(self), geolocation=()" },
       // Allows the Google sign-in popup to talk back to the opener.
       { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
     ];

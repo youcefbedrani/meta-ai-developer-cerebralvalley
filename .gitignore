@@ -49,3 +49,5 @@ firebase-debug.log
 /seed/*.json
 .e2e/
 *.swp
+/.data/
+/.next-check/

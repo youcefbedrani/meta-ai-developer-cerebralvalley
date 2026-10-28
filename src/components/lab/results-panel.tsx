@@ -10,9 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { NotesAnalysis } from "@/lib/validation/experiments";
-import { AnalysisView } from "./interview-tools";
+import { AnalysisView, type AnalysisRecording } from "./interview-tools";
 
-export type ResultItem = { id: string; metric: string; value: string | null; notes: string | null; recordedAt: string; analysis: NotesAnalysis | null };
+export type ResultItem = { id: string; metric: string; value: string | null; notes: string | null; recordedAt: string; analysis: NotesAnalysis | null; recording?: AnalysisRecording | null };
 
 const fmt = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" });
 
@@ -70,7 +70,7 @@ export function ResultsPanel({ experimentId, results }: { experimentId: string; 
                 </Button>
               </div>
               {r.analysis ? (
-                <div className="mt-3"><AnalysisView analysis={r.analysis} /></div>
+                <div className="mt-3"><AnalysisView analysis={r.analysis} recording={r.recording} /></div>
               ) : r.notes ? (
                 <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{r.notes}</p>
               ) : null}
