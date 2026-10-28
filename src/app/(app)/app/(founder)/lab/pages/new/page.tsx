@@ -9,6 +9,7 @@ import { listExperiments } from "@/server/data/experiments";
 import { suggestSlug } from "@/server/data/landing-pages";
 import { getProject } from "@/server/data/projects";
 import { getBrandKit } from "@/server/services/brand";
+import { listBrandAssets } from "@/server/services/brand-visuals";
 
 export const metadata: Metadata = { title: "New landing page" };
 
@@ -17,7 +18,7 @@ export default async function NewLandingPage({ searchParams }: PageProps<"/app/l
   const { project: projectId } = (await searchParams) as { project?: string };
   const project = projectId ? await getProject(user.id, projectId) : null;
   if (!project) notFound();
-  const brand = await getBrandKit(user.id, project.id);
+  const [brand, assets] = await Promise.all([getBrandKit(user.id, project.id), listBrandAssets(user.id, project.id)]);
   const experiments = (await listExperiments(user.id, { projectId: project.id })).filter((e) => (e.type === "landing_page" || e.type === "waitlist") && e.status !== "completed");
   return (
     <div className="space-y-6">
@@ -33,6 +34,7 @@ export default async function NewLandingPage({ searchParams }: PageProps<"/app/l
         aiConfigured={getIntegrationStatus("ai").configured}
         copyCost={CREDIT_COSTS.landing_copy}
         appUrl={getEnv().APP_URL}
+        heroImages={assets.filter((a) => a.kind === "hero").map((a) => a.id)}
       />
     </div>
   );

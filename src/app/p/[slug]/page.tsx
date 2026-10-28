@@ -18,7 +18,7 @@ export default async function PublicLandingPage({ params }: PageProps<"/p/[slug]
   return (
     <div className="flex min-h-screen flex-col [&>div]:flex-1">
       <VisitPing slug={page.slug} />
-      <LandingView content={page.content} brand={page.brand} projectName={page.projectName} cta={<WaitlistForm slug={page.slug} ctaLabel={page.content.ctaLabel} />} footer={`Validation page built with ${BRAND.name}`} />
+      <LandingView content={page.content} brand={page.brand} projectName={page.projectName} cta={<WaitlistForm slug={page.slug} ctaLabel={page.content.ctaLabel} />} footer={`Validation page built with ${BRAND.name}`} heroUrl={page.content.style?.heroImageId ? `/api/p/${page.slug}/hero` : null} />
     </div>
   );
 }

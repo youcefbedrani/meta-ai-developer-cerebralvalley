@@ -28,6 +28,7 @@ import { continueToPains, createGoldLandingDraft, expandMarketNode, generateGold
 import { getMarketMap, listSessionIdeas, requireSession } from "@/server/data/gold-mine";
 import { createListingDraft } from "@/server/data/marketplace";
 import { startAutopilot } from "@/server/services/autopilot";
+import { createProject } from "@/server/data/projects";
 import { draftTeaser } from "@/server/marketplace/listings";
 import { ASSET_TYPE_KEYS } from "@/lib/validation/marketing-assets";
 
@@ -114,6 +115,11 @@ async function main() {
   if (process.argv.includes("--only=autopilot")) {
     const given = process.argv.find((a) => a.startsWith("--project="))?.slice(10);
     let projectId = given ?? null;
+    const idea = process.argv.find((a) => a.startsWith("--idea="))?.slice(7);
+    if (!projectId && idea) {
+      const [name, ...rest] = idea.split(":");
+      projectId = (await createProject(userId, { name: name.trim(), description: rest.join(":").trim() })).id;
+    }
     if (!projectId) {
       const ideas = await step("ideas", () => generateIdeas(userId, { niche: "tools for independent bakeries", customer: "bakery owners with 1-10 staff", geography: "United States", skills: "full-stack web development", businessModel: "B2B SaaS subscription", count: 2 }), (r) => r.map((i) => i.title).join(" | "));
       if (ideas) projectId = (await convertIdeaToProject(userId, ideas[0].id)).projectId;

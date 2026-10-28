@@ -99,6 +99,8 @@ export const landingStyleSchema = z.object({
       initials: z.string().trim().min(1).max(2).optional(),
     })
     .default({ show: true, source: "generated", shape: "rounded" }),
+  /** A Muse Image hero from the project's brand visuals, shown under the headline. */
+  heroImageId: z.uuid().optional(),
 });
 export type LandingStyle = z.output<typeof landingStyleSchema>;
 

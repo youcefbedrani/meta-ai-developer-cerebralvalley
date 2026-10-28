@@ -16,7 +16,7 @@ export function landingDisplayName(style: LandingStyle, brand: StoredBrand | nul
   return usesBrand ? (brand.names[brand.chosen]?.name ?? brand.names[0].name) : projectName;
 }
 
-export function LandingView({ content, brand, projectName, cta, footer }: { content: LandingContent; brand: StoredBrand | null; projectName: string; cta: ReactNode; footer?: ReactNode }) {
+export function LandingView({ content, brand, projectName, cta, footer, heroUrl }: { content: LandingContent; brand: StoredBrand | null; projectName: string; cta: ReactNode; footer?: ReactNode; heroUrl?: string | null }) {
   const style = landingStyleSchema.parse(content.style ?? {});
   const theme = resolveTheme(style.theme, brand);
   const p = theme.palette;
@@ -112,6 +112,10 @@ export function LandingView({ content, brand, projectName, cta, footer }: { cont
             <div className="mt-10 w-full">{cta}</div>
           </div>
         )}
+        {heroUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element -- generated hero, served by our own route
+          <img src={heroUrl} alt="" className="mt-12 aspect-video w-full rounded-3xl border border-[var(--lp-line)] object-cover shadow-[0_24px_60px_-30px_rgb(0_0_0/0.35)]" />
+        ) : null}
       </main>
       {footer ? <footer className="pb-6 text-center text-xs opacity-50">{footer}</footer> : null}
     </div>

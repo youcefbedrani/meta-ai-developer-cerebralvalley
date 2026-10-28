@@ -22,7 +22,7 @@ import { initialsOf, LANDING_THEMES, landingLogo, landingStyleSchema, resolveThe
 import { cn } from "@/lib/utils";
 import type { LandingContent } from "@/lib/validation/experiments";
 
-type Common = { projectId: string; projectName: string; brand: StoredBrand | null; brandCost: number; aiConfigured: boolean; copyCost: number; appUrl: string };
+type Common = { projectId: string; projectName: string; brand: StoredBrand | null; brandCost: number; aiConfigured: boolean; copyCost: number; appUrl: string; heroImages: string[] };
 type Props =
   | (Common & { mode: "create"; suggestedSlug: string; experiments: { id: string; title: string }[] })
   | (Common & { mode: "edit"; pageId: string; initial: LandingContent; slug: string; published: boolean });
@@ -93,6 +93,23 @@ export function LandingEditor(props: Props) {
   return (
     <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
       <div className="space-y-6">
+      {props.heroImages.length ? (
+        <div className="surface p-6">
+          <h2 className="font-medium">Hero image</h2>
+          <p className="mt-1 text-xs text-muted-foreground">From your Brand visuals (Meta Muse Image). Shown under the headline.</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button type="button" onClick={() => setStyle({ heroImageId: undefined })} className={cn("h-16 w-28 rounded-lg border text-xs", !style.heroImageId ? "border-primary ring-2 ring-primary/30" : "border-border text-muted-foreground")}>
+              None
+            </button>
+            {props.heroImages.map((id) => (
+              <button key={id} type="button" onClick={() => setStyle({ heroImageId: id })} className={cn("overflow-hidden rounded-lg border", style.heroImageId === id ? "border-primary ring-2 ring-primary/30" : "border-border")} aria-label="Use this hero image">
+                {/* eslint-disable-next-line @next/next/no-img-element -- private, auth-checked image */}
+                <img src={`/api/images/${id}`} alt="" className="h-16 w-28 object-cover" />
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
       <ThemeAndLogo
         projectId={props.projectId}
         projectName={props.projectName}
@@ -246,6 +263,7 @@ export function LandingEditor(props: Props) {
             brand={props.brand}
             projectName={props.projectName}
             cta={<CtaMock label={content.ctaLabel} />}
+            heroUrl={style.heroImageId ? `/api/images/${style.heroImageId}` : null}
           />
         </PreviewFrame>
       </div>
