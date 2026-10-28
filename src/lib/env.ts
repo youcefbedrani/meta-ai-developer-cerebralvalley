@@ -39,6 +39,13 @@ const integrationSchema = z.object({
   AI_STRUCTURED_OUTPUT: optionalString,
   /** Speech-to-text model on the Meta Model API (uses AI_API_KEY). Default muse-voice-transcribe-1.0. */
   VOICE_MODEL: optionalString,
+  /** Optional open-weights route (Muse Spark Open on Baseten / Modal / Fireworks / vLLM) for the operations listed. */
+  OPEN_MODEL_BASE_URL: optionalString,
+  OPEN_MODEL_API_KEY: optionalString,
+  OPEN_MODEL: optionalString,
+  /** Comma-separated operation names (as logged in ai_usage_logs), or "*" for all. */
+  OPEN_MODEL_OPERATIONS: optionalString,
+  OPEN_MODEL_STRUCTURED_OUTPUT: optionalString,
   /** Where uploaded audio is kept (interview recordings). Default ./.data/uploads; a volume in production. */
   UPLOAD_DIR: optionalString,
   SEARCH_PROVIDER: optionalString,

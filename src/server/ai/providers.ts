@@ -34,11 +34,13 @@ export function __setTestModelFactory(factory: ((tier: ModelTier) => ResolvedMod
   testFactory = factory;
 }
 
-export function resolveModel(tier: ModelTier): ResolvedModel {
+export function resolveModel(tier: ModelTier, operation?: string): ResolvedModel {
   if (testFactory) return testFactory(tier);
   if (isMockProvider("ai")) return { mock: true, provider: "mock", modelId: `mock-${tier}` };
 
   requireIntegration("ai");
+  const open = operation ? openWeightsRoute(operation) : null;
+  if (open) return open;
   const env = getIntegrationEnv();
   const modelId = (tier === "smart" ? env.AI_MODEL_SMART : env.AI_MODEL_FAST)!;
   const baseURL = env.AI_BASE_URL?.replace(/\/+$/, "");
@@ -56,6 +58,30 @@ export function resolveModel(tier: ModelTier): ResolvedModel {
     default:
       throw new ConfigError("ai", [`AI_PROVIDER (unsupported value "${env.AI_PROVIDER}"; use anthropic, openai, openai-compatible or mock)`]);
   }
+}
+
+/**
+ * Optional open-weights route: the operations listed in OPEN_MODEL_OPERATIONS (e.g. "pain_extract,voice_extract")
+ * run on Meta's open-weights Muse Spark Open, served by an OpenAI-compatible host (Baseten, Modal, Fireworks or
+ * your own vLLM), while everything else stays on the Meta Model API. Off unless OPEN_MODEL_BASE_URL is set.
+ */
+const DEFAULT_OPEN_MODEL = "meta-models/muse-spark-open-1026";
+function openWeightsRoute(operation: string): ResolvedModel | null {
+  const env = getIntegrationEnv();
+  const baseURL = env.OPEN_MODEL_BASE_URL?.replace(/\/+$/, "");
+  if (!baseURL) return null;
+  const ops = (env.OPEN_MODEL_OPERATIONS ?? "").split(",").map((o) => o.trim()).filter(Boolean);
+  if (!ops.includes(operation) && !ops.includes("*")) return null;
+  if (!/^https:\/\//.test(baseURL) && !/^http:\/\/(localhost|127\.0\.0\.1)[:/]/.test(baseURL)) throw new ConfigError("ai", ["OPEN_MODEL_BASE_URL (must start with https://)"]);
+  if (!env.OPEN_MODEL_API_KEY) throw new ConfigError("ai", ["OPEN_MODEL_API_KEY (open-weights host key)"]);
+  const modelId = env.OPEN_MODEL || DEFAULT_OPEN_MODEL;
+  return {
+    model: createOpenAI({ apiKey: env.OPEN_MODEL_API_KEY, baseURL }).chat(modelId),
+    provider: "openai-compatible",
+    modelId,
+    viaGateway: true,
+    jsonSchema: structuredMode(env.OPEN_MODEL_STRUCTURED_OUTPUT, baseURL) === "json_schema",
+  };
 }
 
 /** Gateways known to enforce JSON Schema natively (constrained decoding). Others get the schema in the prompt. */
