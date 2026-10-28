@@ -27,6 +27,7 @@ import { askHelp } from "@/server/services/help";
 import { continueToPains, createGoldLandingDraft, expandMarketNode, generateGoldIdeas, runDemandCheck, startFromIdea, startPainMining } from "@/server/services/gold-mine";
 import { getMarketMap, listSessionIdeas, requireSession } from "@/server/data/gold-mine";
 import { createListingDraft } from "@/server/data/marketplace";
+import { startAutopilot } from "@/server/services/autopilot";
 import { draftTeaser } from "@/server/marketplace/listings";
 import { ASSET_TYPE_KEYS } from "@/lib/validation/marketing-assets";
 
@@ -76,6 +77,28 @@ async function waitJobs(ids: string[], minutes: number) {
   throw new Error(`jobs still running after ${minutes} min (is the worker running? pnpm worker)`);
 }
 
+/** Starts a Validation Autopilot run and prints the agent's trace as the worker writes it. */
+async function autopilot(userId: UserId, projectId: string) {
+  await step("autopilot (worker)", async () => {
+    const { runId } = await startAutopilot(userId, projectId, { goal: "Would owners pay for this every month?" });
+    const db = getDb();
+    let printed = 0;
+    const until = Date.now() + 30 * 60_000;
+    while (Date.now() < until) {
+      const [run] = await db.select().from(schema.autopilotRuns).where(eq(schema.autopilotRuns.id, runId));
+      for (const e of run.trace.slice(printed)) console.log(`      [${e.kind}${e.tool ? ` ${e.tool}` : ""}] ${e.title}${e.durationMs ? ` (${(e.durationMs / 1000).toFixed(1)}s)` : ""}`);
+      printed = run.trace.length;
+      if (run.status === "failed") throw new Error(run.error ?? "failed");
+      if (run.status === "succeeded" && run.verdict) {
+        const v = run.verdict;
+        return `${v.decision} ${v.confidence}% · ${v.reasons.length} cited reasons (${v.droppedReasons ?? 0} dropped) · ${v.headline}`;
+      }
+      await sleep(3_000);
+    }
+    throw new Error("autopilot still running after 30 min (is the worker running?)");
+  }, (r) => r);
+}
+
 async function main() {
   const db = getDb();
   const runStart = new Date();
@@ -87,6 +110,18 @@ async function main() {
 
   // Test credits for the demo admin (local database only), so credit checks don't stop the run.
   await db.insert(schema.creditLedger).values({ userId, delta: 400, reason: "purchase", note: "local e2e AI test top-up" });
+
+  if (process.argv.includes("--only=autopilot")) {
+    const given = process.argv.find((a) => a.startsWith("--project="))?.slice(10);
+    let projectId = given ?? null;
+    if (!projectId) {
+      const ideas = await step("ideas", () => generateIdeas(userId, { niche: "tools for independent bakeries", customer: "bakery owners with 1-10 staff", geography: "United States", skills: "full-stack web development", businessModel: "B2B SaaS subscription", count: 2 }), (r) => r.map((i) => i.title).join(" | "));
+      if (ideas) projectId = (await convertIdeaToProject(userId, ideas[0].id)).projectId;
+    }
+    if (projectId) await autopilot(userId, projectId);
+    await report(runStart, projectId);
+    return;
+  }
 
   if (process.argv.includes("--only=gold")) {
     await goldMine(userId);

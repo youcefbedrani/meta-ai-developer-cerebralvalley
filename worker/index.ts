@@ -4,7 +4,8 @@
  * server-only modules load outside Next.js.
  */
 import { Worker } from "bullmq";
-import { createQueueConnection, PAIN_MINING_QUEUE, RESEARCH_QUEUE, type PainMiningJobData, type ResearchJobData } from "@/server/jobs/queue";
+import { AUTOPILOT_QUEUE, createQueueConnection, PAIN_MINING_QUEUE, RESEARCH_QUEUE, type AutopilotJobData, type PainMiningJobData, type ResearchJobData } from "@/server/jobs/queue";
+import { recoverStaleAutopilotRuns, runAutopilot } from "@/server/jobs/autopilot/agent";
 import { runPainMining } from "@/server/jobs/gold-mine/pain-miner";
 import { recoverStaleJobs, runResearchJob } from "@/server/jobs/research/pipeline";
 import { isMarketplaceEnabled } from "@/server/marketplace/config";
@@ -30,13 +31,20 @@ async function main() {
     connection: createQueueConnection(),
     concurrency: Number(process.env.WORKER_CONCURRENCY ?? 2),
   });
+  // Autopilot runs wait on research jobs, so they need their own slots (never share the research worker's).
+  const autopilot = new Worker<AutopilotJobData>(AUTOPILOT_QUEUE, async (job) => runAutopilot(job.data.runId), {
+    connection: createQueueConnection(),
+    concurrency: Number(process.env.AUTOPILOT_CONCURRENCY ?? 2),
+    lockDuration: 60_000,
+  });
+  autopilot.on("failed", (job, err) => console.error(`[worker] autopilot ${job?.data.runId} crashed:`, err.message));
   miner.on("failed", (job, err) => console.error(`[worker] pain mining ${job?.data.sessionId} crashed:`, err.message));
   worker.on("ready", () => console.log("[worker] ready, waiting for research jobs"));
   worker.on("completed", (job) => console.log(`[worker] job ${job.data.jobId} finished`));
   worker.on("failed", (job, err) => console.error(`[worker] job ${job?.data.jobId} crashed:`, err.message));
 
   // Periodically clean up jobs orphaned by crashes.
-  const sweep = setInterval(() => void recoverStaleJobs().catch(() => {}), 5 * 60_000);
+  const sweep = setInterval(() => void Promise.all([recoverStaleJobs(), recoverStaleAutopilotRuns()]).catch(() => {}), 5 * 60_000);
 
   // Marketplace: confirm deals whose buyer-confirmation window passed without a dispute, then pay out.
   const confirmDeals = () =>
@@ -49,7 +57,7 @@ async function main() {
     console.log(`[worker] ${signal} received, finishing current jobs…`);
     clearInterval(sweep);
     if (marketplace) clearInterval(marketplace);
-    await Promise.all([worker.close(), miner.close()]);
+    await Promise.all([worker.close(), miner.close(), autopilot.close()]);
     process.exit(0);
   };
   process.on("SIGTERM", () => void shutdown("SIGTERM"));

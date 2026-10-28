@@ -37,6 +37,7 @@ export const OPERATION_MODULE: Record<string, ModuleKey> = {
   landing_copy: "lab",
   business_model: "research",
   mvp_plan: "research",
+  autopilot: "research",
   market_expand: "goldMine",
   demand_check: "goldMine",
   pain_mining: "goldMine",

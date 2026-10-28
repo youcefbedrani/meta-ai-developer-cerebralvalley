@@ -76,6 +76,8 @@ export const CREDIT_COSTS = {
   landing_copy: 3,
   business_model: 5,
   mvp_plan: 8,
+  /** Validation Autopilot: the agent's own reasoning. The tools it runs (research, plans…) charge their own price. */
+  autopilot: 6,
   // Gold Mine
   market_expand: 1,
   demand_check: 10,
