@@ -1,5 +1,7 @@
 # Startum — AI SaaS Opportunity Platform
 
+> **Meta Global AI Developer Hackathon:** what we built on Meta's models (Validation Autopilot agent, voice interviews, voice pitches, brand visuals with Muse Image + SAM 3.1, page review with Muse Spark vision) is documented in **[HACKATHON.md](HACKATHON.md)**, with every change since the [`pre-hackathon-baseline`](../../tree/pre-hackathon-baseline) tag.
+
 From idea to launch for founders: **Discover → Research → Validate → Plan**, with Brand, Launch and Grow designed for later.
 Every idea is a **project**, and every module reads and writes the same project data. That way pricing, landing copy, interviews and plans build on the same research instead of contradicting it.
 
