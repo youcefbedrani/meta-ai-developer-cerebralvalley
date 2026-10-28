@@ -1527,3 +1527,37 @@ export const voiceRecordings = pgTable(
   },
   (t) => [index("voice_recordings_experiment_idx").on(t.experimentId, t.createdAt), index("voice_recordings_user_idx").on(t.userId, t.createdAt)],
 );
+
+/* -------------------------------------------------------------------------- */
+/* Brand visuals (Muse Image + SAM 3.1)                                       */
+/* -------------------------------------------------------------------------- */
+
+export const brandAssetKindEnum = pgEnum("brand_asset_kind", ["logo", "hero", "ad"]);
+
+/** A generated brand image: logo mark (with a SAM cut-out), landing hero, or a channel ad creative. */
+export const brandAssets = pgTable(
+  "brand_assets",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    kind: brandAssetKindEnum("kind").notNull(),
+    /** Ads: the channel it's for (e.g. "LinkedIn") and the headline drawn on it. */
+    channel: text("channel"),
+    headline: text("headline"),
+    /** What the art director asked the image model for, and why (shown to the founder). */
+    prompt: text("prompt").notNull(),
+    rationale: text("rationale"),
+    width: integer("width").notNull(),
+    height: integer("height").notNull(),
+    imageKey: text("image_key").notNull(),
+    /** Logo only: transparent PNG cut out with SAM 3.1. */
+    cutoutKey: text("cutout_key"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("brand_assets_project_idx").on(t.projectId, t.createdAt)],
+);

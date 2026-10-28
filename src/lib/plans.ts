@@ -69,6 +69,8 @@ export const CREDIT_COSTS = {
   /** Research + competitor scan + market voices in one run, cheaper than the three separately (60). */
   full_validation: 50,
   brand_kit: 8,
+  /** Brand visuals: a logo (with cut-out), a landing hero and three ad creatives. */
+  brand_visuals: 10,
   /** One MVP design screen (or one edit) with Google Stitch. Stitch quota is shared by all users of one API key. */
   design_screen: 4,
   interview_script: 2,
