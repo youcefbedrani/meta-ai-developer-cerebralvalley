@@ -26,6 +26,8 @@ type Run = {
 
 type Props = {
   projectId: string;
+  /** Prefilled focus, e.g. the question from a voice pitch. */
+  initialGoal: string;
   run: Run | null;
   /** Worst case: agent reasoning plus a full validation if the project has no research yet. */
   cost: number;
@@ -49,10 +51,10 @@ const domainOf = (url: string) => {
 
 const seconds = (ms?: number) => (ms === undefined ? null : ms < 1000 ? `${ms} ms` : `${(ms / 1000).toFixed(ms < 10_000 ? 1 : 0)} s`);
 
-export function AutopilotPanel({ projectId, run, cost, balance, missing }: Props) {
+export function AutopilotPanel({ projectId, initialGoal, run, cost, balance, missing }: Props) {
   const router = useRouter();
   const [pending, start] = useTransition();
-  const [goal, setGoal] = useState("");
+  const [goal, setGoal] = useState(initialGoal);
   const [error, setError] = useState<{ message: string; missing?: string[] } | null>(null);
   const active = run && (run.status === "queued" || run.status === "running");
 

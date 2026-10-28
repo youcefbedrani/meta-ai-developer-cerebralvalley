@@ -12,6 +12,8 @@ import { EXPERIMENT_TYPES, notesAnalysisSchema } from "@/lib/validation/experime
 import { requireOnboardedUser } from "@/server/auth/current-user";
 import { getExperiment, listResults } from "@/server/data/experiments";
 import { getLandingPageForExperiment, getPageStats } from "@/server/data/landing-pages";
+import { isVoiceConfigured } from "@/server/ai/voice";
+import { listExperimentRecordings } from "@/server/services/voice";
 
 const d = (x: Date | null) => (x ? x.toISOString().slice(0, 10) : "");
 
@@ -20,7 +22,8 @@ export default async function ExperimentPage({ params }: PageProps<"/app/lab/[id
   const { id } = await params;
   const e = await getExperiment(user.id, id);
   if (!e) notFound();
-  const [results, page] = await Promise.all([listResults(user.id, id), getLandingPageForExperiment(user.id, id)]);
+  const [results, page, recordings] = await Promise.all([listResults(user.id, id), getLandingPageForExperiment(user.id, id), listExperimentRecordings(user.id, id)]);
+  const recordingById = new Map(recordings.map((r) => [r.id, { id: r.id, hasAudio: !!r.audioKey, durationMs: r.durationMs, turns: r.turns }]));
   const stats = page ? await getPageStats(page.id) : null;
   const ai = getIntegrationStatus("ai");
 
@@ -74,11 +77,12 @@ export default async function ExperimentPage({ params }: PageProps<"/app/lab/[id
             experimentId={e.id}
             results={results.map((r) => {
               const analysis = r.data && (r.data as { kind?: string }).kind === "interview_analysis" ? notesAnalysisSchema.safeParse((r.data as { analysis?: unknown }).analysis) : null;
-              return { id: r.id, metric: r.metric, value: r.value, notes: r.notes, recordedAt: r.recordedAt.toISOString(), analysis: analysis?.success ? analysis.data : null };
+              const recordingId = (r.data as { recordingId?: string } | null)?.recordingId;
+              return { id: r.id, metric: r.metric, value: r.value, notes: r.notes, recordedAt: r.recordedAt.toISOString(), analysis: analysis?.success ? analysis.data : null, recording: recordingId ? recordingById.get(recordingId) ?? null : null };
             })}
           />
           {e.type === "interview" ? (
-            <InterviewTools experimentId={e.id} hasScript={!!e.procedure} aiConfigured={ai.configured} aiMissing={ai.missing} costs={{ script: CREDIT_COSTS.interview_script, analysis: CREDIT_COSTS.interview_analysis }} />
+            <InterviewTools experimentId={e.id} hasScript={!!e.procedure} aiConfigured={ai.configured} aiMissing={ai.missing} voiceConfigured={isVoiceConfigured()} costs={{ script: CREDIT_COSTS.interview_script, analysis: CREDIT_COSTS.interview_analysis, voicePer5Min: CREDIT_COSTS.voice_transcription }} />
           ) : null}
         </div>
         <ExperimentForm

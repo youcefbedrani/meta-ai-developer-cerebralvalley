@@ -37,6 +37,10 @@ const integrationSchema = z.object({
   AI_MODEL_SMART: optionalString,
   /** openai-compatible only: "json_schema" (the gateway enforces the schema) or "prompt" (schema in the prompt). */
   AI_STRUCTURED_OUTPUT: optionalString,
+  /** Speech-to-text model on the Meta Model API (uses AI_API_KEY). Default muse-voice-transcribe-1.0. */
+  VOICE_MODEL: optionalString,
+  /** Where uploaded audio is kept (interview recordings). Default ./.data/uploads; a volume in production. */
+  UPLOAD_DIR: optionalString,
   SEARCH_PROVIDER: optionalString,
   /** MVP design screens: "stitch" (Google Stitch SDK), "builtin" (no key needed) or "mock" (dev/tests only). */
   DESIGN_PROVIDER: optionalString,

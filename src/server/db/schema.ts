@@ -1499,3 +1499,31 @@ export const autopilotRuns = pgTable(
   },
   (t) => [index("autopilot_runs_project_idx").on(t.projectId, t.createdAt)],
 );
+
+/* -------------------------------------------------------------------------- */
+/* Voice (Meta Muse Voice Transcribe)                                         */
+/* -------------------------------------------------------------------------- */
+
+export const voiceKindEnum = pgEnum("voice_kind", ["interview", "pitch"]);
+
+/** A transcribed recording: a customer interview (audio kept for playback) or a spoken idea pitch (audio not kept). */
+export const voiceRecordings = pgTable(
+  "voice_recordings",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: uuid("project_id").references(() => projects.id, { onDelete: "cascade" }),
+    experimentId: uuid("experiment_id").references(() => experiments.id, { onDelete: "cascade" }),
+    kind: voiceKindEnum("kind").notNull(),
+    fileName: text("file_name"),
+    /** Key of the playback MP3 in UPLOAD_DIR, or null when the audio wasn't kept. */
+    audioKey: text("audio_key"),
+    durationMs: integer("duration_ms").notNull(),
+    transcript: text("transcript").notNull(),
+    turns: jsonb("turns").$type<{ startMs: number; endMs: number; speaker: string | null; text: string }[]>().notNull().default([]),
+    createdAt: createdAt(),
+  },
+  (t) => [index("voice_recordings_experiment_idx").on(t.experimentId, t.createdAt), index("voice_recordings_user_idx").on(t.userId, t.createdAt)],
+);

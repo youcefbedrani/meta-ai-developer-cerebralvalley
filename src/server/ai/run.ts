@@ -46,7 +46,8 @@ type CallOptions<S extends z.ZodType> = {
   maxOutputTokens?: number;
 };
 
-async function logUsage(entry: {
+/** Writes one usage row and counts its cost against the platform's daily spend cap. */
+export async function logUsage(entry: {
   userId: UserId | null;
   projectId?: string | null;
   operation: string;
@@ -59,8 +60,10 @@ async function logUsage(entry: {
   durationMs: number;
   status: "success" | "error" | "invalid_output";
   errorCode?: string;
+  /** For models not billed by the token (speech-to-text is billed per minute of audio). */
+  costUsd?: number;
 }) {
-  const cost = estimateCostUsd(entry.model, entry.tokensIn, entry.tokensOut, entry.cachedIn ?? 0);
+  const cost = entry.costUsd ?? estimateCostUsd(entry.model, entry.tokensIn, entry.tokensOut, entry.cachedIn ?? 0);
   await recordSpend(cost);
   try {
     await getDb()

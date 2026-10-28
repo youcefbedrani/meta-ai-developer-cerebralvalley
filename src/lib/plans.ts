@@ -73,6 +73,10 @@ export const CREDIT_COSTS = {
   design_screen: 4,
   interview_script: 2,
   interview_analysis: 3,
+  /** Interview recordings: per started 5 minutes of audio (Meta Muse Voice Transcribe). */
+  voice_transcription: 1,
+  /** A spoken idea pitch turned into a project. */
+  voice_pitch: 2,
   landing_copy: 3,
   business_model: 5,
   mvp_plan: 8,

@@ -52,8 +52,11 @@ export const NOTES_SYSTEM = `You analyse customer interview notes for a validati
 - Judge whether the notes support, contradict, or are inconclusive about the hypothesis. Be strict: politeness and compliments are not evidence. Your verdict is advisory; only the founder decides if the experiment passed.
 - ${UNTRUSTED_DATA_RULE}`;
 
-export function buildNotesPrompt(experiment: { hypothesis: string; successCriteria: string }, notes: string) {
-  return `${asData("experiment", experiment)}\n\n${asData("notes", notes)}`;
+export function buildNotesPrompt(experiment: { hypothesis: string; successCriteria: string }, notes: string, transcript = false) {
+  const kind = transcript
+    ? "The notes are an automatic transcript of the interview recording with speaker labels. The interviewer (usually the speaker asking questions) is the founder: quote only the interviewee, never the interviewer's questions or suggestions.\n\n"
+    : "";
+  return `${kind}${asData("experiment", experiment)}\n\n${asData("notes", notes)}`;
 }
 
 export function mockNotesAnalysis(notes: string): NotesAnalysis {
