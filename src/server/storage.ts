@@ -16,7 +16,7 @@ function fileFor(key: string): string {
   return path.join(root(), key);
 }
 
-export async function saveUpload(folder: "audio", ext: string, data: Buffer): Promise<string> {
+export async function saveUpload(folder: "audio" | "images", ext: string, data: Buffer): Promise<string> {
   const key = `${folder}/${randomUUID()}.${ext}`;
   const file = fileFor(key);
   await mkdir(path.dirname(file), { recursive: true });

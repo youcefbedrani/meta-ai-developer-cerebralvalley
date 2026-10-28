@@ -27,8 +27,8 @@ RUN pnpm build
 FROM node:22-bookworm-slim AS app
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000 HOSTNAME=0.0.0.0 NEXT_TELEMETRY_DISABLED=1 UPLOAD_DIR=/data/uploads
-# ffmpeg converts voice recordings for Meta Muse Voice Transcribe; /data/uploads holds interview audio (a volume).
-RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/* \
+# ffmpeg converts voice recordings for Muse Voice Transcribe; DejaVu draws ad headlines; /data/uploads holds audio and images (a volume).
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /data/uploads && chown -R node:node /data
 COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./

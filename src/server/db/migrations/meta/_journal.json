@@ -120,6 +120,13 @@
       "when": 1793228365147,
       "tag": "0016_voice",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793229304819,
+      "tag": "0017_brand_assets",
+      "breakpoints": true
     }
   ]
 }

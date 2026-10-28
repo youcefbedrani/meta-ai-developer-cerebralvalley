@@ -31,6 +31,7 @@ export const OPERATION_MODULE: Record<string, ModuleKey> = {
   market_voices: "research",
   full_validation: "research",
   brand_kit: "marketing",
+  brand_visuals: "marketing",
   design_screen: "design",
   interview_script: "lab",
   interview_analysis: "lab",
