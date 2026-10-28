@@ -17,7 +17,9 @@
     "check": "pnpm typecheck && pnpm lint && pnpm build",
     "worker": "tsx --conditions=react-server --env-file=.env worker/index.ts",
     "worker:dev": "tsx watch --conditions=react-server --env-file=.env worker/index.ts",
-    "seed:demo": "tsx --env-file=.env scripts/seed-demo.ts"
+    "seed:demo": "tsx --env-file=.env scripts/seed-demo.ts",
+    "e2e:ai": "node --env-file=.env --conditions=react-server --import tsx scripts/e2e-ai.ts",
+    "ai:smoke": "node --env-file=.env --conditions=react-server --import tsx scripts/ai-smoke.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.82",

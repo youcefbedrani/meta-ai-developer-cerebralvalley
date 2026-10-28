@@ -16,7 +16,15 @@ import { ConfigError, getIntegrationEnv, isMockProvider, requireIntegration } fr
 export type ModelTier = "fast" | "smart";
 
 export type ResolvedModel =
-  | { model: LanguageModel; provider: string; modelId: string; /** True when calls go through AI_BASE_URL rather than the provider's own API. */ viaGateway?: boolean }
+  | {
+      model: LanguageModel;
+      provider: string;
+      modelId: string;
+      /** True when calls go through AI_BASE_URL rather than the provider's own API. */
+      viaGateway?: boolean;
+      /** openai-compatible: the gateway enforces a JSON Schema (response_format json_schema) instead of a schema in the prompt. */
+      jsonSchema?: boolean;
+    }
   | { mock: true; provider: "mock"; modelId: string };
 
 let testFactory: ((tier: ModelTier) => ResolvedModel) | null = null;
@@ -44,10 +52,19 @@ export function resolveModel(tier: ModelTier): ResolvedModel {
     case "openai-compatible":
       // Gateways usually implement only Chat Completions (not OpenAI's newer Responses API).
       if (!baseURL) throw new ConfigError("ai", ["AI_BASE_URL (required for openai-compatible)"]);
-      return { model: createOpenAI({ apiKey: env.AI_API_KEY, baseURL }).chat(modelId), provider: "openai-compatible", modelId, viaGateway };
+      return { model: createOpenAI({ apiKey: env.AI_API_KEY, baseURL }).chat(modelId), provider: "openai-compatible", modelId, viaGateway, jsonSchema: structuredMode(env.AI_STRUCTURED_OUTPUT, baseURL) === "json_schema" };
     default:
       throw new ConfigError("ai", [`AI_PROVIDER (unsupported value "${env.AI_PROVIDER}"; use anthropic, openai, openai-compatible or mock)`]);
   }
+}
+
+/** Gateways known to enforce JSON Schema natively (constrained decoding). Others get the schema in the prompt. */
+const NATIVE_JSON_SCHEMA_HOSTS = ["api.meta.ai"];
+
+function structuredMode(setting: string | undefined, baseURL: string): "json_schema" | "prompt" {
+  if (setting === "json_schema" || setting === "prompt") return setting;
+  if (setting) throw new ConfigError("ai", [`AI_STRUCTURED_OUTPUT (unsupported value "${setting}"; use json_schema or prompt)`]);
+  return NATIVE_JSON_SCHEMA_HOSTS.includes(new URL(baseURL).hostname) ? "json_schema" : "prompt";
 }
 
 /* ------------------------------------------------------------- cost control */

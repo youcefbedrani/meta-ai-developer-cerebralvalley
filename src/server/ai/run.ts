@@ -114,50 +114,73 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
   }
 
   // OpenAI-compatible gateways support JSON Schema unevenly (some honour only `json_object`, Gemini rejects
-  // `minItems`/`maxItems`): ask them for plain JSON mode, spell the schema out in the prompt, and let Zod
-  // below enforce it.
+  // `minItems`/`maxItems`): unless the gateway is known to enforce JSON Schema (Meta's API does), spell the
+  // schema out in the prompt and let Zod below enforce it.
   const gateway = resolved.provider === "openai-compatible";
-  const system = gateway
+  const promptSchema = gateway && !resolved.jsonSchema;
+  const system = promptSchema
     ? `${opts.system}\n\nReply with a single JSON object (no prose, no code fences) matching this JSON Schema:\n${JSON.stringify(z.toJSONSchema(opts.schema))}`
     : opts.system;
 
+  // Token use across attempts (a gateway reply that isn't valid JSON is asked for once more).
+  const used = { in: 0, out: 0, cached: 0 };
   try {
-    const result = await generateText({
-      model: resolved.model,
-      system,
-      prompt: opts.prompt,
-      output: gateway ? Output.json() : Output.object({ schema: opts.schema }),
-      maxOutputTokens: outputCap(resolved.provider, maxOutputTokens),
-      maxRetries: retriesFor(resolved.provider),
-      abortSignal: AbortSignal.timeout(TIMEOUT_MS),
-      providerOptions: gateway ? undefined : providerOptionsFor(resolved, { tier: opts.tier, operation: opts.operation, userId: opts.userId }),
-    });
-    // Belt and braces: re-validate even though the SDK already checked the schema (gateways: the only check).
-    const output = opts.schema.parse(result.output);
-    const tokensIn = result.usage.inputTokens ?? 0;
-    const tokensOut = result.usage.outputTokens ?? 0;
-    if (budget) await settleTokens(budget, tokensIn + tokensOut);
+    let output: z.output<S>;
+    if (promptSchema) {
+      output = await gatewayJson(opts.schema, opts.operation, used, (prompt) =>
+        generateText({
+          model: resolved.model,
+          system,
+          prompt,
+          maxOutputTokens: outputCap(resolved.provider, maxOutputTokens),
+          maxRetries: retriesFor(resolved.provider),
+          abortSignal: AbortSignal.timeout(TIMEOUT_MS),
+        }),
+        opts.prompt,
+      );
+    } else {
+      const result = await generateText({
+        model: resolved.model,
+        system,
+        prompt: opts.prompt,
+        output: Output.object({ schema: opts.schema }),
+        maxOutputTokens: outputCap(resolved.provider, maxOutputTokens),
+        maxRetries: retriesFor(resolved.provider),
+        abortSignal: AbortSignal.timeout(TIMEOUT_MS),
+        // Gateways with native JSON Schema: non-strict, since strict mode would require every field (Zod
+        // optionals and defaults) and `additionalProperties: false` everywhere.
+        providerOptions: gateway ? { openai: { strictJsonSchema: false } } : providerOptionsFor(resolved, { tier: opts.tier, operation: opts.operation, userId: opts.userId }),
+      });
+      used.in += result.usage.inputTokens ?? 0;
+      used.out += result.usage.outputTokens ?? 0;
+      used.cached += result.usage.inputTokenDetails?.cacheReadTokens ?? 0;
+      // Belt and braces: re-validate even though the SDK already checked the schema.
+      output = opts.schema.parse(result.output);
+    }
+    if (budget) await settleTokens(budget, used.in + used.out);
     await logUsage({
       ...opts,
       provider: resolved.provider,
       model: resolved.modelId,
-      tokensIn,
-      tokensOut,
-      cachedIn: result.usage.inputTokenDetails?.cacheReadTokens ?? 0,
+      tokensIn: used.in,
+      tokensOut: used.out,
+      cachedIn: used.cached,
       durationMs: Date.now() - started,
       status: "success",
     });
     return output;
   } catch (err) {
-    const invalid = NoObjectGeneratedError.isInstance(err) || (err instanceof Error && err.name === "ZodError");
+    const invalid = NoObjectGeneratedError.isInstance(err) || (err instanceof Error && (err.name === "ZodError" || err.name === "InvalidJsonReply"));
     const usage = NoObjectGeneratedError.isInstance(err) ? err.usage : undefined;
-    if (budget) await settleTokens(budget, (usage?.inputTokens ?? 0) + (usage?.outputTokens ?? 0));
+    used.in += usage?.inputTokens ?? 0;
+    used.out += usage?.outputTokens ?? 0;
+    if (budget) await settleTokens(budget, used.in + used.out);
     await logUsage({
       ...opts,
       provider: resolved.provider,
       model: resolved.modelId,
-      tokensIn: usage?.inputTokens ?? 0,
-      tokensOut: usage?.outputTokens ?? 0,
+      tokensIn: used.in,
+      tokensOut: used.out,
       durationMs: Date.now() - started,
       status: invalid ? "invalid_output" : "error",
       errorCode: err instanceof Error ? err.name : "unknown",
@@ -165,6 +188,53 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
     console.error(`[ai] ${opts.operation} failed:`, err instanceof Error ? `${err.name}: ${err.message}` : err);
     throw invalid ? new AIInvalidOutputError() : new AIProviderError();
   }
+}
+
+/** The JSON object in a model reply: tolerates code fences and stray prose around it. Null if there is none. */
+export function extractJson(text: string): unknown {
+  const unfenced = text.replace(/^\s*```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "");
+  for (const candidate of [unfenced, unfenced.slice(unfenced.indexOf("{"), unfenced.lastIndexOf("}") + 1)]) {
+    if (!candidate.trim()) continue;
+    try {
+      return JSON.parse(candidate);
+    } catch {
+      // try the next candidate
+    }
+  }
+  return null;
+}
+
+/**
+ * Gateway structured call: plain text in JSON mode-by-prompt, parsed and validated here. A reply that isn't
+ * valid (cut off, wrapped in prose, wrong shape) gets one more attempt with the problem spelled out.
+ */
+async function gatewayJson<S extends z.ZodType>(
+  schema: S,
+  operation: string,
+  used: { in: number; out: number; cached: number },
+  call: (prompt: string) => ReturnType<typeof generateText>,
+  prompt: string,
+): Promise<z.output<S>> {
+  let problem = "";
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const result = await call(problem ? `${prompt}\n\nYour previous reply was rejected: ${problem}. Reply again with only the complete JSON object.` : prompt);
+    used.in += result.usage.inputTokens ?? 0;
+    used.out += result.usage.outputTokens ?? 0;
+    used.cached += result.usage.inputTokenDetails?.cacheReadTokens ?? 0;
+    const json = extractJson(result.text);
+    const parsed = json === null ? null : schema.safeParse(json);
+    if (parsed?.success) return parsed.data;
+    problem =
+      result.finishReason === "length"
+        ? "it was cut off before the JSON was complete; keep every field concise"
+        : json === null
+          ? "it was not valid JSON"
+          : `it did not match the schema (${parsed!.error.issues.slice(0, 3).map((i) => `${i.path.join(".") || "root"}: ${i.message}`).join("; ")})`;
+    console.warn(`[ai] ${operation} attempt ${attempt} invalid (finish=${result.finishReason}, ${result.text.length} chars): ${problem}`);
+  }
+  const err = new Error(problem);
+  err.name = "InvalidJsonReply";
+  throw err;
 }
 
 export type TextResult = { text: string; tokensIn: number; tokensOut: number; cachedIn: number };

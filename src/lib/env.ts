@@ -35,6 +35,8 @@ const integrationSchema = z.object({
   AI_BASE_URL: optionalString,
   AI_MODEL_FAST: optionalString,
   AI_MODEL_SMART: optionalString,
+  /** openai-compatible only: "json_schema" (the gateway enforces the schema) or "prompt" (schema in the prompt). */
+  AI_STRUCTURED_OUTPUT: optionalString,
   SEARCH_PROVIDER: optionalString,
   /** MVP design screens: "stitch" (Google Stitch SDK), "builtin" (no key needed) or "mock" (dev/tests only). */
   DESIGN_PROVIDER: optionalString,

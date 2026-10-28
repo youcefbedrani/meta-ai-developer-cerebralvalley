@@ -8,6 +8,7 @@ const responseSchema = z.object({
       url: z.string(),
       title: z.string().optional().default(""),
       content: z.string().optional().default(""),
+      raw_content: z.string().nullish(),
       published_date: z.string().nullish(),
     }),
   ),
@@ -18,11 +19,11 @@ export class TavilySearch implements SearchProvider {
   readonly name = "tavily";
   constructor(private readonly apiKey: string) {}
 
-  async search(query: string, opts: { maxResults?: number; includeDomains?: string[] } = {}): Promise<SearchResult[]> {
+  async search(query: string, opts: { maxResults?: number; includeDomains?: string[]; rawContent?: boolean } = {}): Promise<SearchResult[]> {
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${this.apiKey}` },
-      body: JSON.stringify({ query, max_results: opts.maxResults ?? 5, search_depth: "basic", include_answer: false, ...(opts.includeDomains?.length ? { include_domains: opts.includeDomains } : {}) }),
+      body: JSON.stringify({ query, max_results: opts.maxResults ?? 5, search_depth: "basic", include_answer: false, ...(opts.rawContent ? { include_raw_content: "text" } : {}), ...(opts.includeDomains?.length ? { include_domains: opts.includeDomains } : {}) }),
       signal: AbortSignal.timeout(20_000),
     });
     if (!res.ok) throw new Error(`Tavily search failed with HTTP ${res.status}`);
@@ -34,6 +35,7 @@ export class TavilySearch implements SearchProvider {
         title: r.title.slice(0, 300),
         snippet: r.content.slice(0, 1000),
         publishedAt: published && !Number.isNaN(published.getTime()) ? published : null,
+        ...(r.raw_content ? { rawContent: r.raw_content } : {}),
       };
     });
   }
