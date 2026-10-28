@@ -8,6 +8,7 @@ import { requireOnboardedUser } from "@/server/auth/current-user";
 import { getLandingPage, getPageStats, listSignups } from "@/server/data/landing-pages";
 import { getProject } from "@/server/data/projects";
 import { getBrandKit } from "@/server/services/brand";
+import { listBrandAssets } from "@/server/services/brand-visuals";
 
 const fmt = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" });
 
@@ -17,6 +18,7 @@ export default async function LandingPageEditor({ params }: PageProps<"/app/lab/
   const page = await getLandingPage(user.id, id);
   if (!page) notFound();
   const [stats, signups, project, brand] = await Promise.all([getPageStats(page.id), listSignups(user.id, page.id), getProject(user.id, page.projectId), getBrandKit(user.id, page.projectId)]);
+  const heroImages = (await listBrandAssets(user.id, page.projectId)).filter((a) => a.kind === "hero").map((a) => a.id);
 
   return (
     <div className="space-y-6">
@@ -30,7 +32,7 @@ export default async function LandingPageEditor({ params }: PageProps<"/app/lab/
           {stats.conversion !== null ? ` · ${(stats.conversion * 100).toFixed(1)}% conversion` : ""}
         </p>
       </div>
-      <LandingEditor mode="edit" projectId={page.projectId} projectName={project?.name ?? "Your product"} brand={brand} brandCost={CREDIT_COSTS.brand_kit} pageId={page.id} initial={page.content} slug={page.slug} published={page.published} aiConfigured={getIntegrationStatus("ai").configured} copyCost={CREDIT_COSTS.landing_copy} appUrl={getEnv().APP_URL} />
+      <LandingEditor mode="edit" projectId={page.projectId} projectName={project?.name ?? "Your product"} brand={brand} brandCost={CREDIT_COSTS.brand_kit} pageId={page.id} initial={page.content} slug={page.slug} published={page.published} aiConfigured={getIntegrationStatus("ai").configured} copyCost={CREDIT_COSTS.landing_copy} appUrl={getEnv().APP_URL} heroImages={heroImages} />
       <section className="surface p-6">
         <h2 className="font-medium">Waitlist ({signups.length})</h2>
         <p className="mt-1 text-xs text-muted-foreground">Personal data — only you can see these emails. Use them only to contact people about this product.</p>

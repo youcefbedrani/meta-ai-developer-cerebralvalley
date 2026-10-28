@@ -49,6 +49,7 @@ export const AUTOPILOT_TOOLS: Record<string, string> = {
   web_search: "Web search",
   generate_business_model: "Business model",
   generate_mvp_plan: "MVP plan",
+  design_brand: "Brand and visuals",
   create_landing_page: "Landing page and waitlist test",
   submit_verdict: "Verdict",
 };

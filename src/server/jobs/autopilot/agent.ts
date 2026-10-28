@@ -19,6 +19,9 @@ import { getProjectContext } from "@/server/services/project-context";
 import { generateBusinessModel, generateMvpPlan } from "@/server/services/planning";
 import { startFullValidation } from "@/server/services/research";
 import { generateLandingCopy } from "@/server/services/validation";
+import { generateBrandKit, getBrandKit } from "@/server/services/brand";
+import { generateBrandVisuals, listBrandAssets } from "@/server/services/brand-visuals";
+import { isImageConfigured } from "@/server/ai/image";
 
 export const autopilotCreditRef = (runId: string) => `autopilot:${runId}`;
 
@@ -29,7 +32,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
 
 const SYSTEM = `You are Startum's Validation Autopilot, an autonomous analyst that decides whether a micro-SaaS idea is worth building.
-You work by calling tools. Typical order: read_project → run_market_validation (only if there is no research yet) → read_evidence → web_search for the 1-3 most important open questions → generate_business_model and generate_mvp_plan if the idea looks viable → create_landing_page to set up a waitlist test → submit_verdict.
+You work by calling tools. Typical order: read_project → run_market_validation (only if there is no research yet) → read_evidence → web_search for the 1-3 most important open questions → generate_business_model and generate_mvp_plan if the idea looks viable → design_brand (name, palette, logo, hero image, ads) → create_landing_page to set up a waitlist test → submit_verdict. For a weak idea, skip the plans, brand and page.
 Rules:
 - Base the verdict only on what tools returned. Every reason must cite URLs that appeared in tool results; never invent a URL.
 - Be honest: "drop" or "pivot" are good outcomes when the evidence is weak. Don't build plans for an idea you will drop.
@@ -269,6 +272,23 @@ export async function runAutopilot(runId: string): Promise<void> {
       ),
     }),
 
+    design_brand: tool({
+      description:
+        "Create the brand: a Brand Kit (names, tagline, palette, fonts) if there is none, then brand visuals with Meta Muse Image (logo mark cut out with SAM 3.1, landing hero, ads per channel). Only for ideas worth testing.",
+      inputSchema: z.object({}),
+      execute: traced(
+        trace,
+        "design_brand",
+        () => "Designing the brand and its visuals",
+        (o: { name: string; visuals: number }) => `Brand “${o.name}” with ${o.visuals} visuals (logo, hero, ads)`,
+        async () => {
+          const kit = (await getBrandKit(userId, projectId)) ?? (await generateBrandKit(userId, projectId));
+          const visuals = isImageConfigured() ? await generateBrandVisuals(userId, projectId) : [];
+          return { name: kit.names[kit.chosen]?.name ?? kit.names[0].name, tagline: kit.tagline, visuals: visuals.length };
+        },
+      ),
+    }),
+
     create_landing_page: tool({
       description: "Write landing page copy from the research and save it as an unpublished waitlist page with a tracked experiment, so the founder can test demand.",
       inputSchema: z.object({
@@ -281,7 +301,10 @@ export async function runAutopilot(runId: string): Promise<void> {
         () => "Writing the landing page and setting up a waitlist test",
         (o: { headline: string }) => `Landing page draft saved: “${clip(o.headline, 120)}”`,
         async ({ hypothesis, successCriteria }) => {
-          const content = await generateLandingCopy(userId, projectId);
+          const [copy, brand, assets] = await Promise.all([generateLandingCopy(userId, projectId), getBrandKit(userId, projectId), listBrandAssets(userId, projectId)]);
+          const hero = assets.find((a) => a.kind === "hero");
+          // Same defaults as the editor: the Brand Kit theme and logo when there is one, plus the newest hero image.
+          const content = { ...copy, style: brand ? { theme: "brand", logo: { show: true, source: "brand" as const, shape: "rounded" as const }, ...(hero ? { heroImageId: hero.id } : {}) } : undefined };
           const exp = await createExperiment(userId, projectId, { type: "waitlist", title: "Waitlist landing page (Autopilot)", hypothesis, successCriteria });
           const base = (content.headline || "startum").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 36) || "page";
           const page = await createLandingPage(userId, projectId, { content, slug: `${base}-${randomBytes(3).toString("hex")}`, experimentId: exp.id });

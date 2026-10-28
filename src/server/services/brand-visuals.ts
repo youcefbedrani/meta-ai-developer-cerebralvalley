@@ -36,7 +36,7 @@ const briefSchema = z.object({
 const ART_DIRECTOR_SYSTEM = `You are the art director for a micro-SaaS launch. You write briefs for an image model (Meta Muse Image).
 Ground every image in the research: the customers, the moment of pain they describe and the product's promise. No generic stock-photo clichés (handshakes, people pointing at screens, glowing brains).
 - logo.prompt: a simple, flat vector logo MARK (icon only, no letters or words) that says what the product does, in the brand palette (name the hex colours), centered on a plain pure-white background, generous margin, no shadow, no mockup.
-- hero.prompt: a wide landing-page hero illustration or photo showing the customer's world AFTER the product solved their problem. Brand colours as accents. Leave calm empty space on the left third for a headline. Absolutely no text, letters, logos or UI copy in the image.
+- hero.prompt: a wide landing-page hero illustration or photo showing the customer's world AFTER the product solved their problem. Brand colours as accents. A full-frame composition with the subject spread across the whole width (it is shown as a wide banner below the page copy, nothing is overlaid on it). Absolutely no text, letters, logos or UI copy in the image.
 - ads: exactly one per channel listed, in the same order. headline: max 8 words, in the customers' own words where possible (the app draws it on the image; never put text in the prompt). prompt: a scroll-stopping image for that channel showing the specific pain or the relief, no text or letters in the image, keep the bottom third simple (the headline goes there).
 - rationale: one sentence on which research finding the image is based on.
 ${UNTRUSTED_DATA_RULE}`;
@@ -184,6 +184,20 @@ export async function getBrandAsset(userId: UserId, id: string): Promise<BrandAs
     .select()
     .from(schema.brandAssets)
     .where(and(eq(schema.brandAssets.id, id), eq(schema.brandAssets.userId, userId)))
+    .limit(1);
+  return row ?? null;
+}
+
+/**
+ * Public: the hero image a published landing page shows. Only an image of that page's own project, and only
+ * while the page is published, so private brand assets never leak through a guessed id.
+ */
+export async function getPublishedHero(projectId: string, imageId: string): Promise<BrandAsset | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(imageId)) return null;
+  const [row] = await getDb()
+    .select()
+    .from(schema.brandAssets)
+    .where(and(eq(schema.brandAssets.id, imageId), eq(schema.brandAssets.projectId, projectId)))
     .limit(1);
   return row ?? null;
 }
