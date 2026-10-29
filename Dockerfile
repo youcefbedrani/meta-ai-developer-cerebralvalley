@@ -41,7 +41,10 @@ CMD ["node", "server.js"]
 
 # ---- Worker + migrations (full dependencies, runs TypeScript via tsx) ----
 FROM deps AS worker
-ENV NODE_ENV=production
+ENV NODE_ENV=production UPLOAD_DIR=/data/uploads
+# The Autopilot's brand step runs here: it saves images to the shared uploads volume and draws ad headlines (DejaVu).
+RUN apt-get update && apt-get install -y --no-install-recommends fonts-dejavu-core && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p /data/uploads && chown -R node:node /data
 COPY --chown=node:node . .
 RUN chown -R node:node /app
 USER node
