@@ -24,7 +24,7 @@ capabilities that only became possible with them.** Everything below was built b
 
 ### 1. Validation Autopilot (agentic)
 
-A Muse Spark agent with eight tools: `read_project`, `run_market_validation` (Startum's research pipeline,
+A Muse Spark agent with nine tools: `read_project`, `run_market_validation` (Startum's research pipeline,
 competitor scan and forum "market voices"), `read_evidence`, `web_search`, `generate_business_model`,
 `generate_mvp_plan`, `design_brand`, `create_landing_page` and `submit_verdict`. It decides what to do, narrates
 each step in one sentence on a live timeline, and stops when it hands in a verdict.
