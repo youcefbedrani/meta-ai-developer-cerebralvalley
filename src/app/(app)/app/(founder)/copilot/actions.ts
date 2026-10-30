@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireFounder } from "@/server/auth/current-user";
 import { toActionError, type ActionResult } from "@/server/action-result";
 import { getAiUsage, type AiUsage } from "@/server/ai/budget";
-import { deleteCopilotThread, sendCopilotMessage, type CopilotReply } from "@/server/services/copilot";
+import { deleteCopilotThread, projectFromCopilotIdea, sendCopilotMessage, type CopilotReply } from "@/server/services/copilot";
 
 export async function sendCopilotMessageAction(input: unknown): Promise<ActionResult<CopilotReply & { usage: AiUsage }>> {
   const user = await requireFounder();
@@ -22,6 +22,17 @@ export async function deleteCopilotThreadAction(threadId: string): Promise<Actio
     await deleteCopilotThread(user.id, threadId);
     revalidatePath("/app/copilot");
     return { ok: true, data: undefined };
+  } catch (err) {
+    return toActionError(err);
+  }
+}
+
+export async function copilotIdeaToProjectAction(messageId: string, index: number): Promise<ActionResult<{ projectId: string; goal: string }>> {
+  const user = await requireFounder();
+  try {
+    const created = await projectFromCopilotIdea(user.id, messageId, index);
+    revalidatePath("/app", "layout");
+    return { ok: true, data: created };
   } catch (err) {
     return toActionError(err);
   }

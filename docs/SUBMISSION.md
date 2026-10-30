@@ -20,7 +20,9 @@ During the hackathon we rebuilt it around Meta's models:
 - **Voice interviews** (Muse Voice Transcribe diarization): upload a customer interview, get who said what, verified quotes that play back from the moment they were said.
 - **Brand visuals** (Muse Spark art director + Muse Image + SAM 3.1): research-grounded logo, landing hero and channel ads; SAM 3.1 cuts the logo out to a transparent PNG.
 - **Page review** (Muse Spark vision): screenshot critique of your landing page or a competitor's, with each issue pinned on the image.
-- Every existing Startum feature now runs on Muse Spark with native JSON Schema output, plus an optional route to Muse Spark Open on Baseten/Modal/vLLM.
+- **Copilot ideas → projects**: every idea the AI Copilot suggests gets "Create project" and "Validate with Autopilot" buttons. Two clicks from a chat answer to a researched verdict.
+- **Muse Spark Open on Baseten**: research, competitor, forum and pain extraction run on Meta's open-weights model, 3–6× faster than on the hosted API, with the same word-for-word quote checks.
+- Every other Startum feature now runs on Muse Spark with native JSON Schema output.
 
 Measured: from a bare idea to a BUILD verdict with business model, MVP plan, brand, 5 visuals and a branded landing page in 4 min 55 s for $0.47.
 
@@ -39,7 +41,7 @@ I pitched a startup idea out loud.
 
 5 minutes later an AI agent had researched the market, checked competitor prices, written a business model + MVP plan, designed the brand and built a landing page — and told me BUILD, with a real source for every reason.
 
-Built on Meta's Muse Spark, Muse Image, SAM 3.1 and Muse Voice Transcribe for the Meta Global AI Developer Hackathon 👇 [tag the official account + hashtag from the hackathon Discord #announcements]
+Built on Meta's Muse Spark, Muse Spark Open, Muse Image, SAM 3.1 and Muse Voice Transcribe for the Meta Global AI Developer Hackathon 👇 [tag the official account + hashtag from the hackathon Discord #announcements]
 
 [video]
 

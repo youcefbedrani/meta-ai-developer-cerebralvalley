@@ -20,7 +20,8 @@ capabilities that only became possible with them.** Everything below was built b
 | 4 | **Brand visuals** — research-grounded logo, landing hero and channel ads | Muse Spark (art director) + Muse Image + SAM 3.1 | Project → Brand |
 | 5 | **Page review** — screenshot critique of your landing page or a competitor's, pinned on the image | Muse Spark (vision) | Project → Page review |
 | 6 | **Startum on Muse Spark** — every existing AI feature (research, plans, marketing, copilot, Gold Mine) | Muse Spark (native JSON Schema output) | everywhere |
-| 7 | **Open-weights route** — send chosen steps to Muse Spark Open on Baseten / Modal / vLLM | Muse Spark Open | `OPEN_MODEL_*` env |
+| 7 | **Open-weights route** — research, competitor, forum and pain extraction run on Muse Spark Open on Baseten, 3–6× faster | Muse Spark Open | `OPEN_MODEL_*` env |
+| 8 | **Copilot ideas → projects** — every idea the Copilot suggests gets "Create project" and "Validate with Autopilot" buttons | Muse Spark | AI Copilot → Find SaaS ideas |
 
 ### 1. Validation Autopilot (agentic)
 
@@ -98,6 +99,35 @@ Code: [`src/server/services/page-review.ts`](src/server/services/page-review.ts)
 `OPEN_MODEL_BASE_URL`, `OPEN_MODEL_API_KEY`, `OPEN_MODEL` (default `meta-models/muse-spark-open-1026`) and
 `OPEN_MODEL_OPERATIONS` send the listed operations (e.g. `pain_extract,voice_extract`) to Muse Spark Open on any
 OpenAI-compatible host while everything else stays on the Meta Model API. Usage logs record which model served each call.
+
+**Running on Baseten.** We send Startum's four high-volume extraction steps to Muse Spark Open on Baseten
+(`inference.baseten.co`): reading research sources, competitor pages, forum threads (market voices) and Reddit / Hacker
+News threads (Gold Mine pain mining). Muse Spark Open always reasons, so every call sends `reasoning_effort: low`
+(it halved reasoning tokens in our tests). Baseten follows a JSON Schema only in strict mode (non-strict, the model
+renamed keys), so these calls use strict mode whenever every field of the schema is required, and fall back to the
+schema-in-prompt path with validation and one retry otherwise. Quotes are still kept only if they appear word for
+word in the source.
+
+Measured in the full A-to-Z run (`pnpm e2e:ai`, 36 of 37 steps pass, same as on the hosted API):
+
+| Step | Muse Spark (hosted API), avg | Muse Spark Open on Baseten |
+|---|---|---|
+| Research source extraction | 33.4 s | 9.4 s |
+| Competitor extraction | 56.4 s | 9.8 s |
+| Market voices extraction | 23.5 s | 4.7 s |
+| Pain mining extraction | 19.5 s | 5.9 s, 11 verified quotes in 4 pain clusters |
+
+Code: `openWeightsRoute` in [`src/server/ai/providers.ts`](src/server/ai/providers.ts), `strictCompatible` in [`src/server/ai/run.ts`](src/server/ai/run.ts)
+
+### 8. Copilot ideas → projects
+
+Ask the AI Copilot for ideas ("Find SaaS ideas", or any tool) and each idea comes back in a fixed format: name,
+one-liner, customer, problem, solution. Under the reply, each idea gets **Create project** and **Validate with
+Autopilot** buttons. The project is built from the saved reply on the server, never from text sent by the browser.
+Autopilot opens with the question already filled in ("Would independent groomers with 50–200 repeat clients pay for
+Due-Date Texter?"), so a founder goes from a chat answer to a researched Build / Pivot / Drop verdict in two clicks.
+
+Code: [`src/lib/copilot-ideas.ts`](src/lib/copilot-ideas.ts), `projectFromCopilotIdea` in [`src/server/services/copilot.ts`](src/server/services/copilot.ts), [`src/components/copilot/copilot-chat.tsx`](src/components/copilot/copilot-chat.tsx)
 
 ## How it fits together
 
