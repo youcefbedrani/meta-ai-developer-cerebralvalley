@@ -17,6 +17,7 @@ import { getLatestValidationRun, getVerdictData } from "@/server/data/verdict";
 import { getSearchProvider } from "@/server/search";
 import { getProjectContext } from "@/server/services/project-context";
 import { generateBusinessModel, generateMvpPlan } from "@/server/services/planning";
+import { generateLaunchPlaybook } from "@/server/services/launch-playbook";
 import { startFullValidation } from "@/server/services/research";
 import { generateLandingCopy } from "@/server/services/validation";
 import { generateBrandKit, getBrandKit } from "@/server/services/brand";
@@ -25,14 +26,14 @@ import { isImageConfigured } from "@/server/ai/image";
 
 export const autopilotCreditRef = (runId: string) => `autopilot:${runId}`;
 
-const MAX_STEPS = 18;
+const MAX_STEPS = 20;
 const MAX_SEARCHES = 4;
 const VALIDATION_WAIT_MS = 15 * 60_000;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
 
 const SYSTEM = `You are Startum's Validation Autopilot, an autonomous analyst that decides whether a micro-SaaS idea is worth building.
-You work by calling tools. Typical order: read_project → run_market_validation (only if there is no research yet) → read_evidence → web_search for the 1-3 most important open questions → generate_business_model and generate_mvp_plan if the idea looks viable → design_brand (name, palette, logo, hero image, ads) → create_landing_page to set up a waitlist test → submit_verdict. For a weak idea, skip the plans, brand and page.
+You work by calling tools. Typical order: read_project → run_market_validation (only if there is no research yet) → read_evidence → web_search for the 1-3 most important open questions → generate_business_model and generate_mvp_plan if the idea looks viable → design_brand (name, palette, logo, hero image, ads) → create_landing_page to set up a waitlist test → create_launch_playbook (stages, sales, metrics and build plan) → submit_verdict. For a weak idea, skip the plans, brand and page.
 Rules:
 - Base the verdict only on what tools returned. Every reason must cite URLs that appeared in tool results; never invent a URL.
 - Be honest: "drop" or "pivot" are good outcomes when the evidence is weak. Don't build plans for an idea you will drop.
@@ -285,6 +286,22 @@ export async function runAutopilot(runId: string): Promise<void> {
           const kit = (await getBrandKit(userId, projectId)) ?? (await generateBrandKit(userId, projectId));
           const visuals = isImageConfigured() ? await generateBrandVisuals(userId, projectId) : [];
           return { name: kit.names[kit.chosen]?.name ?? kit.names[0].name, tagline: kit.tagline, visuals: visuals.length };
+        },
+      ),
+    }),
+
+    create_launch_playbook: tool({
+      description:
+        "Write the launch playbook: six stages from validation to growth with exit gates, a founder-led sales playbook, SaaS metrics and revenue maths, retention and a week-by-week build plan. Use last, after the plans, brand and landing page, only for ideas worth building.",
+      inputSchema: z.object({}),
+      execute: traced(
+        trace,
+        "create_launch_playbook",
+        () => "Writing the launch playbook",
+        (o: { northStar: string; customersFor10k: number }) => `Playbook saved: ${o.northStar} (${o.customersFor10k} customers for $10k MRR)`,
+        async () => {
+          const { playbook, math } = await generateLaunchPlaybook(userId, projectId);
+          return { northStar: playbook.northStar.goal, motion: playbook.sales.motion, customersFor10k: math.milestones[math.milestones.length - 1].customers, gates: playbook.stages.map((st) => `${st.stage}: ${st.exitCriteria[0]}`) };
         },
       ),
     }),

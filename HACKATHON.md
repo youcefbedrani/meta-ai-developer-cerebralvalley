@@ -22,12 +22,13 @@ capabilities that only became possible with them.** Everything below was built b
 | 6 | **Startum on Muse Spark** — every existing AI feature (research, plans, marketing, copilot, Gold Mine) | Muse Spark (native JSON Schema output) | everywhere |
 | 7 | **Open-weights route** — research, competitor, forum and pain extraction run on Muse Spark Open on Baseten, 3–6× faster | Muse Spark Open | `OPEN_MODEL_*` env |
 | 8 | **Copilot ideas → projects** — every idea the Copilot suggests gets "Create project" and "Validate with Autopilot" buttons | Muse Spark | AI Copilot → Find SaaS ideas |
+| 9 | **Launch playbook** — idea to market in one plan: 6 stages with exit gates, founder-led sales playbook, SaaS metrics with code-computed revenue maths, retention, build sprints and AI-coding prompts | Muse Spark (structured output) | Project → Launch playbook |
 
 ### 1. Validation Autopilot (agentic)
 
-A Muse Spark agent with nine tools: `read_project`, `run_market_validation` (Startum's research pipeline,
+A Muse Spark agent with ten tools: `read_project`, `run_market_validation` (Startum's research pipeline,
 competitor scan and forum "market voices"), `read_evidence`, `web_search`, `generate_business_model`,
-`generate_mvp_plan`, `design_brand`, `create_landing_page` and `submit_verdict`. It decides what to do, narrates
+`generate_mvp_plan`, `design_brand`, `create_landing_page`, `create_launch_playbook` and `submit_verdict`. It decides what to do, narrates
 each step in one sentence on a live timeline, and stops when it hands in a verdict.
 
 **Verifiable by construction.** Every reason in the verdict must cite URLs, and the server keeps a reason only if
@@ -129,6 +130,30 @@ Due-Date Texter?"), so a founder goes from a chat answer to a researched Build /
 
 Code: [`src/lib/copilot-ideas.ts`](src/lib/copilot-ideas.ts), `projectFromCopilotIdea` in [`src/server/services/copilot.ts`](src/server/services/copilot.ts), [`src/components/copilot/copilot-chat.tsx`](src/components/copilot/copilot-chat.tsx)
 
+### 9. Launch playbook (idea to market)
+
+One plan that takes an idea all the way to paying customers, built on everything Startum knows about the project:
+research, customer quotes, competitors, the business model, the MVP plan and the marketing plan.
+
+- **Six stages with gates:** validate → build → pre-launch → launch → first 10 customers → grow to $10k MRR. Each has a
+  timeframe sized to the founder's hours, measurable "move on when" criteria, tasks with hour estimates, and a link
+  to the Startum feature that does each task.
+- **Sales playbook:** the sales motion chosen from price and buyer (self-serve, founder-led or sales-assisted), the
+  ideal customer with buying triggers and disqualifiers, prospecting with a daily routine, a multi-touch outreach
+  sequence, discovery questions about past behaviour, a demo flow, objections, a founding-customer offer and pipeline
+  stages. Objections marked as customer quotes are checked against the collected quotes; unmatched ones are relabelled
+  as hypotheses.
+- **SaaS metrics:** north star, activation moment, a five-stage funnel with targets marked as assumptions, and a
+  weekly dashboard. **The revenue maths is computed by code, not the model:** lifetime value, the maximum cost to win a
+  customer, and customers needed for $1k / $5k / $10k MRR, from the business model's main tier.
+- **Retention, pricing tactics and a build plan:** week-by-week sprints with a definition of done, a launch
+  infrastructure checklist, and prompts ready to paste into an AI coding tool. Downloadable as Markdown.
+- The Autopilot writes it automatically (`create_launch_playbook`) for ideas it decides to build.
+
+Measured: about 60 s and $0.06 per playbook on `muse-spark-1.3`.
+
+Code: [`src/lib/validation/launch-playbook.ts`](src/lib/validation/launch-playbook.ts), [`src/server/services/launch-playbook.ts`](src/server/services/launch-playbook.ts), [`src/server/ai/prompts/launch-playbook.ts`](src/server/ai/prompts/launch-playbook.ts)
+
 ## How it fits together
 
 ```mermaid
@@ -140,6 +165,7 @@ flowchart LR
   A --> B[Business model · MVP plan]
   A --> D[Brand visuals<br/>Muse Image + SAM 3.1]
   A --> L[Branded landing page + waitlist test]
+  A --> G[Launch playbook<br/>stages · sales · metrics · build]
   A --> X[Verdict: Build / Pivot / Drop<br/>every reason cites a URL the run saw]
   I[Interview recording] -->|Muse Voice Transcribe diarization| Q[Verified quotes with playback]
   S[Page screenshot] -->|Muse Spark vision| C[Critique pinned on the page]
