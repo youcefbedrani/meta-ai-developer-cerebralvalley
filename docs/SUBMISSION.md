@@ -15,11 +15,12 @@ A Muse Spark agent that takes a founder's spoken idea, researches the market, ci
 Most first-time founders spend months building something nobody wants. Startum makes them find out first.
 During the hackathon we rebuilt it around Meta's models:
 
-- **Validation Autopilot** (Muse Spark tool calling): an agent with nine tools — market research, competitor scan, forum mining, web search, business model, MVP plan, brand, landing page, verdict. Every reason in its verdict must cite a URL the agent actually read during the run; anything else is discarded and weak verdicts are sent back.
+- **Validation Autopilot** (Muse Spark tool calling): an agent with ten tools — market research, competitor scan, forum mining, web search, business model, MVP plan, brand, landing page, launch playbook, verdict. Every reason in its verdict must cite a URL the agent actually read during the run; anything else is discarded and weak verdicts are sent back.
 - **Pitch it out loud** (Muse Voice Transcribe + Muse Spark): speak the idea, get a project and an Autopilot run focused on your own question.
 - **Voice interviews** (Muse Voice Transcribe diarization): upload a customer interview, get who said what, verified quotes that play back from the moment they were said.
 - **Brand visuals** (Muse Spark art director + Muse Image + SAM 3.1): research-grounded logo, landing hero and channel ads; SAM 3.1 cuts the logo out to a transparent PNG.
 - **Page review** (Muse Spark vision): screenshot critique of your landing page or a competitor's, with each issue pinned on the image.
+- **Launch playbook**: idea to market in one plan — six stages with measurable gates, a founder-led sales playbook (ideal customer, outreach, discovery, demo, objections, founding offer), SaaS metrics with revenue maths computed by code, retention and a week-by-week build plan with AI-coding prompts. The Autopilot writes it for ideas it decides to build.
 - **Copilot ideas → projects**: every idea the AI Copilot suggests gets "Create project" and "Validate with Autopilot" buttons. Two clicks from a chat answer to a researched verdict.
 - **Muse Spark Open on Baseten**: research, competitor, forum and pain extraction run on Meta's open-weights model, 3–6× faster than on the hosted API, with the same word-for-word quote checks.
 - Every other Startum feature now runs on Muse Spark with native JSON Schema output.
@@ -39,7 +40,7 @@ Everything listed above. The pre-hackathon product is tagged `pre-hackathon-base
 ## X post (for the Most Viral prize — post with the demo video attached)
 I pitched a startup idea out loud.
 
-5 minutes later an AI agent had researched the market, checked competitor prices, written a business model + MVP plan, designed the brand and built a landing page — and told me BUILD, with a real source for every reason.
+5 minutes later an AI agent had researched the market, checked competitor prices, written a business model, MVP plan and a launch playbook with a sales plan, designed the brand and built a landing page — and told me BUILD, with a real source for every reason.
 
 Built on Meta's Muse Spark, Muse Spark Open, Muse Image, SAM 3.1 and Muse Voice Transcribe for the Meta Global AI Developer Hackathon 👇 [tag the official account + hashtag from the hackathon Discord #announcements]
 

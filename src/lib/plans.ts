@@ -84,6 +84,8 @@ export const CREDIT_COSTS = {
   page_review: 3,
   business_model: 5,
   mvp_plan: 8,
+  /** Launch playbook: stages with gates, sales playbook, SaaS metrics, retention and build sprints. */
+  launch_playbook: 10,
   /** Validation Autopilot: the agent's own reasoning. The tools it runs (research, plans…) charge their own price. */
   autopilot: 6,
   // Gold Mine

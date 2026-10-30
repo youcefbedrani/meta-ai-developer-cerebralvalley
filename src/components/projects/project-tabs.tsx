@@ -13,6 +13,7 @@ const TABS = [
   { slug: "validation", label: "Validation" },
   { slug: "review", label: "Page review" },
   { slug: "plan", label: "Plan" },
+  { slug: "playbook", label: "Launch playbook" },
   { slug: "brand", label: "Brand" },
   { slug: "design", label: "Design" },
   { slug: "marketing", label: "Marketing" },

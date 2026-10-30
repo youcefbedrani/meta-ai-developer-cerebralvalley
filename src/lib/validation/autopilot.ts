@@ -51,5 +51,6 @@ export const AUTOPILOT_TOOLS: Record<string, string> = {
   generate_mvp_plan: "MVP plan",
   design_brand: "Brand and visuals",
   create_landing_page: "Landing page and waitlist test",
+  create_launch_playbook: "Launch playbook",
   submit_verdict: "Verdict",
 };
