@@ -46,6 +46,7 @@ const integrationSchema = z.object({
   /** Comma-separated operation names (as logged in ai_usage_logs), or "*" for all. */
   OPEN_MODEL_OPERATIONS: optionalString,
   OPEN_MODEL_STRUCTURED_OUTPUT: optionalString,
+  OPEN_MODEL_REASONING: optionalString,
   /** Where uploaded audio is kept (interview recordings). Default ./.data/uploads; a volume in production. */
   UPLOAD_DIR: optionalString,
   SEARCH_PROVIDER: optionalString,

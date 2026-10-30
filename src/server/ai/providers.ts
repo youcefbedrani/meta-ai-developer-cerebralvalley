@@ -24,6 +24,10 @@ export type ResolvedModel =
       viaGateway?: boolean;
       /** openai-compatible: the gateway enforces a JSON Schema (response_format json_schema) instead of a schema in the prompt. */
       jsonSchema?: boolean;
+      /** openai-compatible reasoning models (Muse Spark Open): reasoning_effort sent with every call. */
+      reasoningEffort?: "low" | "medium";
+      /** The host follows a JSON Schema only in strict mode (Baseten): strict when the schema allows it, otherwise the schema goes in the prompt. */
+      strictJsonSchema?: boolean;
     }
   | { mock: true; provider: "mock"; modelId: string };
 
@@ -81,11 +85,21 @@ function openWeightsRoute(operation: string): ResolvedModel | null {
     modelId,
     viaGateway: true,
     jsonSchema: structuredMode(env.OPEN_MODEL_STRUCTURED_OUTPUT, baseURL) === "json_schema",
+    // Muse Spark Open always reasons; low effort halves its reasoning tokens on extraction work.
+    reasoningEffort: openReasoningEffort(env.OPEN_MODEL_REASONING),
+    // Measured on Baseten: non-strict json_schema isn't enforced (keys get renamed); strict is.
+    strictJsonSchema: true,
   };
 }
 
 /** Gateways known to enforce JSON Schema natively (constrained decoding). Others get the schema in the prompt. */
-const NATIVE_JSON_SCHEMA_HOSTS = ["api.meta.ai"];
+const NATIVE_JSON_SCHEMA_HOSTS = ["api.meta.ai", "inference.baseten.co"];
+
+function openReasoningEffort(setting: string | undefined): "low" | "medium" {
+  if (!setting) return "low";
+  if (setting === "low" || setting === "medium") return setting;
+  throw new ConfigError("ai", [`OPEN_MODEL_REASONING (unsupported value "${setting}"; use low or medium)`]);
+}
 
 function structuredMode(setting: string | undefined, baseURL: string): "json_schema" | "prompt" {
   if (setting === "json_schema" || setting === "prompt") return setting;
@@ -130,7 +144,7 @@ type OpenAIOptions = { store: false; promptCacheKey: string; safetyIdentifier?: 
 export function providerOptionsFor(
   resolved: ResolvedModel,
   opts: { tier: ModelTier; operation: string; userId: string | null; verbosity?: "low" | "medium" | "high"; reasoning?: "minimal" | "low" | "medium" },
-): { anthropic: AnthropicOptions } | { openai: OpenAIOptions } | undefined {
+): { anthropic: AnthropicOptions } | { openai: OpenAIOptions } | { openai: { reasoningEffort: "low" | "medium" } } | undefined {
   if ("mock" in resolved) return undefined;
   if (resolved.provider === "anthropic") {
     const effort: AnthropicOptions["effort"] = opts.reasoning === "medium" || (!opts.reasoning && opts.tier === "smart") ? "medium" : "low";
@@ -143,6 +157,7 @@ export function providerOptionsFor(
       },
     };
   }
+  if (resolved.provider === "openai-compatible" && resolved.reasoningEffort) return { openai: { reasoningEffort: resolved.reasoningEffort } };
   if (resolved.provider !== "openai") return undefined;
   const reasoning = REASONING_MODEL.test(resolved.modelId);
   return {
