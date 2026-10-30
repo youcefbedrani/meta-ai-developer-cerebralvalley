@@ -3,12 +3,14 @@ import { and, asc, desc, eq } from "drizzle-orm";
 import { createHash } from "node:crypto";
 import { buildBrief, buildMessages, cacheNormalise, copilotMessageSchema, systemFor, threadTitle, toolById, type ChatMessage } from "@/lib/copilot";
 import { getIntegrationStatus, ConfigError } from "@/lib/env";
+import { copilotIdeaDescription, copilotIdeaGoal, parseCopilotIdeas } from "@/lib/copilot-ideas";
+import { createProjectSchema } from "@/lib/validation/project";
 import { CREDIT_COSTS } from "@/lib/plans";
 import { getPlatformSettings } from "@/server/platform/settings";
 import { callText, withCredits } from "@/server/ai/run";
 import { getDb, schema } from "@/server/db/client";
 import { NotFoundError } from "@/server/data/errors";
-import { requireProject } from "@/server/data/projects";
+import { createProject, requireProject } from "@/server/data/projects";
 import { listCompetitors } from "@/server/data/research";
 import type { UserId } from "@/server/data/user-id";
 import { enforceAiLimits } from "@/server/rate-limit";
@@ -104,6 +106,24 @@ export async function sendCopilotMessage(userId: UserId, raw: unknown): Promise<
   );
   if (key) await getRedis().set(key, result.text, "EX", CACHE_TTL_SECONDS).catch(() => {});
   return save({ content: result.text, cached: false, tokensIn: result.tokensIn, tokensOut: result.tokensOut });
+}
+
+/**
+ * Turns idea number `index` of a saved Copilot reply into a project. The idea is read from the stored reply,
+ * never from the browser, so a project only ever holds what the Copilot actually suggested.
+ */
+export async function projectFromCopilotIdea(userId: UserId, messageId: string, index: number): Promise<{ projectId: string; goal: string }> {
+  if (!/^[0-9a-f-]{36}$/.test(messageId) || !Number.isInteger(index) || index < 0) throw new NotFoundError("Idea");
+  const [row] = await getDb()
+    .select({ content: schema.copilotMessages.content })
+    .from(schema.copilotMessages)
+    .innerJoin(schema.copilotThreads, eq(schema.copilotThreads.id, schema.copilotMessages.threadId))
+    .where(and(eq(schema.copilotMessages.id, messageId), eq(schema.copilotMessages.role, "assistant"), eq(schema.copilotThreads.userId, userId)))
+    .limit(1);
+  const idea = row ? parseCopilotIdeas(row.content)[index] : undefined;
+  if (!idea) throw new NotFoundError("Idea");
+  const project = await createProject(userId, createProjectSchema.parse({ name: idea.title, description: copilotIdeaDescription(idea) }));
+  return { projectId: project.id, goal: copilotIdeaGoal(idea) };
 }
 
 export async function listCopilotThreads(userId: UserId) {

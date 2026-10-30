@@ -40,6 +40,7 @@ export const COPILOT_TOOLS: CopilotTool[] = [
   { id: "onboarding_emails", group: "Sales", label: "Onboarding emails", description: "Welcome and activation emails that bring users back.", placeholder: "Write the onboarding emails for new sign-ups", instructions: "Write 4 onboarding emails (day 0 welcome, day 1 first win, day 3 key feature, day 7 check-in), each with a subject line, under 110 words, and one call to action that moves the user to their first success.", maxReplyTokens: 1100, verbosity: "low" },
   { id: "sales_page_objections", group: "Sales", label: "Objection handling", description: "Answers to the doubts that stop people from buying.", placeholder: "What objections will buyers have, and how do I answer them?", instructions: "List the 6 most likely buying objections for this product and customer. For each, give a short, honest answer for the sales page or a call, plus one proof the founder should collect.", maxReplyTokens: 900, verbosity: "low" },
   { id: "pricing", group: "Strategy", label: "Pricing & packaging", description: "Plans, price points and how to test them.", placeholder: "How should I price my SaaS?", instructions: "Recommend pricing: the value metric, 2 or 3 plans with what's in each, starting price points with reasoning (use competitor prices from the brief if present; otherwise say they're unknown), and a cheap way to test willingness to pay. Don't invent market data.", maxReplyTokens: 1000, verbosity: "low" },
+  { id: "ideas", group: "Strategy", label: "Find SaaS ideas", description: "Ideas for a niche or skill set, each one-click to a project.", placeholder: "Give me 5 SaaS ideas for independent gyms", instructions: "Suggest 3 to 5 distinct SaaS ideas for the founder's niche, customer or skills. Prefer narrow, boring, painful problems a solo founder can reach and build for in weeks. Use the idea format for every idea. After the ideas, say in one line which one you'd validate first and why.", maxReplyTokens: 1400, verbosity: "medium" },
   { id: "positioning", group: "Strategy", label: "Positioning & messaging", description: "Who it's for, the alternative, and why you win.", placeholder: "Help me position my product against competitors", instructions: "Write a positioning statement (for / who / unlike / we), the main alternatives customers use today, 3 key differentiators, and a messaging hierarchy (one core message, three supporting ones).", maxReplyTokens: 900, verbosity: "low" },
   { id: "interview_questions", group: "Product", label: "Customer interview script", description: "Questions that reveal real pain without leading.", placeholder: "Write questions for interviews with potential customers", instructions: "Write a 15-minute customer interview script in the style of The Mom Test: an intro, 8 to 10 open questions about past behaviour (not opinions about the idea), follow-up probes, and what signals mean real demand.", maxReplyTokens: 900, verbosity: "low" },
   { id: "feature_spec", group: "Product", label: "Feature spec & user stories", description: "User stories with acceptance criteria, ready to build.", placeholder: "Write user stories for my main feature", instructions: "Write user stories ('As a…, I want…, so that…') with acceptance criteria as checkboxes, edge cases, and what's explicitly out of scope for the MVP. Keep the scope small enough to ship in 1 to 2 weeks.", maxReplyTokens: 1100, verbosity: "low" },
@@ -80,6 +81,13 @@ Channel guidance:
 - Ads: one angle per ad, match the landing page's promise, respect each platform's character limits.
 - SEO: write for the searcher's intent first, use the keyword naturally in the title, first paragraph and one heading.
 - Product and strategy: ship the smallest version that tests the riskiest assumption; say what would change your recommendation.
+
+Idea format (whenever you suggest product or SaaS ideas, in any tool, so the founder can turn each into a project with one click):
+### Idea: <short name>
+- **One-liner:** <what it does, under 20 words>
+- **Customer:** <who pays>
+- **Problem:** <the pain, concretely>
+- **Solution:** <the smallest product that solves it>
 
 Formatting rules:
 - Start with the deliverable itself. Put any short notes or tips after it, under a "Tips" heading, with at most 3 bullets.
@@ -167,3 +175,4 @@ export const threadTitle = (message: string) => cut(message, 60) || "New convers
 
 /** Normalises a first message for the answer cache, so small differences in spacing or case still hit. */
 export const cacheNormalise = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
+

@@ -1,12 +1,13 @@
 "use client";
 
-import { Bot, Check, Copy, Loader2, MessageSquarePlus, Send, Sparkles, Trash2, Zap } from "lucide-react";
+import { ArrowRight, Bot, Check, Copy, FolderPlus, Lightbulb, Loader2, MessageSquarePlus, Rocket, Send, Sparkles, Trash2, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { deleteCopilotThreadAction, sendCopilotMessageAction } from "@/app/(app)/app/(founder)/copilot/actions";
+import { copilotIdeaToProjectAction, deleteCopilotThreadAction, sendCopilotMessageAction } from "@/app/(app)/app/(founder)/copilot/actions";
 import { Button } from "@/components/ui/button";
+import { parseCopilotIdeas, type CopilotIdea } from "@/lib/copilot-ideas";
 import { cn } from "@/lib/utils";
 
 type Tool = { id: string; group: string; label: string; description: string; placeholder: string };
@@ -243,6 +244,7 @@ function Bubble({ m }: { m: Message }) {
         <div className="rounded-2xl rounded-tl-md border border-border bg-card px-4 py-3 text-sm leading-relaxed">
           <Markdown text={m.content} />
         </div>
+        <IdeaActions messageId={m.id} text={m.content} />
         <div className="mt-1.5 flex items-center gap-3 text-xs text-muted-foreground">
           <button
             type="button"
@@ -255,6 +257,66 @@ function Bubble({ m }: { m: Message }) {
         </div>
       </div>
     </div>
+  );
+}
+
+const SAVED_ID = /^[0-9a-f-]{36}$/;
+
+/** One-click project (and Autopilot validation) for each idea in a saved reply. */
+function IdeaActions({ messageId, text }: { messageId: string; text: string }) {
+  const ideas = SAVED_ID.test(messageId) ? parseCopilotIdeas(text) : [];
+  if (!ideas.length) return null;
+  return (
+    <div className="mt-2 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+      <p className="flex items-center gap-1.5 px-1 text-xs font-medium text-primary">
+        <Lightbulb className="size-3.5" /> Take an idea further
+      </p>
+      <ul className="mt-2 space-y-2">
+        {ideas.map((idea, i) => <IdeaRow key={`${i}-${idea.title}`} messageId={messageId} index={i} idea={idea} />)}
+      </ul>
+    </div>
+  );
+}
+
+function IdeaRow({ messageId, index, idea }: { messageId: string; index: number; idea: CopilotIdea }) {
+  const router = useRouter();
+  const [busy, setBusy] = useState<"project" | "autopilot" | null>(null);
+  const [projectId, setProjectId] = useState<string | null>(null);
+
+  async function go(then: "project" | "autopilot") {
+    setBusy(then);
+    const r = await copilotIdeaToProjectAction(messageId, index);
+    if (!r.ok) {
+      setBusy(null);
+      toast.error(r.error);
+      return;
+    }
+    setProjectId(r.data.projectId);
+    toast.success(`Project “${idea.title}” created`);
+    router.push(then === "autopilot" ? `/app/projects/${r.data.projectId}/autopilot?goal=${encodeURIComponent(r.data.goal)}` : `/app/projects/${r.data.projectId}`);
+  }
+
+  return (
+    <li className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card px-3 py-2">
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">{idea.title}</p>
+        <p className="truncate text-xs text-muted-foreground">{idea.customer}</p>
+      </div>
+      {projectId ? (
+        <Link href={`/app/projects/${projectId}`} className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+          Open project <ArrowRight className="size-3.5" />
+        </Link>
+      ) : (
+        <div className="flex shrink-0 gap-2">
+          <Button type="button" size="sm" variant="outline" disabled={!!busy} onClick={() => go("project")}>
+            {busy === "project" ? <Loader2 className="animate-spin" /> : <FolderPlus />} Create project
+          </Button>
+          <Button type="button" size="sm" variant="gradient" disabled={!!busy} onClick={() => go("autopilot")} title="Creates the project and opens the Autopilot to research and validate it">
+            {busy === "autopilot" ? <Loader2 className="animate-spin" /> : <Rocket />} Validate with Autopilot
+          </Button>
+        </div>
+      )}
+    </li>
   );
 }
 
@@ -274,7 +336,8 @@ function Markdown({ text }: { text: string }) {
     list = null;
   };
   for (const raw of text.split("\n")) {
-    const line = raw.trimEnd();
+    // "1. ### Title" (a numbered heading) is a heading, not a list item.
+    const line = raw.trimEnd().replace(/^\s*\d+[.)]\s+(?=#{1,4}\s)/, "");
     const h = line.match(/^(#{1,4})\s+(.*)$/);
     const ul = line.match(/^\s*[-*•]\s+(.*)$/);
     const ol = line.match(/^\s*\d+[.)]\s+(.*)$/);
