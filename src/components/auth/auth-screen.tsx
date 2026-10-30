@@ -144,6 +144,12 @@ export function AuthScreen({ initialMode, missingConfig, signupNotice }: { initi
     return () => cancelAnimationFrame(id);
   }, []);
 
+  // Set Firebase Auth up before any click, so "Continue with Google" opens its popup straight from the click
+  // (browsers block popups opened after an await).
+  useEffect(() => {
+    if (!missingConfig.length) getClientAuth().catch(() => {});
+  }, [missingConfig.length]);
+
   function switchMode(next: Mode) {
     if (next === mode) return;
     setSwapping(true);
