@@ -130,7 +130,8 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
   // `minItems`/`maxItems`): unless the gateway is known to enforce JSON Schema (Meta's API does), spell the
   // schema out in the prompt and let Zod below enforce it.
   const gateway = resolved.provider === "openai-compatible";
-  const promptSchema = gateway && !resolved.jsonSchema;
+  const strict = gateway && !!resolved.strictJsonSchema && strictCompatible(opts.schema);
+  const promptSchema = gateway && (!resolved.jsonSchema || (!!resolved.strictJsonSchema && !strict));
   const system = promptSchema
     ? `${opts.system}\n\nReply with a single JSON object (no prose, no code fences) matching this JSON Schema:\n${JSON.stringify(z.toJSONSchema(opts.schema))}`
     : opts.system;
@@ -148,6 +149,7 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
           maxOutputTokens: outputCap(resolved.provider, maxOutputTokens),
           maxRetries: retriesFor(resolved.provider),
           abortSignal: AbortSignal.timeout(TIMEOUT_MS),
+          providerOptions: providerOptionsFor(resolved, { tier: opts.tier, operation: opts.operation, userId: opts.userId }),
         }),
         opts.prompt,
       );
@@ -161,8 +163,11 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
         maxRetries: retriesFor(resolved.provider),
         abortSignal: AbortSignal.timeout(TIMEOUT_MS),
         // Gateways with native JSON Schema: non-strict, since strict mode would require every field (Zod
-        // optionals and defaults) and `additionalProperties: false` everywhere.
-        providerOptions: gateway ? { openai: { strictJsonSchema: false } } : providerOptionsFor(resolved, { tier: opts.tier, operation: opts.operation, userId: opts.userId }),
+        // optionals and defaults) and `additionalProperties: false` everywhere. Hosts that only follow a
+        // schema in strict mode get it whenever every field is required (see strictCompatible).
+        providerOptions: gateway
+          ? { openai: { strictJsonSchema: strict, ...(resolved.reasoningEffort ? { reasoningEffort: resolved.reasoningEffort } : {}) } }
+          : providerOptionsFor(resolved, { tier: opts.tier, operation: opts.operation, userId: opts.userId }),
       });
       used.in += result.usage.inputTokens ?? 0;
       used.out += result.usage.outputTokens ?? 0;
@@ -204,6 +209,21 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
 }
 
 /** The JSON object in a model reply: tolerates code fences and stray prose around it. Null if there is none. */
+/** True when every object in the schema requires all its fields, which is what strict JSON Schema mode needs. */
+function strictCompatible(schema: z.ZodType): boolean {
+  const ok = (node: unknown): boolean => {
+    if (!node || typeof node !== "object") return true;
+    const n = node as { type?: unknown; properties?: Record<string, unknown>; required?: string[] };
+    if (n.type === "object" && n.properties && !Object.keys(n.properties).every((k) => n.required?.includes(k))) return false;
+    return Object.values(node).every((v) => (Array.isArray(v) ? v.every(ok) : ok(v)));
+  };
+  try {
+    return ok(z.toJSONSchema(schema, { io: "input" }));
+  } catch {
+    return false;
+  }
+}
+
 export function extractJson(text: string): unknown {
   const unfenced = text.replace(/^\s*```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "");
   for (const candidate of [unfenced, unfenced.slice(unfenced.indexOf("{"), unfenced.lastIndexOf("}") + 1)]) {
