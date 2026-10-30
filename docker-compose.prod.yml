@@ -76,6 +76,8 @@ services:
     environment:
       DOMAIN: ${DOMAIN:?set DOMAIN in .env.production}
       ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL in .env.production}
+      # Where /__/auth/* is relayed to (Firebase's sign-in helper for this project).
+      FIREBASE_AUTH_HOST: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID:-firebase-project-not-set}.firebaseapp.com
     ports:
       - "80:80"
       - "443:443"
