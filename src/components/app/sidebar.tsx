@@ -4,6 +4,7 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { HackathonLockup } from "@/components/brand/hackathon-lockup";
 import { Wordmark } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -73,7 +74,7 @@ function Brand({ admin = false }: { admin?: boolean }) {
       className="flex items-center gap-2.5 px-2"
       aria-label={`${BRAND.name} home`}
     >
-      <Wordmark className="text-[22px] text-foreground" />
+      {admin ? <Wordmark className="text-[22px] text-foreground" /> : <HackathonLockup className="text-[20px] text-foreground" />}
       {admin ? (
         <span className="rounded-full bg-[var(--plum)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
           Admin
