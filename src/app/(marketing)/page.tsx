@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LandingEffects } from "@/components/landing/landing-effects";
 import { MistakesStory } from "@/components/landing/mistakes-story";
 import { MarketingFooter, MarketingHeader } from "@/components/landing/marketing-chrome";
+import { MetaAiSection } from "@/components/landing/meta-ai-section";
 import { PricingSection } from "@/components/landing/pricing-section";
 import { ArrowChip, Example, Ic, IconSprite, LogoGlyph } from "@/components/landing/icons";
 import "./landing.css";
@@ -246,6 +247,8 @@ export default function HomePage() {
         <MistakesStory />
 
         {/* ================= FEATURE TRIO ================= */}
+        <MetaAiSection />
+
         <section id="features">
           <div className="trio">
             <div className="rv">

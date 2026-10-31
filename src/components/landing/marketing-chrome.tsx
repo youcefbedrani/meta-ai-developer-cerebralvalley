@@ -28,11 +28,10 @@ export function MarketingHeader() {
             <HackathonLockup compact className="text-[25px] text-[var(--plum)]" />
           </Link>
           <nav className="nav-links">
-            <Link href="/#mistakes">Why {BRAND.name}</Link>
+            <Link href="/#meta-ai">Meta AI</Link>
             <Link href="/#features">Features</Link>
             <Link href="/#gold-mine">Gold Mine</Link>
             <Link href="/#how">How it works</Link>
-            <Link href="/#capabilities">Capabilities</Link>
             <Link href="/pricing">Pricing</Link>
             <Link href="/#faq">FAQ</Link>
           </nav>
@@ -53,6 +52,7 @@ export function MarketingHeader() {
         </div>
       </header>
       <div className="mobile-menu" id="mobileMenu">
+        <Link href="/#meta-ai">Meta AI</Link>
         <Link href="/#features">Features</Link>
         <Link href="/#how">How it works</Link>
         <Link href="/#capabilities">Capabilities</Link>
