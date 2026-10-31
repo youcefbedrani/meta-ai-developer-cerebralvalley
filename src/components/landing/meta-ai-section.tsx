@@ -150,7 +150,7 @@ export function MetaAiSection() {
         ))}
       </div>
       <p className="meta-note rv">
-        Measured on the live product during the hackathon.{" "}
+        Measured during the hackathon (end-to-end test runs and real Autopilot runs).{" "}
         <a href={HACKATHON.writeUp} target="_blank" rel="noopener noreferrer">Read exactly what we built and how →</a>
       </p>
     </section>
