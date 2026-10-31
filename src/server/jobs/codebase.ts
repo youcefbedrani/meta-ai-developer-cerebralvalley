@@ -4,12 +4,31 @@ import { buildCodebaseFiles, type BrandTokens, type GeneratedPage } from "@/lib/
 import { buildCodingPrompt, screenFileName, type DesignContext } from "@/lib/design-prompt";
 import { screenRoutes, screenSlug } from "@/lib/prototype";
 import { codebaseDataSchema, normalizeDataModel, type Entity } from "@/lib/validation/codebase";
-import { buildCodebaseDataPrompt, buildCodebasePagePrompt, CODEBASE_DATA_SYSTEM, CODEBASE_PAGE_SYSTEM, extractPageCode, mockCodebaseData, mockCodebasePage, screenBody, screenText } from "@/server/ai/prompts/codebase";
+import {
+  buildCodebaseDataPrompt,
+  buildCodebaseEditPrompt,
+  buildCodebaseFixPrompt,
+  buildCodebasePagePrompt,
+  CODEBASE_DATA_SYSTEM,
+  CODEBASE_EDIT_SYSTEM,
+  CODEBASE_FIX_SYSTEM,
+  CODEBASE_PAGE_SYSTEM,
+  codebaseChangeSchema,
+  extractPageCode,
+  isEditablePath,
+  mockCodebaseChange,
+  mockCodebaseData,
+  mockCodebasePage,
+  screenBody,
+  screenText,
+  type CodebaseChange,
+} from "@/server/ai/prompts/codebase";
 import { callStructured, callText } from "@/server/ai/run";
 import { refundCredits } from "@/server/billing/credits";
+import { checkCodebase, issuesText, type CheckResult } from "@/server/codebase/check";
 import { getDb, schema } from "@/server/db/client";
 import { unsafeToUserId, type UserId } from "@/server/data/user-id";
-import { CODEBASE_SCHEMA_VERSION, codebaseCreditRef, type CodebaseContent } from "@/server/services/codebase";
+import { codebaseCreditRef, insertCodebaseVersion, type CodebaseContent } from "@/server/services/codebase";
 import { designDocs, getDesignContext } from "@/server/services/design";
 
 type Job = typeof schema.researchJobs.$inferSelect;
@@ -147,18 +166,13 @@ export async function runCodebaseJob(job: Job): Promise<void> {
     // Fallback pages embed their design from public/.
     for (const [i, s] of screens.entries()) if (failedScreens.includes(s.name)) generated[`public/designs/${files[i]}`] = s.html;
 
-    const content: CodebaseContent = { name: ctx.name, files: generated, screens: pages.map((p) => ({ name: p.name, route: p.route })), entities: entities.map((e) => e.key), failedScreens };
-    await db.transaction(async (tx) => {
-      await tx.insert(schema.reports).values({
-        projectId: job.projectId,
-        researchJobId: job.id,
-        type: "codebase",
-        schemaVersion: CODEBASE_SCHEMA_VERSION,
-        content: content as unknown as Record<string, unknown>,
-        summary: `${pages.length} pages, ${entities.length} entities, ${Object.keys(generated).length} files`,
-      });
-      await tx.update(schema.researchJobs).set({ status: "succeeded", currentStage: null, finishedAt: new Date() }).where(eq(schema.researchJobs.id, job.id));
-    });
+    // Make sure it runs: type-check everything, and let Muse Spark fix what the check finds.
+    await stage("Checking that the code compiles");
+    const checked = await checkAndFix(userId, job.projectId, generated, (n) => stage(`Fixing ${n} problem${n === 1 ? "" : "s"}`));
+
+    const content: CodebaseContent = { name: ctx.name, files: checked.files, screens: pages.map((p) => ({ name: p.name, route: p.route })), entities: entities.map((e) => e.key), failedScreens, note: "Generated from the approved prototype", check: checked.check };
+    await insertCodebaseVersion(job.projectId, job.id, content);
+    await db.update(schema.researchJobs).set({ status: "succeeded", currentStage: null, finishedAt: new Date() }).where(eq(schema.researchJobs.id, job.id));
   } catch (err) {
     console.error(`[codebase] job ${job.id} failed:`, err instanceof Error ? err.message : err);
     await db
@@ -166,5 +180,115 @@ export async function runCodebaseJob(job: Job): Promise<void> {
       .set({ status: "failed", currentStage: null, error: "The code couldn't be generated. Your credits were refunded; please try again.", finishedAt: new Date() })
       .where(eq(schema.researchJobs.id, job.id));
     await refundCredits(userId, codebaseCreditRef(job.id), "codebase failed");
+  }
+}
+
+const MAX_FIX_ROUNDS = 2;
+
+/** Writes a model's change into the files: only editable paths, complete contents. */
+function applyChange(files: Record<string, string>, change: CodebaseChange): { files: Record<string, string>; touched: string[] } {
+  const next = { ...files };
+  const touched: string[] = [];
+  for (const f of change.files) {
+    if (!isEditablePath(f.path) || !f.content.trim()) continue;
+    next[f.path] = f.content.endsWith("\n") ? f.content : `${f.content}\n`;
+    touched.push(f.path);
+  }
+  for (const p of change.deleted) {
+    if (isEditablePath(p) && p in next && p !== "package.json") {
+      delete next[p];
+      touched.push(p);
+    }
+  }
+  return { files: next, touched };
+}
+
+/**
+ * Type-checks the codebase; while problems remain (up to two rounds) Muse Spark fixes the files they're in.
+ * A fix round that makes things worse is thrown away.
+ */
+async function checkAndFix(userId: UserId, projectId: string, files: Record<string, string>, onFix: (problems: number) => Promise<unknown>): Promise<{ files: Record<string, string>; check: CheckResult; rounds: number }> {
+  let current = files;
+  let check = await checkCodebase(current);
+  let rounds = 0;
+  while (!check.ok && rounds < MAX_FIX_ROUNDS) {
+    rounds++;
+    await onFix(check.issues.length);
+    const broken = [...new Set(check.issues.map((i) => i.file))].filter((f) => f in current).slice(0, 5);
+    if (!broken.length) break;
+    let change: CodebaseChange;
+    try {
+      change = await callStructured({ userId, projectId, operation: "codebase_fix", tier: "smart", schema: codebaseChangeSchema, system: CODEBASE_FIX_SYSTEM, prompt: buildCodebaseFixPrompt(issuesText(check.issues), current, broken), mock: () => ({ summary: "[Mock] No fix.", files: [], deleted: [] }), maxOutputTokens: 24_000 });
+    } catch (err) {
+      console.error("[codebase] fix round failed:", err instanceof Error ? err.message : err);
+      break;
+    }
+    const candidate = applyChange(current, change).files;
+    const next = await checkCodebase(candidate);
+    if (next.issues.length >= check.issues.length && !next.ok) break;
+    current = candidate;
+    check = next;
+  }
+  return { files: current, check, rounds };
+}
+
+/**
+ * Changes to an existing codebase (input.kind = "codebase_edit"):
+ * - "ai": Muse Spark applies the founder's request, then check-and-fix → a new version;
+ * - "fix": check-and-fix the given version → a new version;
+ * - "check": type-check the given version in place (after the founder's own edits; free).
+ */
+export async function runCodebaseEditJob(job: Job): Promise<void> {
+  const db = getDb();
+  const userId = unsafeToUserId(job.userId);
+  const input = job.input as { mode?: "ai" | "fix" | "check"; baseId?: string; instruction?: string };
+  const mode = input.mode ?? "check";
+  const stage = (currentStage: string) => db.update(schema.researchJobs).set({ currentStage }).where(eq(schema.researchJobs.id, job.id));
+  await db.update(schema.researchJobs).set({ status: "running", startedAt: new Date(), currentStage: mode === "ai" ? "Muse Spark is changing the code" : "Checking that the code compiles", error: null }).where(eq(schema.researchJobs.id, job.id));
+  try {
+    const [base] = await db
+      .select({ id: schema.reports.id, content: schema.reports.content })
+      .from(schema.reports)
+      .where(and(eq(schema.reports.id, input.baseId ?? ""), eq(schema.reports.projectId, job.projectId), eq(schema.reports.type, "codebase")))
+      .limit(1);
+    if (!base) throw new Error("The code version is gone.");
+    const content = base.content as unknown as CodebaseContent;
+
+    if (mode === "check") {
+      const check = await checkCodebase(content.files);
+      await db.update(schema.reports).set({ content: { ...content, check } as unknown as Record<string, unknown> }).where(eq(schema.reports.id, base.id));
+    } else {
+      let files = content.files;
+      let summary: string | undefined;
+      if (mode === "ai") {
+        const change = await callStructured({
+          userId,
+          projectId: job.projectId,
+          operation: "codebase_edit",
+          tier: "smart",
+          schema: codebaseChangeSchema,
+          system: CODEBASE_EDIT_SYSTEM,
+          prompt: buildCodebaseEditPrompt(input.instruction ?? "", files, Object.keys(files)),
+          mock: mockCodebaseChange,
+          maxOutputTokens: 32_000,
+        });
+        const applied = applyChange(files, change);
+        if (!applied.touched.length) throw new Error("The change didn't touch any file.");
+        files = applied.files;
+        summary = `${change.summary} (${applied.touched.join(", ")})`.slice(0, 800);
+        await stage("Checking that the code compiles");
+      }
+      const checked = await checkAndFix(userId, job.projectId, files, (n) => stage(`Fixing ${n} problem${n === 1 ? "" : "s"}`));
+      const note = mode === "ai" ? `Muse Spark: ${(input.instruction ?? "").slice(0, 120)}` : "Muse Spark fixed the problems";
+      await insertCodebaseVersion(job.projectId, job.id, { ...content, files: checked.files, note, summary: summary ?? (checked.rounds ? `Fixed in ${checked.rounds} round${checked.rounds === 1 ? "" : "s"}.` : undefined), check: checked.check });
+    }
+    await db.update(schema.researchJobs).set({ status: "succeeded", currentStage: null, finishedAt: new Date() }).where(eq(schema.researchJobs.id, job.id));
+  } catch (err) {
+    console.error(`[codebase] edit job ${job.id} failed:`, err instanceof Error ? err.message : err);
+    await db
+      .update(schema.researchJobs)
+      .set({ status: "failed", currentStage: null, error: mode === "check" ? "The check couldn't run. Try saving again." : "Muse Spark couldn't make that change. Your credits were refunded; try rephrasing it.", finishedAt: new Date() })
+      .where(eq(schema.researchJobs.id, job.id));
+    await refundCredits(userId, codebaseCreditRef(job.id), "code change failed");
   }
 }

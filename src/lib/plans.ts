@@ -75,6 +75,10 @@ export const CREDIT_COSTS = {
   design_screen: 4,
   /** The approved prototype turned into a runnable Next.js codebase (data model + one page per screen, Muse Spark). */
   codebase: 20,
+  /** Muse Spark changes the generated code on request (then type-checks and fixes it). */
+  codebase_edit: 5,
+  /** Muse Spark fixes the problems the type-check found (e.g. after your own edits). */
+  codebase_fix: 3,
   interview_script: 2,
   interview_analysis: 3,
   /** Interview recordings: per started 5 minutes of audio (Meta Muse Voice Transcribe). */

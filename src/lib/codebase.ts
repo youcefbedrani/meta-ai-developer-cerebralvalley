@@ -34,7 +34,9 @@ export function buildCodebaseFiles(input: {
     version: "0.1.0",
     private: true,
     scripts: { dev: "next dev", build: "next build", start: "next start" },
-    dependencies: { next: "^15.5.0", react: "^19.1.0", "react-dom": "^19.1.0" },
+    // Pinned: Next.js 15.5 crashes on StackBlitz's WebContainers ("Expected workUnitAsyncStorage to have a
+    // store"); 15.3.5 runs there and locally. Tested by posting a generated app to StackBlitz.
+    dependencies: { next: "15.3.5", react: "19.1.0", "react-dom": "19.1.0" },
     devDependencies: { "@tailwindcss/postcss": "^4.1.0", tailwindcss: "^4.1.0", typescript: "^5.9.0", "@types/node": "^22.0.0", "@types/react": "^19.1.0", "@types/react-dom": "^19.1.0" },
   });
   files["tsconfig.json"] = json({
@@ -85,9 +87,6 @@ body {
 `;
   files["src/app/layout.tsx"] = `import type { Metadata } from "next";
 import "./globals.css";
-
-// Pages read the JSON store, so render them on every request (always fresh data).
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = { title: ${JSON.stringify(name)}, description: ${JSON.stringify(`${name}: MVP generated with Startum`)} };
 
@@ -256,4 +255,27 @@ export async function deleteRecord(formData: FormData) {
 export function codebaseFileOrder(paths: string[]): string[] {
   const rank = (p: string) => (p === "README.md" ? 0 : p.startsWith("src/app/") && p.endsWith("page.tsx") ? 1 : p.startsWith("src/") ? 2 : p.startsWith("design/") || p.startsWith("docs/") ? 4 : 3);
   return [...paths].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+}
+
+/**
+ * Code generated before the StackBlitz fix asked for Next.js ^15.5 (which crashes on WebContainers) and forced
+ * dynamic rendering in the layout. Applied when a codebase is read, so old versions run too.
+ */
+export function withRunnableDefaults(files: Record<string, string>): Record<string, string> {
+  const out = { ...files };
+  try {
+    const pkg = JSON.parse(out["package.json"] ?? "") as { dependencies?: Record<string, string> };
+    if (pkg.dependencies && /^\^?15\.(4|5)/.test(pkg.dependencies.next ?? "")) {
+      pkg.dependencies.next = "15.3.5";
+      pkg.dependencies.react = "19.1.0";
+      pkg.dependencies["react-dom"] = "19.1.0";
+      out["package.json"] = `${JSON.stringify(pkg, null, 2)}\n`;
+    }
+  } catch {
+    // Invalid package.json: the check reports it.
+  }
+  if (out["src/app/layout.tsx"]?.includes('export const dynamic = "force-dynamic";')) {
+    out["src/app/layout.tsx"] = out["src/app/layout.tsx"].replace(/\/\/ Pages read the JSON store[^\n]*\n/, "").replace('export const dynamic = "force-dynamic";\n\n', "").replace('export const dynamic = "force-dynamic";\n', "");
+  }
+  return out;
 }

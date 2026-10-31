@@ -174,12 +174,25 @@ After validation, the founder sees the product before building it, then gets the
   around the pages (Tailwind v4 theme with the same tokens, store, actions, README, PROMPT.md for Claude Code or
   Cursor, the designs and docs) is deterministic code. A page whose conversion fails twice falls back to embedding its
   approved design, so one bad page never sinks the build.
-- The result can be browsed in the app, downloaded as a zip, or opened on StackBlitz.
+- **Change it, yourself or with Muse Spark:** every file is editable in the app; or ask in plain words ("add a
+  pricing page with 3 plans and link it from the nav") and Muse Spark rewrites the files it needs. Every change is a
+  new version (restore any earlier one).
+- **Make sure it runs:** after every generation, AI change and manual save, the worker type-checks the whole project
+  in memory with the TypeScript compiler (against declarations of exactly what the scaffold allows), plus React rules
+  that compile but crash at runtime (hooks without "use client", client files reading the server store, `class=`,
+  `style="…"`). If anything fails, Muse Spark fixes the files involved, up to two rounds; a round that makes things
+  worse is discarded. The founder sees "Compiles: 0 problems" or each problem, clickable to the exact line.
+- **Runs on StackBlitz:** we posted generated apps to StackBlitz and found Next.js 15.5 crashes in its WebContainers
+  ("Expected workUnitAsyncStorage to have a store"); the scaffold pins Next.js 15.3.5, which we verified boots there
+  with Tailwind, the brand and data from the store. The result can be browsed, downloaded as a zip, or run on
+  StackBlitz in one click.
 
 Measured on two projects: about 25 s and $0.03 per screen design; code for 3–4 screens in 60–90 s for $0.15–0.23.
+A Muse Spark change (a new pricing page linked from the nav) took 24 s; the check takes about 3 s; fixing two
+deliberate mistakes in a manual edit took 12 s in one round.
 Both generated apps passed `tsc --noEmit` with zero errors and `next build` on the first try.
 
-Code: [`src/server/design/muse.ts`](src/server/design/muse.ts), [`src/server/ai/prompts/design-screen.ts`](src/server/ai/prompts/design-screen.ts), [`src/lib/prototype.ts`](src/lib/prototype.ts), [`src/components/design/prototype-viewer.tsx`](src/components/design/prototype-viewer.tsx), [`src/server/jobs/codebase.ts`](src/server/jobs/codebase.ts), [`src/lib/codebase.ts`](src/lib/codebase.ts)
+Code: [`src/server/design/muse.ts`](src/server/design/muse.ts), [`src/server/ai/prompts/design-screen.ts`](src/server/ai/prompts/design-screen.ts), [`src/lib/prototype.ts`](src/lib/prototype.ts), [`src/components/design/prototype-viewer.tsx`](src/components/design/prototype-viewer.tsx), [`src/server/jobs/codebase.ts`](src/server/jobs/codebase.ts), [`src/lib/codebase.ts`](src/lib/codebase.ts), [`src/server/codebase/check.ts`](src/server/codebase/check.ts), [`src/components/design/code-viewer.tsx`](src/components/design/code-viewer.tsx)
 
 ## How it fits together
 

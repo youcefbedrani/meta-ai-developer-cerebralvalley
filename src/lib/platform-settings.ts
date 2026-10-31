@@ -34,6 +34,8 @@ export const OPERATION_MODULE: Record<string, ModuleKey> = {
   brand_visuals: "marketing",
   design_screen: "design",
   codebase: "design",
+  codebase_edit: "design",
+  codebase_fix: "design",
   interview_script: "lab",
   interview_analysis: "lab",
   voice_transcription: "lab",
