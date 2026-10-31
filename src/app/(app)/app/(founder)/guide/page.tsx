@@ -24,7 +24,7 @@ export default async function GuidePage({ searchParams }: PageProps<"/app/guide"
 
   return (
     <div className="space-y-8">
-      <section className="surface ambient-glow rails-bg overflow-hidden p-6 sm:p-8">
+      <section className="surface ambient-glow overflow-hidden p-6 sm:p-8">
         <div className="flex items-center gap-2 text-sm font-medium text-[var(--violet)]">
           <Compass className="size-4" /> Start here
         </div>

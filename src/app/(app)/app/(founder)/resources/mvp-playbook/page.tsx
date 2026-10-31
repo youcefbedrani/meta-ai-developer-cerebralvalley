@@ -29,7 +29,7 @@ export default async function MvpPlaybookPage() {
     <article className="space-y-10">
       <div>
         <Link href="/app/resources" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ChevronLeft className="size-4" /> Resources</Link>
-        <header className="surface ambient-glow rails-bg mt-3 overflow-hidden p-6 sm:p-8">
+        <header className="surface ambient-glow mt-3 overflow-hidden p-6 sm:p-8">
           <p className="flex items-center gap-2 text-sm font-medium text-[var(--violet)]"><Clock className="size-4" /> {P.readMinutes} min read</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{P.title}</h1>
           <p className="mt-2 max-w-2xl text-lg text-muted-foreground">{P.subtitle}</p>
