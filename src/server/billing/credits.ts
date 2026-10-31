@@ -53,18 +53,31 @@ export async function monthlyAllowance(plan: PlanId): Promise<number> {
 }
 
 async function grantIfNeeded(tx: Tx | Database, userId: UserId, plan: PlanId, now = new Date()): Promise<void> {
-  const delta = await monthlyAllowance(plan);
+  const allowance = await monthlyAllowance(plan);
   await tx
     .insert(schema.creditLedger)
     .values({
       userId,
-      delta,
+      delta: allowance,
       reason: "monthly_grant",
       referenceId: periodKey(now),
       note: `${plan} plan monthly credits`,
       createdAt: now,
     })
     .onConflictDoNothing();
+  // Upgraded this month (e.g. Free → Studio): top up to the new plan's allowance now, not next month.
+  // One top-up per plan per period (unique index); downgrades never take credits back.
+  const [granted] = await tx
+    .select({ total: sql<string>`coalesce(sum(${schema.creditLedger.delta}), 0)` })
+    .from(schema.creditLedger)
+    .where(and(eq(schema.creditLedger.userId, userId), eq(schema.creditLedger.reason, "monthly_grant"), gte(schema.creditLedger.createdAt, periodStart(now))));
+  const missing = allowance - Number(granted?.total ?? 0);
+  if (missing > 0) {
+    await tx
+      .insert(schema.creditLedger)
+      .values({ userId, delta: missing, reason: "monthly_grant", referenceId: `${periodKey(now)}:${plan}`, note: `Upgraded to ${plan}: rest of this month's credits`, createdAt: now })
+      .onConflictDoNothing();
+  }
 }
 
 async function lockUser(tx: Tx, userId: UserId): Promise<PlanId> {
