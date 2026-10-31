@@ -85,6 +85,7 @@
 .landing .announce{display:flex;justify-content:center;gap:10px;align-items:center;font-size:13px;color:#fff;
   background:var(--grad-dark);padding:9px 16px;text-align:center}
 .landing .announce b{font-weight:600}
+.landing .announce-marks{display:inline-flex;align-items:center;gap:6px;font-size:15px;padding:3px 8px;border-radius:999px;background:#fff;color:var(--plum)}
 .landing .announce a{display:inline-flex;align-items:center;gap:4px;opacity:.85;border-bottom:1px solid rgba(255,255,255,.35)}
 .landing .announce a:hover{opacity:1}
 .landing .nav{position:sticky;top:0;z-index:60;transition:padding .4s var(--ease)}

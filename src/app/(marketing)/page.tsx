@@ -77,7 +77,7 @@ export default function HomePage() {
           <div className="hero-grid">
             <div className="hero-copy">
               <span className="pill rv" style={v({ "--d": ".05s" })}>
-                <span className="new">Early access</span> Evidence-first idea validation
+                <span className="new">Meta Hackathon</span> Evidence-first idea validation on Muse Spark
               </span>
               <h1>
                 <span className="line">

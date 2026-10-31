@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
+import { EventMark, HACKATHON, HackathonLockup, MetaMark } from "@/components/brand/hackathon-lockup";
 import { Wordmark } from "@/components/brand/logo";
 import { ArrowChip, Ic } from "./icons";
 
@@ -9,19 +10,22 @@ export function MarketingHeader() {
     <>
       {/* ANNOUNCEMENT */}
       <div className="announce">
-        <span>
-          ✦ <b>Early access</b> — {BRAND.name} is free while we build it with founders
+        <span className="announce-marks" aria-hidden="true">
+          <MetaMark /> <EventMark />
         </span>
-        <Link href="/#how">
-          See how it works <Ic id="arrow" style={{ width: 14, height: 14 }} />
-        </Link>
+        <span>
+          Built for the <b>{HACKATHON.name}</b> — every AI feature runs on Meta&apos;s {HACKATHON.models}
+        </span>
+        <a href={HACKATHON.writeUp} target="_blank" rel="noopener noreferrer">
+          What we built <Ic id="arrow" style={{ width: 14, height: 14 }} />
+        </a>
       </div>
 
       {/* NAV */}
       <header className="nav" id="nav">
         <div className="nav-in">
           <Link href="/" className="brand" aria-label={`${BRAND.name} home`}>
-            <Wordmark className="text-[25px] text-[var(--plum)]" />
+            <HackathonLockup compact className="text-[25px] text-[var(--plum)]" />
           </Link>
           <nav className="nav-links">
             <Link href="/#mistakes">Why {BRAND.name}</Link>
