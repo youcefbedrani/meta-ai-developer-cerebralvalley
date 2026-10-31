@@ -52,6 +52,17 @@ const integrationSchema = z.object({
   SEARCH_PROVIDER: optionalString,
   /** MVP design screens: "muse" (Meta Muse Spark, uses the AI key), "stitch" (Google Stitch SDK), "builtin" (no key needed) or "mock" (dev/tests only). */
   DESIGN_PROVIDER: optionalString,
+  /** Social publishing (launch videos). Each platform is on when its app credentials are set. */
+  SOCIAL_TOKEN_SECRET: optionalString,
+  LINKEDIN_CLIENT_ID: optionalString,
+  LINKEDIN_CLIENT_SECRET: optionalString,
+  /** LinkedIn's versioned API (YYYYMM). Default: two months before today, which is always a supported version. */
+  LINKEDIN_API_VERSION: optionalString,
+  META_APP_ID: optionalString,
+  META_APP_SECRET: optionalString,
+  META_GRAPH_VERSION: optionalString,
+  TIKTOK_CLIENT_KEY: optionalString,
+  TIKTOK_CLIENT_SECRET: optionalString,
   STITCH_API_KEY: optionalString,
   SEARCH_API_KEY: optionalString,
   KEYWORD_PROVIDER: optionalString,
@@ -118,6 +129,9 @@ export const INTEGRATIONS = {
   stripe: { label: "Stripe", vars: ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_PRICE_FOUNDER_MONTHLY", "STRIPE_PRICE_STUDIO_MONTHLY"], productionVars: [] },
   email: { label: "Email (Resend)", vars: ["RESEND_API_KEY"], productionVars: [] },
   design: { label: "MVP design (Google Stitch)", vars: ["DESIGN_PROVIDER", "STITCH_API_KEY"], productionVars: [] },
+  linkedin: { label: "Post to LinkedIn", vars: ["LINKEDIN_CLIENT_ID", "LINKEDIN_CLIENT_SECRET", "SOCIAL_TOKEN_SECRET"], productionVars: [] },
+  meta_social: { label: "Post to Facebook & Instagram", vars: ["META_APP_ID", "META_APP_SECRET", "SOCIAL_TOKEN_SECRET"], productionVars: [] },
+  tiktok: { label: "Post to TikTok", vars: ["TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET", "SOCIAL_TOKEN_SECRET"], productionVars: [] },
 } as const satisfies Record<string, { label: string; vars: readonly string[]; productionVars: readonly string[] }>;
 
 export type IntegrationName = keyof typeof INTEGRATIONS;

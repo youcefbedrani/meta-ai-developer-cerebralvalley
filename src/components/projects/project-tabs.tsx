@@ -17,6 +17,7 @@ const TABS = [
   { slug: "brand", label: "Brand" },
   { slug: "design", label: "Design" },
   { slug: "marketing", label: "Marketing" },
+  { slug: "videos", label: "Launch videos" },
 ];
 
 export function ProjectTabs({ projectId }: { projectId: string }) {

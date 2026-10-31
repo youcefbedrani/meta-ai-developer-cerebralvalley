@@ -5,7 +5,7 @@ import path from "node:path";
 import { getIntegrationEnv } from "@/lib/env";
 
 /**
- * Local file storage for user uploads (interview audio). Keys are generated here, never taken from users,
+ * Local file storage for user uploads and generated media (interview audio, images, launch videos). Keys are generated here, never taken from users,
  * so a key can't point outside the upload directory. Production mounts a volume at UPLOAD_DIR.
  */
 const root = () => path.resolve(/*turbopackIgnore: true*/ getIntegrationEnv().UPLOAD_DIR || ".data/uploads");
@@ -17,7 +17,7 @@ function fileFor(key: string): string {
   return path.join(/*turbopackIgnore: true*/ root(), key);
 }
 
-export async function saveUpload(folder: "audio" | "images", ext: string, data: Buffer): Promise<string> {
+export async function saveUpload(folder: "audio" | "images" | "videos", ext: string, data: Buffer): Promise<string> {
   const key = `${folder}/${randomUUID()}.${ext}`;
   const file = fileFor(key);
   await mkdir(/*turbopackIgnore: true*/ path.dirname(file), { recursive: true });
