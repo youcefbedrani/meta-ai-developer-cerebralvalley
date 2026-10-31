@@ -30,6 +30,12 @@ export default async function DealRoomPage({ params }: PageProps<"/app/marketpla
   const otherAgreement = role === "seller" ? agreement?.buyerAcceptedAt : agreement?.sellerAcceptedAt;
   const reviewed = reviews.some((r) => r.reviewerId === user.id);
   const openDispute = disputes.find((d) => d.status === "open");
+  let mode: string;
+  try {
+    mode = paymentsMode();
+  } catch {
+    mode = "unconfigured";
+  }
 
   return (
     <div className="space-y-6">
@@ -83,10 +89,14 @@ export default async function DealRoomPage({ params }: PageProps<"/app/marketpla
                 <div className="mt-5 border-t border-border pt-4">
                   <h2 className="font-medium">2. Payment</h2>
                   {myAgreement && otherAgreement ? (
-                    <div className="mt-2 space-y-2">
-                      <PayButton dealId={deal.id} label={money(deal.amountCents)} />
-                      <p className="text-xs text-muted-foreground">The platform holds the money until you confirm the transfer.{paymentsMode() === "mock" ? " Test mode: no real payment is taken." : ""}</p>
-                    </div>
+                    mode === "unconfigured" ? (
+                      <p className="mt-1 text-sm text-muted-foreground">Payments aren&apos;t switched on yet. You can keep messaging the seller in the meantime.</p>
+                    ) : (
+                      <div className="mt-2 space-y-2">
+                        <PayButton dealId={deal.id} label={money(deal.amountCents)} />
+                        <p className="text-xs text-muted-foreground">The platform holds the money until you confirm the transfer.{mode === "mock" ? " Test mode: no real payment is taken." : ""}</p>
+                      </div>
+                    )
                   ) : <p className="mt-1 text-sm text-muted-foreground">Available once both parties accept the agreement.</p>}
                 </div>
               ) : null}
