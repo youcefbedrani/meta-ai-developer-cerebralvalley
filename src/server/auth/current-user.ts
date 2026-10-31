@@ -27,6 +27,7 @@ export const getCurrentUser = cache(async (): Promise<AppUser | null> => {
   const user = await upsertUserFromVerifiedIdentity({
     firebaseUid: decoded.uid,
     email: decoded.email,
+    emailVerified: decoded.email_verified === true,
     name: typeof decoded.name === "string" ? decoded.name : null,
   });
   // Suspended by an admin: treated as signed out everywhere.

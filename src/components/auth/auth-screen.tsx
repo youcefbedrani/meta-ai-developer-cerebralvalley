@@ -223,7 +223,10 @@ export function AuthScreen({ initialMode, missingConfig, signupNotice }: { initi
     }
     setBusy("google");
     try {
-      await finish(await signInWithPopup(await getClientAuth(), new GoogleAuthProvider()));
+      const provider = new GoogleAuthProvider();
+      // Always show the account picker, so nobody lands in the wrong Google account without noticing.
+      provider.setCustomParameters({ prompt: "select_account" });
+      await finish(await signInWithPopup(await getClientAuth(), provider));
     } catch (err) {
       setNotice({ kind: "bad", text: messageFor(err) });
       setBusy(null);
