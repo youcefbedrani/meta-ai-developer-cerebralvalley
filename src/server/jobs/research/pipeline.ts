@@ -26,7 +26,7 @@ import { callStructured } from "@/server/ai/run";
 import { refundCredits } from "@/server/billing/credits";
 import { runCompetitorScan } from "./competitor-scan";
 import { runMarketVoices } from "./market-voices";
-import { runCodebaseJob } from "@/server/jobs/codebase";
+import { runCodebaseEditJob, runCodebaseJob } from "@/server/jobs/codebase";
 import { runDesignJob } from "@/server/jobs/design";
 import { codebaseCreditRef } from "@/server/services/codebase";
 import { designCreditRef } from "@/server/services/design";
@@ -121,6 +121,7 @@ export async function runResearchJob(jobId: string): Promise<void> {
     else if (job.input?.kind === "market_voices") await runMarketVoices(job);
     else if (job.input?.kind === "design") await runDesignJob(job);
     else if (job.input?.kind === "codebase") await runCodebaseJob(job);
+    else if (job.input?.kind === "codebase_edit") await runCodebaseEditJob(job);
     else await runValidationResearch(job);
   } finally {
     await queueNextStep(job);

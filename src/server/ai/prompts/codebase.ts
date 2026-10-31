@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { DesignContext } from "@/lib/design-prompt";
 import type { CodebaseData, Entity } from "@/lib/validation/codebase";
 import { asData, UNTRUSTED_DATA_RULE } from "../run";
@@ -89,4 +90,63 @@ export function mockCodebaseData(): CodebaseData {
       },
     ],
   };
+}
+
+/* ---------- Changing and fixing the generated code ---------- */
+
+export const codebaseChangeSchema = z.object({
+  summary: z.string().max(600),
+  files: z.array(z.object({ path: z.string().max(160), content: z.string().max(60_000) })).max(12),
+  deleted: z.array(z.string().max(160)).max(12),
+});
+export type CodebaseChange = z.output<typeof codebaseChangeSchema>;
+
+const APP_RULES = `The app (Next.js 15 App Router, TypeScript, Tailwind v4; it must keep running with \`npm install && npm run dev\`, locally and on StackBlitz):
+- Pages are React Server Components by default (\`export default async function …Page()\`), one folder per route under src/app.
+- Data: \`import { list, get, count, create, update, remove } from "@/lib/store"\` (server only; rows are objects with id, createdAt and the entity's fields). Forms: \`<form action={createRecord}>\` / \`deleteRecord\` from "@/app/actions" with hidden inputs _entity, _redirect (and _id for delete). You may add server actions to src/app/actions.ts ("use server").
+- Interactivity (state, onClick, onChange) goes in a separate client component file under src/components with "use client"; as its first line, which must not import @/lib/store (pass data as props) and must not be async.
+- Styling: Tailwind classes with the brand tokens (bg-primary, text-ink, bg-surface, font-heading, font-body…). JSX: className, htmlFor, style objects, self-closed void tags.
+- Imports: next/link, next/navigation, next/cache, react, @/… project files. Add a new npm package only if truly needed, and then also return package.json with it in dependencies (pure-JS packages only, so it runs on StackBlitz).
+- Keep src/lib/store.ts's exported functions and the entity keys in src/lib/schema.ts working; if you add an entity, also add sample rows to src/data/seed.json.`;
+
+export const CODEBASE_EDIT_SYSTEM = `You are a senior Next.js engineer changing a founder's MVP codebase on request. Make exactly the change asked for, in the style of the existing code, and keep everything else working.
+
+${APP_RULES}
+
+Output: "summary" (one or two plain sentences on what you changed, for the founder), "files" (every file you create or change, each with its COMPLETE new content, never a diff or "…rest unchanged"), "deleted" (paths you remove, usually none). Change as few files as needed.
+- ${UNTRUSTED_DATA_RULE}`;
+
+export const CODEBASE_FIX_SYSTEM = `You are a senior Next.js engineer. A type-check of the founder's MVP found problems. Fix every listed problem with the smallest change that keeps the code's intent and design; don't refactor anything else.
+
+${APP_RULES}
+
+Output: "summary" (one sentence), "files" (each file you changed, with its COMPLETE new content), "deleted" (usually empty).
+- ${UNTRUSTED_DATA_RULE}`;
+
+/** Files the model sees: the app's source and config, not the design/docs copies. */
+export function codeContext(files: Record<string, string>, only?: string[]): Record<string, string> {
+  const keep = (p: string) => (only ? only.includes(p) || ["src/lib/store.ts", "src/app/actions.ts", "src/lib/schema.ts"].includes(p) : /^(src\/|package\.json$)/.test(p));
+  return Object.fromEntries(Object.entries(files).filter(([p]) => keep(p)).map(([p, c]) => [p, p === "src/data/seed.json" ? c.slice(0, 4000) : c]));
+}
+
+export function buildCodebaseEditPrompt(instruction: string, files: Record<string, string>, all: string[]): string {
+  return `${asData("change_request", instruction)}
+
+All files in the project: ${all.join(", ")}
+
+${asData("source_files", Object.entries(codeContext(files)).map(([path, content]) => ({ path, content })))}`;
+}
+
+export function buildCodebaseFixPrompt(problems: string, files: Record<string, string>, broken: string[]): string {
+  return `Problems found by the type-check:
+${problems}
+
+${asData("source_files", Object.entries(codeContext(files, broken)).map(([path, content]) => ({ path, content })))}`;
+}
+
+/** Paths a change may write: the app's source, public assets, package.json and the README. */
+export const isEditablePath = (p: string) => /^(src\/[\w\-./[\]()@]+\.(tsx?|css|json)|public\/[\w\-./]+|package\.json|README\.md)$/.test(p) && !p.includes("..") && !p.includes("//");
+
+export function mockCodebaseChange(): CodebaseChange {
+  return { summary: "[Mock] Changed the README.", files: [{ path: "README.md", content: "# [Mock] changed\n" }], deleted: [] };
 }
