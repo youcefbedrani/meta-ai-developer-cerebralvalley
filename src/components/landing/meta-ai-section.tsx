@@ -50,7 +50,8 @@ const FEATURES: { icon: string; title: string; models: string[]; text: string; s
   { icon: "trend", title: "Launch playbook", models: ["Muse Spark"], text: "Idea to market in one plan: stage gates, ICP, outreach, discovery, demo, objections, funnel, LTV and AI-coding prompts.", stat: "~60 s · $0.06" },
   { icon: "list", title: "Copilot ideas → projects", models: ["Muse Spark"], text: "Ask the Copilot for ideas; every idea gets Create project and Validate with Autopilot buttons.", stat: "Two clicks to a verdict" },
   { icon: "scissors", title: "Gold Mine pain mining", models: ["Muse Spark Open"], text: "Finds what customers already complain about on Reddit, Hacker News and forums, quotes checked word for word.", stat: "11 verified quotes · 4 clusters" },
-  { icon: "chart", wide: true, title: "Everything else, on Muse Spark", models: ["Muse Spark"], text: "Research reports, competitors, business model, MVP plan, marketing plans and assets, interview scripts, Copilot.", stat: "36 / 37 end-to-end steps pass" },
+  { icon: "play", title: "Launch videos for organic social", models: ["Muse Spark", "Muse Image"], text: "A vertical captioned video and a native post for TikTok, Reels, Facebook and LinkedIn, from your research and customers' words. Post it from Startum or download it.", stat: "18 s video in 57 s · ~$0.06" },
+  { icon: "chart", title: "Everything else, on Muse Spark", models: ["Muse Spark"], text: "Research reports, competitors, business model, MVP plan, marketing plans and assets, interview scripts, Copilot.", stat: "36 / 37 end-to-end steps pass" },
 ];
 
 const RULES = [

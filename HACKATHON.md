@@ -24,6 +24,7 @@ capabilities that only became possible with them.** Everything below was built b
 | 8 | **Copilot ideas → projects** — every idea the Copilot suggests gets "Create project" and "Validate with Autopilot" buttons | Muse Spark | AI Copilot → Find SaaS ideas |
 | 9 | **Launch playbook** — idea to market in one plan: 6 stages with exit gates, founder-led sales playbook, SaaS metrics with code-computed revenue maths, retention, build sprints and AI-coding prompts | Muse Spark (structured output) | Project → Launch playbook |
 | 10 | **Design → clickable prototype → code** — Muse Spark designs every screen, links them into a Figma-style prototype, and after approval writes a runnable Next.js app | Muse Spark | Project → Design |
+| 11 | **Launch videos for organic social** — a vertical captioned video and a native post for TikTok, Instagram Reels, Facebook and LinkedIn; post from Startum or download | Muse Spark (storyboard + posts) + Muse Image (scenes) | Project → Launch videos |
 
 ### 1. Validation Autopilot (agentic)
 
@@ -194,6 +195,31 @@ Both generated apps passed `tsc --noEmit` with zero errors and `next build` on t
 
 Code: [`src/server/design/muse.ts`](src/server/design/muse.ts), [`src/server/ai/prompts/design-screen.ts`](src/server/ai/prompts/design-screen.ts), [`src/lib/prototype.ts`](src/lib/prototype.ts), [`src/components/design/prototype-viewer.tsx`](src/components/design/prototype-viewer.tsx), [`src/server/jobs/codebase.ts`](src/server/jobs/codebase.ts), [`src/lib/codebase.ts`](src/lib/codebase.ts), [`src/server/codebase/check.ts`](src/server/codebase/check.ts), [`src/components/design/code-viewer.tsx`](src/components/design/code-viewer.tsx)
 
+### 11. Launch videos for organic social
+
+Organic short-form video is how most bootstrapped SaaS products get their first users. Startum makes the video and
+the posts from what it already knows about the product.
+
+- **Storyboard (Muse Spark):** pick an angle (problem → solution, in customers' own words, build in public, launch
+  day). Muse Spark writes a 15–30 s, 3–6 scene vertical video: a hook in the first two seconds, captions written to be
+  read on mute, a call to action, and a native post for each platform (a LinkedIn story post, a Facebook post, an
+  Instagram caption, a TikTok caption, each with its own hashtags). It may not invent users, numbers or testimonials.
+- **Scenes (Muse Image):** every scene is drawn in 9:16 from the storyboard, in parallel, in the brand's colours, with
+  no text in the image (captions are added afterwards, crisp).
+- **Render (ffmpeg in the worker):** slow Ken Burns zoom on each scene, the caption card fading in, cross-fades, and a
+  branded end card with the logo (SAM 3.1 cut-out from Brand visuals), the call to action and the landing-page link.
+  H.264 + silent AAC (some platforms reject videos without audio), 1080×1920, 30 fps.
+- **Publish:** download the MP4 and copy each platform's post; or connect accounts and post from Startum:
+  LinkedIn (video upload + post on the member's profile), Facebook Pages and Instagram Reels (one Meta login; Meta
+  fetches the video from a signed, expiring link), TikTok (sent to the user's TikTok inbox to add a sound and post).
+  Tokens are encrypted at rest (AES-256-GCM); the OAuth state is signed and checked. Each platform is switched on by
+  its developer-app credentials.
+
+Measured: one 18 s video (4 scenes) in 57 s for about $0.06 (storyboard $0.02, 4 scenes $0.04). The publishing
+connectors are implemented against each platform's API but not yet exercised with live developer apps.
+
+Code: [`src/server/jobs/launch-video.ts`](src/server/jobs/launch-video.ts), [`src/server/video/render.ts`](src/server/video/render.ts), [`src/server/ai/prompts/launch-video.ts`](src/server/ai/prompts/launch-video.ts), [`src/server/social/providers.ts`](src/server/social/providers.ts), [`src/components/videos/launch-videos.tsx`](src/components/videos/launch-videos.tsx)
+
 ## How it fits together
 
 ```mermaid
@@ -208,6 +234,7 @@ flowchart LR
   A --> G[Launch playbook<br/>stages · sales · metrics · build]
   A --> X[Verdict: Build / Pivot / Drop<br/>every reason cites a URL the run saw]
   X --> DS[Screens designed by Muse Spark] --> PR[Clickable prototype] -->|approve| CODE[Runnable Next.js code]
+  X --> VID[Launch video<br/>Muse Spark storyboard + Muse Image scenes] --> SOC[LinkedIn · Facebook · Instagram · TikTok]
   I[Interview recording] -->|Muse Voice Transcribe diarization| Q[Verified quotes with playback]
   S[Page screenshot] -->|Muse Spark vision| C[Critique pinned on the page]
 ```
@@ -223,6 +250,7 @@ flowchart LR
 | Voice transcription | $0.003 per minute |
 | One screen designed by Muse Spark | ~$0.03 |
 | Approved prototype → runnable code (3–4 screens) | $0.15–0.23 |
+| Launch video (storyboard, posts for 4 platforms, 4 scenes, rendered MP4) | ~$0.06 |
 
 Total spent building and testing everything above: under $10.
 

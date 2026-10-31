@@ -79,6 +79,8 @@ export const CREDIT_COSTS = {
   codebase_edit: 5,
   /** Muse Spark fixes the problems the type-check found (e.g. after your own edits). */
   codebase_fix: 3,
+  /** A launch video for organic social: storyboard + posts (Muse Spark), 3–6 scenes (Muse Image), rendered MP4. */
+  launch_video: 12,
   interview_script: 2,
   interview_analysis: 3,
   /** Interview recordings: per started 5 minutes of audio (Meta Muse Voice Transcribe). */

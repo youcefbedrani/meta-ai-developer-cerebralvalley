@@ -1588,3 +1588,79 @@ export const pageReviews = pgTable(
   },
   (t) => [index("page_reviews_project_idx").on(t.projectId, t.createdAt)],
 );
+
+/* -------------------------------------------------------------------------- */
+/* Launch videos and social publishing                                        */
+/* -------------------------------------------------------------------------- */
+
+/** A short vertical launch video: Muse Spark storyboard + Muse Image scenes, rendered to MP4 by the worker. */
+export const launchVideos = pgTable(
+  "launch_videos",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    jobId: uuid("job_id").references(() => researchJobs.id, { onDelete: "set null" }),
+    angle: text("angle").notNull(),
+    status: jobStatusEnum("status").notNull().default("queued"),
+    /** The storyboard and the per-platform posts (lib/validation/launch-video.ts). */
+    script: jsonb("script").$type<Record<string, unknown>>(),
+    videoKey: text("video_key"),
+    thumbKey: text("thumb_key"),
+    durationSec: integer("duration_sec"),
+    error: text("error"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("launch_videos_project_idx").on(t.projectId, t.createdAt)],
+);
+
+export const socialProviderEnum = pgEnum("social_provider", ["linkedin", "facebook", "instagram", "tiktok"]);
+
+/** A founder's connected social account. Tokens are encrypted at rest (server/social/crypto.ts). */
+export const socialConnections = pgTable(
+  "social_connections",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    provider: socialProviderEnum("provider").notNull(),
+    /** The account posts go to: LinkedIn member, Facebook Page, Instagram business account, TikTok user. */
+    accountId: text("account_id").notNull(),
+    accountName: text("account_name").notNull(),
+    accessTokenEnc: text("access_token_enc").notNull(),
+    refreshTokenEnc: text("refresh_token_enc"),
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("social_connections_account_idx").on(t.userId, t.provider, t.accountId)],
+);
+
+export const socialPostStatusEnum = pgEnum("social_post_status", ["queued", "posting", "published", "sent_to_inbox", "failed"]);
+
+/** One video posted (or being posted) to one connected account. */
+export const socialPosts = pgTable(
+  "social_posts",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    videoId: uuid("video_id")
+      .notNull()
+      .references(() => launchVideos.id, { onDelete: "cascade" }),
+    connectionId: uuid("connection_id").references(() => socialConnections.id, { onDelete: "set null" }),
+    provider: socialProviderEnum("provider").notNull(),
+    caption: text("caption").notNull(),
+    status: socialPostStatusEnum("status").notNull().default("queued"),
+    externalId: text("external_id"),
+    url: text("url"),
+    error: text("error"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("social_posts_video_idx").on(t.videoId, t.createdAt)],
+);

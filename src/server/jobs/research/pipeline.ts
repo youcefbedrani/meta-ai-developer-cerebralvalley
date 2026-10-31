@@ -28,8 +28,11 @@ import { runCompetitorScan } from "./competitor-scan";
 import { runMarketVoices } from "./market-voices";
 import { runCodebaseEditJob, runCodebaseJob } from "@/server/jobs/codebase";
 import { runDesignJob } from "@/server/jobs/design";
+import { runLaunchVideoJob } from "@/server/jobs/launch-video";
+import { runSocialPostJob } from "@/server/jobs/social-post";
 import { codebaseCreditRef } from "@/server/services/codebase";
 import { designCreditRef } from "@/server/services/design";
+import { launchVideoCreditRef } from "@/server/services/launch-video";
 import { getDb, schema } from "@/server/db/client";
 import { getIdeaForProject } from "@/server/data/ideas";
 import { getProject } from "@/server/data/projects";
@@ -122,6 +125,8 @@ export async function runResearchJob(jobId: string): Promise<void> {
     else if (job.input?.kind === "design") await runDesignJob(job);
     else if (job.input?.kind === "codebase") await runCodebaseJob(job);
     else if (job.input?.kind === "codebase_edit") await runCodebaseEditJob(job);
+    else if (job.input?.kind === "launch_video") await runLaunchVideoJob(job);
+    else if (job.input?.kind === "social_post") await runSocialPostJob(job);
     else await runValidationResearch(job);
   } finally {
     await queueNextStep(job);
@@ -315,6 +320,8 @@ export async function recoverStaleJobs(olderThanMinutes = 30): Promise<number> {
       .returning({ id: schema.designScreens.id });
     for (const s of unfinished) await refundCredits(userId, designCreditRef(s.id), "design screen timed out");
     await refundCredits(userId, codebaseCreditRef(job.id), "codebase timed out");
+    await refundCredits(userId, launchVideoCreditRef(job.id), "launch video timed out");
+    await getDb().update(schema.launchVideos).set({ status: "failed", error: "Timed out. Your credits were refunded." }).where(and(eq(schema.launchVideos.jobId, job.id), inArray(schema.launchVideos.status, ["queued", "running"])));
   }
   return stale.length;
 }
