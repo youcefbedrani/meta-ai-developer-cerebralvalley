@@ -23,6 +23,7 @@ capabilities that only became possible with them.** Everything below was built b
 | 7 | **Open-weights route** — research, competitor, forum and pain extraction run on Muse Spark Open on Baseten, 3–6× faster | Muse Spark Open | `OPEN_MODEL_*` env |
 | 8 | **Copilot ideas → projects** — every idea the Copilot suggests gets "Create project" and "Validate with Autopilot" buttons | Muse Spark | AI Copilot → Find SaaS ideas |
 | 9 | **Launch playbook** — idea to market in one plan: 6 stages with exit gates, founder-led sales playbook, SaaS metrics with code-computed revenue maths, retention, build sprints and AI-coding prompts | Muse Spark (structured output) | Project → Launch playbook |
+| 10 | **Design → clickable prototype → code** — Muse Spark designs every screen, links them into a Figma-style prototype, and after approval writes a runnable Next.js app | Muse Spark | Project → Design |
 
 ### 1. Validation Autopilot (agentic)
 
@@ -154,6 +155,32 @@ Measured: about 60 s and $0.06 per playbook on `muse-spark-1.3`.
 
 Code: [`src/lib/validation/launch-playbook.ts`](src/lib/validation/launch-playbook.ts), [`src/server/services/launch-playbook.ts`](src/server/services/launch-playbook.ts), [`src/server/ai/prompts/launch-playbook.ts`](src/server/ai/prompts/launch-playbook.ts)
 
+### 10. Design → clickable prototype → code
+
+After validation, the founder sees the product before building it, then gets the code.
+
+- **Design (Muse Spark as product designer):** each screen is written as a complete Tailwind HTML document from the
+  project's research, MVP plan, Brand Kit and customers' own words. Every screen uses the same brand tokens
+  (`bg-primary`, `text-ink`, `font-heading` …) set from the Brand Kit. Marketing screens never invent traction:
+  testimonials, customer counts and results are marked placeholders. Edits are plain language ("move pricing above
+  the fold").
+- **Clickable prototype:** buttons and links that lead to another screen carry `data-goto="<screen>"`. The prototype
+  viewer shows one screen at a time at its real 1280px width, scaled to fit; clicking a hotspot switches screens,
+  clicking anywhere else flashes the hotspots (like Figma's prototype mode). Screens run in an opaque-origin
+  sandbox and talk to the viewer only through `postMessage`, checked against the iframe's window.
+- **Approve → code:** a background job makes one structured call for the data model (entities, fields, realistic
+  seed rows) and one call per screen that converts the design into a Next.js App Router page: `data-goto` becomes
+  `<Link>`, lists read real rows from a JSON-file store, forms create records through server actions. The scaffold
+  around the pages (Tailwind v4 theme with the same tokens, store, actions, README, PROMPT.md for Claude Code or
+  Cursor, the designs and docs) is deterministic code. A page whose conversion fails twice falls back to embedding its
+  approved design, so one bad page never sinks the build.
+- The result can be browsed in the app, downloaded as a zip, or opened on StackBlitz.
+
+Measured on two projects: about 25 s and $0.03 per screen design; code for 3–4 screens in 60–90 s for $0.15–0.23.
+Both generated apps passed `tsc --noEmit` with zero errors and `next build` on the first try.
+
+Code: [`src/server/design/muse.ts`](src/server/design/muse.ts), [`src/server/ai/prompts/design-screen.ts`](src/server/ai/prompts/design-screen.ts), [`src/lib/prototype.ts`](src/lib/prototype.ts), [`src/components/design/prototype-viewer.tsx`](src/components/design/prototype-viewer.tsx), [`src/server/jobs/codebase.ts`](src/server/jobs/codebase.ts), [`src/lib/codebase.ts`](src/lib/codebase.ts)
+
 ## How it fits together
 
 ```mermaid
@@ -167,6 +194,7 @@ flowchart LR
   A --> L[Branded landing page + waitlist test]
   A --> G[Launch playbook<br/>stages · sales · metrics · build]
   A --> X[Verdict: Build / Pivot / Drop<br/>every reason cites a URL the run saw]
+  X --> DS[Screens designed by Muse Spark] --> PR[Clickable prototype] -->|approve| CODE[Runnable Next.js code]
   I[Interview recording] -->|Muse Voice Transcribe diarization| Q[Verified quotes with playback]
   S[Page screenshot] -->|Muse Spark vision| C[Critique pinned on the page]
 ```
@@ -180,6 +208,8 @@ flowchart LR
 | Full journey through every Startum feature | ~$0.83 |
 | 5 brand visuals (Muse Image + SAM 3.1) | ~$0.06 |
 | Voice transcription | $0.003 per minute |
+| One screen designed by Muse Spark | ~$0.03 |
+| Approved prototype → runnable code (3–4 screens) | $0.15–0.23 |
 
 Total spent building and testing everything above: under $10.
 

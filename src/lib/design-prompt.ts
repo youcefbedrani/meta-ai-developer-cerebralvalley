@@ -119,7 +119,7 @@ export function buildCodingPrompt(ctx: DesignContext, screens: { name: string; f
     `**Problem:** ${cut(ctx.problem, 400) || "see the product summary"}`,
     "",
     "## Screens (designs in `design/`)",
-    "Each HTML file is a high-fidelity design made with Google Stitch. Match the layout, hierarchy, colours and copy closely, but rebuild it as real, accessible components. Don't paste the HTML in as-is.",
+    "Each HTML file is an approved high-fidelity design. Match the layout, hierarchy, colours and copy closely, but rebuild it as real, accessible components. Don't paste the HTML in as-is.",
     ...screens.map((s, i) => `${i + 1}. **${s.name}**: \`design/${s.file}\``),
     "",
     "## Must-have features",

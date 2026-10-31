@@ -71,8 +71,10 @@ export const CREDIT_COSTS = {
   brand_kit: 8,
   /** Brand visuals: a logo (with cut-out), a landing hero and three ad creatives. */
   brand_visuals: 10,
-  /** One MVP design screen (or one edit) with Google Stitch. Stitch quota is shared by all users of one API key. */
+  /** One MVP design screen (or one edit) with Muse Spark or Google Stitch. Stitch quota is shared by all users of one API key. */
   design_screen: 4,
+  /** The approved prototype turned into a runnable Next.js codebase (data model + one page per screen, Muse Spark). */
+  codebase: 20,
   interview_script: 2,
   interview_analysis: 3,
   /** Interview recordings: per started 5 minutes of audio (Meta Muse Voice Transcribe). */

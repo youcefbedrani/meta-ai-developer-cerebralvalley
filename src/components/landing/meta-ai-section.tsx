@@ -11,7 +11,7 @@ import { Ic } from "./icons";
 const v = (o: Record<string, string>) => o as React.CSSProperties;
 
 const MODELS = [
-  { name: "Muse Spark", role: "The brain: plans, calls tools, reads screenshots, writes every plan with native JSON Schema output." },
+  { name: "Muse Spark", role: "The brain: plans, calls tools, reads screenshots, designs the product's screens and writes its code." },
   { name: "Muse Spark Open", role: "Meta's open-weights model on Baseten: reads sources, competitors and forum threads 3–6× faster." },
   { name: "Muse Image", role: "Renders the logo mark, the landing hero and one ad per channel from an art-director brief." },
   { name: "SAM 3.1", role: "Segments the logo and cuts it out onto a transparent background." },
@@ -40,8 +40,9 @@ const TRACE = [
   { k: "verdict", t: "submit_verdict", d: "BUILD · 67% · 8 cited reasons · 0 dropped" },
 ];
 
-const FEATURES = [
+const FEATURES: { icon: string; title: string; models: string[]; text: string; stat: string; wide?: boolean }[] = [
   { icon: "spark", title: "Validation Autopilot", models: ["Muse Spark"], text: "From a bare idea to a cited Build / Pivot / Drop verdict, with plans, brand and a landing page for ideas worth building.", stat: "4 min 55 s · $0.47" },
+  { icon: "eye", wide: true, title: "Design → clickable prototype → code", models: ["Muse Spark"], text: "Muse Spark designs every screen like a product designer in Figma, from the research, MVP plan, Brand Kit and customers' words. Buttons link the screens into a clickable prototype. Approve it and Muse Spark writes a runnable Next.js app: one page per screen, a data model with sample data, your brand. Download it or run it on StackBlitz.", stat: "3 screens + code in ~2.5 min · ~$0.25 · 0 type errors" },
   { icon: "play", title: "Pitch it out loud", models: ["Muse Voice", "Muse Spark"], text: "Speak for a minute; get a structured project and an Autopilot focused on your own question.", stat: "Project in ~15 s" },
   { icon: "user", title: "Voice interviews", models: ["Muse Voice", "Muse Spark"], text: "Upload a customer call: speakers separated, verified pain and willingness-to-pay quotes that play back from the moment they were said.", stat: "3 min call → 8 turns in 35 s" },
   { icon: "bulb", title: "Brand visuals", models: ["Muse Image", "SAM 3.1", "Muse Spark"], text: "Logo cut out on transparency, a full-bleed landing hero and channel ads, all from the research.", stat: "5 visuals · $0.06" },
@@ -49,7 +50,7 @@ const FEATURES = [
   { icon: "trend", title: "Launch playbook", models: ["Muse Spark"], text: "Idea to market in one plan: stage gates, ICP, outreach, discovery, demo, objections, funnel, LTV and AI-coding prompts.", stat: "~60 s · $0.06" },
   { icon: "list", title: "Copilot ideas → projects", models: ["Muse Spark"], text: "Ask the Copilot for ideas; every idea gets Create project and Validate with Autopilot buttons.", stat: "Two clicks to a verdict" },
   { icon: "scissors", title: "Gold Mine pain mining", models: ["Muse Spark Open"], text: "Finds what customers already complain about on Reddit, Hacker News and forums, quotes checked word for word.", stat: "11 verified quotes · 4 clusters" },
-  { icon: "chart", title: "Everything else, on Muse Spark", models: ["Muse Spark"], text: "Research reports, competitors, business model, MVP plan, marketing plans and assets, interview scripts, Copilot.", stat: "36 / 37 end-to-end steps pass" },
+  { icon: "chart", wide: true, title: "Everything else, on Muse Spark", models: ["Muse Spark"], text: "Research reports, competitors, business model, MVP plan, marketing plans and assets, interview scripts, Copilot.", stat: "36 / 37 end-to-end steps pass" },
 ];
 
 const RULES = [
@@ -138,7 +139,7 @@ export function MetaAiSection() {
       <h3 className="meta-sub meta-center rv">Everything Startum does with Meta AI</h3>
       <div className="meta-features">
         {FEATURES.map((f, i) => (
-          <div key={f.title} className="card feat meta-feature rv" style={v({ "--d": `${(i % 3) * 0.1}s` })}>
+          <div key={f.title} className={`card feat meta-feature rv${f.wide ? " wide" : ""}`} style={v({ "--d": `${(i % 3) * 0.1}s` })}>
             <span className="ico"><Ic id={f.icon} /></span>
             <h3>{f.title}</h3>
             <p>{f.text}</p>

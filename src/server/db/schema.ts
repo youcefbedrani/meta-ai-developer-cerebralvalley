@@ -44,7 +44,7 @@ export const projectStageEnum = pgEnum("project_stage", [
 ]);
 export const projectStatusEnum = pgEnum("project_status", ["active", "archived"]);
 export const jobStatusEnum = pgEnum("job_status", ["queued", "running", "succeeded", "failed", "cancelled"]);
-export const reportTypeEnum = pgEnum("report_type", ["validation", "competitors", "business_model", "launch_playbook"]);
+export const reportTypeEnum = pgEnum("report_type", ["validation", "competitors", "business_model", "launch_playbook", "codebase"]);
 export const evidenceKindEnum = pgEnum("evidence_kind", ["FACT", "ANALYSIS", "ASSUMPTION"]);
 export const competitorTypeEnum = pgEnum("competitor_type", ["direct", "indirect", "alternative"]);
 export const competitorOriginEnum = pgEnum("competitor_origin", ["research", "scan", "manual"]);
