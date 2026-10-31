@@ -2,7 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { getEnv } from "@/lib/env";
 import { signupDecision } from "@/lib/platform-settings";
-import { findUserByFirebaseUid } from "@/server/data/users";
+import { findUserByEmail, findUserByFirebaseUid, reconcileSplitAccount } from "@/server/data/users";
 import { adminEmails } from "@/server/marketplace/config";
 import { getPlatformSettings } from "@/server/platform/settings";
 import { getAdminAuth } from "./firebase-admin";
@@ -40,7 +40,8 @@ export async function createSession(idToken: string, { remember = true }: { reme
   if (!decoded.email) {
     throw new SessionError("Your account has no email address.");
   }
-  await checkAccountAllowed(decoded.uid, decoded.email);
+  await checkAccountAllowed(decoded.uid, decoded.email, decoded.email_verified === true);
+  if (decoded.email_verified === true) await reconcileSplitAccount(decoded.uid, decoded.email);
   const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn: SESSION_MAX_AGE_SECONDS * 1000 });
   (await cookies()).set(SESSION_COOKIE, sessionCookie, {
     httpOnly: true,
@@ -58,8 +59,22 @@ export async function createSession(idToken: string, { remember = true }: { reme
  *   A refused new account is deleted from Firebase, so the person can sign up later once allowed.
  * Emails in ADMIN_EMAILS are never locked out.
  */
-async function checkAccountAllowed(firebaseUid: string, email: string): Promise<void> {
-  const existing = await findUserByFirebaseUid(firebaseUid);
+async function checkAccountAllowed(firebaseUid: string, email: string, emailVerified: boolean): Promise<void> {
+  let existing = await findUserByFirebaseUid(firebaseUid);
+  if (!existing) {
+    // A new Firebase identity for an email that already has a Startum account (see upsertUserFromVerifiedIdentity).
+    const byEmail = await findUserByEmail(email);
+    if (byEmail && !emailVerified) {
+      // An unverified email can't claim someone's account, and a second empty account would hide their work.
+      try {
+        await getAdminAuth().deleteUser(firebaseUid);
+      } catch {
+        // Already gone, or Firebase unreachable: refusing the session is what matters.
+      }
+      throw new SessionError("This email already has a Startum account. Sign in the way you did before (for example with Google).");
+    }
+    existing = byEmail;
+  }
   if (existing?.suspendedAt) {
     throw new SessionError(existing.suspendedReason ? `This account is suspended: ${existing.suspendedReason}` : "This account is suspended. Contact support if you think this is a mistake.");
   }
