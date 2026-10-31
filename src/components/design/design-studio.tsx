@@ -1,20 +1,23 @@
 "use client";
 
-import { Check, CircleAlert, Copy, Download, ExternalLink, Laptop, Loader2, Package, Plus, Smartphone, Sparkles, Wand2, X } from "lucide-react";
+import { Check, CircleAlert, Copy, Download, ExternalLink, Laptop, Loader2, MousePointerClick, Package, Plus, Smartphone, Sparkles, Wand2, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { editDesignAction, startDesignAction } from "@/app/(app)/app/(founder)/projects/[id]/design/actions";
+import { MetaMark } from "@/components/brand/hackathon-lockup";
 import { LogoLoader } from "@/components/brand/logo";
+import { CodebasePanel, type CodebaseJob, type CodebaseSummary } from "@/components/design/codebase-panel";
 import { Button } from "@/components/ui/button";
 import { buildScreenPrompt, MAX_SCREENS, suggestScreens, type DesignContext, type Platform, type ScreenSpec } from "@/lib/design-prompt";
 import { cn } from "@/lib/utils";
 
 export type StudioScreen = { id: string; name: string; device: "MOBILE" | "DESKTOP"; status: "queued" | "running" | "succeeded" | "failed" | "cancelled"; error: string | null; imageUrl: string | null };
 type Sources = { research: boolean; mvpPlan: boolean; brand: boolean; quotes: number; competitors: number };
+type Provider = "muse" | "stitch" | "builtin" | "mock";
 
-export function DesignStudio({ projectId, ctx, sources, screens, cost, balance, provider, codingPrompt }: { projectId: string; ctx: DesignContext; sources: Sources; screens: StudioScreen[]; cost: number; balance: number; provider: "stitch" | "builtin" | "mock"; codingPrompt: string | null }) {
+export function DesignStudio({ projectId, ctx, sources, screens, cost, balance, provider, codingPrompt, codebaseCost, codebaseJob, codebase }: { projectId: string; ctx: DesignContext; sources: Sources; screens: StudioScreen[]; cost: number; balance: number; provider: Provider; codingPrompt: string | null; codebaseCost: number; codebaseJob: CodebaseJob; codebase: CodebaseSummary }) {
   const router = useRouter();
   const active = screens.some((s) => s.status === "queued" || s.status === "running");
   useEffect(() => {
@@ -32,12 +35,17 @@ export function DesignStudio({ projectId, ctx, sources, screens, cost, balance, 
         <div className="flex items-start gap-3">
           <span className="animate-glow-pulse grid size-10 shrink-0 place-items-center rounded-xl bg-brand-gradient text-white shadow-glow"><Wand2 className="size-4" /></span>
           <div className="min-w-0">
-            <h2 className="font-medium">{provider === "stitch" ? "Design your MVP with Google Stitch" : "Design your MVP"}</h2>
+            <h2 className="flex flex-wrap items-center gap-2 font-medium">
+              {provider === "muse" ? "Design your MVP with Muse Spark" : provider === "stitch" ? "Design your MVP with Google Stitch" : "Design your MVP"}
+              {provider === "muse" ? <span className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[11px] font-normal text-muted-foreground"><MetaMark /> Meta AI</span> : null}
+            </h2>
             <p className="text-sm text-muted-foreground">
-              {provider === "stitch"
+              {provider === "muse"
+                ? "Muse Spark designs every screen like a product designer in Figma, from everything you've built here: your MVP features, Brand Kit and customers' own words. Buttons link the screens into a clickable prototype; approve it and Muse Spark writes the code."
+                : provider === "stitch"
                 ? "We write a detailed prompt for every screen from everything you've built here, and Stitch turns it into a real, high-fidelity design."
                 : "Every screen is designed from everything you've built here: your product, MVP features, Brand Kit colours, fonts and logo, and your customers' own words."}{" "}
-              Then download it as a kit and build it with Claude Code, Cursor or any AI coding tool.
+              {provider === "muse" ? null : "Then download it as a kit and build it with Claude Code, Cursor or any AI coding tool."}
             </p>
           </div>
         </div>
@@ -59,7 +67,10 @@ export function DesignStudio({ projectId, ctx, sources, screens, cost, balance, 
 
       {screens.length ? (
         <section className="space-y-3">
-          <h2 className="font-medium">Your screens</h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-medium">Your screens</h2>
+            {done.length ? <Link href={`${base}/design/prototype`} className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-muted"><MousePointerClick className="size-4 text-primary" /> Click through the prototype</Link> : null}
+          </div>
           <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {screens.map((s) => (
               <ScreenCard key={s.id} provider={provider} s={s} projectId={projectId} cost={cost} balance={balance} busy={active} />
@@ -67,6 +78,8 @@ export function DesignStudio({ projectId, ctx, sources, screens, cost, balance, 
           </div>
         </section>
       ) : null}
+
+      {done.length ? <CodebasePanel projectId={projectId} screens={done.length} job={codebaseJob} codebase={codebase} cost={codebaseCost} balance={balance} designBusy={active} /> : null}
 
       {done.length && codingPrompt ? <ExportPanel projectId={projectId} prompt={codingPrompt} count={done.length} /> : null}
     </div>
@@ -83,7 +96,7 @@ function Source({ ok, label, href, hint }: { ok: boolean; label: string; href?: 
   return !ok && href ? <Link href={href} className="hover:opacity-80">{body}</Link> : body;
 }
 
-function NewDesign({ provider, projectId, ctx, cost, balance }: { provider: "stitch" | "builtin" | "mock"; projectId: string; ctx: DesignContext; cost: number; balance: number }) {
+function NewDesign({ provider, projectId, ctx, cost, balance }: { provider: Provider; projectId: string; ctx: DesignContext; cost: number; balance: number }) {
   const router = useRouter();
   const [platform, setPlatform] = useState<Platform>("web");
   const suggestions = useMemo(() => suggestScreens(ctx, platform), [ctx, platform]);
@@ -181,14 +194,14 @@ function NewDesign({ provider, projectId, ctx, cost, balance }: { provider: "sti
   );
 }
 
-function Progress({ provider, screens }: { provider: "stitch" | "builtin" | "mock"; screens: StudioScreen[] }) {
+function Progress({ provider, screens }: { provider: Provider; screens: StudioScreen[] }) {
   return (
     <section className="surface p-5" aria-live="polite">
       <div className="flex items-center gap-4">
         <LogoLoader label="" size="sm" />
         <div>
-          <p className="font-medium">{provider === "stitch" ? "Stitch is designing your screens…" : "Designing your screens…"}</p>
-          <p className="text-sm text-muted-foreground">Each screen takes one to three minutes. You can leave this page; they appear below as they finish.</p>
+          <p className="font-medium">{provider === "stitch" ? "Stitch is designing your screens…" : provider === "muse" ? "Muse Spark is designing your screens…" : "Designing your screens…"}</p>
+          <p className="text-sm text-muted-foreground">Each screen takes about one to three minutes. You can leave this page; they appear below as they finish.</p>
         </div>
       </div>
       <ul className="stagger mt-4 grid gap-2 sm:grid-cols-2">
@@ -204,7 +217,7 @@ function Progress({ provider, screens }: { provider: "stitch" | "builtin" | "moc
   );
 }
 
-function ScreenCard({ provider, s, projectId, cost, balance, busy }: { provider: "stitch" | "builtin" | "mock"; s: StudioScreen; projectId: string; cost: number; balance: number; busy: boolean }) {
+function ScreenCard({ provider, s, projectId, cost, balance, busy }: { provider: Provider; s: StudioScreen; projectId: string; cost: number; balance: number; busy: boolean }) {
   const router = useRouter();
   const [imgFailed, setImgFailed] = useState(false);
   const [editing, setEditing] = useState(false);

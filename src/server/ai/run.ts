@@ -285,6 +285,8 @@ export async function callText(opts: {
   messages: { role: "user" | "assistant"; content: string }[];
   maxOutputTokens: number;
   verbosity?: "low" | "medium" | "high";
+  /** Long outputs (a whole HTML screen, a source file) need more than the default timeout. */
+  timeoutMs?: number;
   mock: () => string;
 }): Promise<TextResult> {
   const resolved = resolveModel(opts.tier, opts.operation);
@@ -305,7 +307,7 @@ export async function callText(opts: {
       messages: opts.messages,
       maxOutputTokens: outputCap(resolved.provider, opts.maxOutputTokens),
       maxRetries: retriesFor(resolved.provider),
-      abortSignal: AbortSignal.timeout(TIMEOUT_MS),
+      abortSignal: AbortSignal.timeout(opts.timeoutMs ?? TIMEOUT_MS),
       providerOptions: providerOptionsFor(resolved, { tier: opts.tier, operation: opts.operation, userId: opts.userId, verbosity: opts.verbosity }),
     });
     const tokensIn = result.usage.inputTokens ?? 0;

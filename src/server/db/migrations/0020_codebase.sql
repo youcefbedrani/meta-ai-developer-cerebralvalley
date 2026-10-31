@@ -1,0 +1,1 @@
+ALTER TYPE "public"."report_type" ADD VALUE 'codebase';

@@ -9,15 +9,16 @@ import type { DesignMeta } from "@/server/design";
 
 type Job = typeof schema.researchJobs.$inferSelect;
 
-const safe = (err: unknown) => {
+const safe = (err: unknown, provider: string) => {
   const msg = err instanceof Error ? err.message : "";
-  if (/RATE_LIMITED|quota|429/i.test(msg)) return "Stitch's usage limit was reached. Your credits were refunded; try again later.";
-  if (/AUTH|401|403|api key/i.test(msg)) return "Stitch rejected the API key. Your credits were refunded.";
+  const who = provider === "stitch" ? "Stitch" : "The designer";
+  if (/RATE_LIMITED|quota|429|budget/i.test(msg)) return `${who}'s usage limit was reached. Your credits were refunded; try again later.`;
+  if (/AUTH|401|403|api key/i.test(msg)) return `${who} rejected the API key. Your credits were refunded.`;
   return "The design couldn't be generated. Your credits were refunded; please try again.";
 };
 
 /**
- * Generates (or edits) the job's screens one at a time with the design provider (Google Stitch).
+ * Generates (or edits) the job's screens one at a time with the design provider (Muse Spark, Stitch or built-in).
  * Each screen succeeds or fails on its own and refunds its own credits on failure.
  */
 export async function runDesignJob(job: Job): Promise<void> {
@@ -27,8 +28,10 @@ export async function runDesignJob(job: Job): Promise<void> {
   const rows = await db.select().from(schema.designScreens).where(and(eq(schema.designScreens.jobId, job.id), eq(schema.designScreens.status, "queued"))).orderBy(asc(schema.designScreens.position));
   let succeeded = 0;
   let lastError: string | null = null;
+  let providerName = "design";
   try {
     const provider = getDesignProvider();
+    providerName = provider.name;
     const [project] = await db.select({ id: schema.projects.id, name: schema.projects.name, designProjectId: schema.projects.designProjectId }).from(schema.projects).where(eq(schema.projects.id, job.projectId));
     if (!project) throw new Error("The project no longer exists.");
     let designProjectId = project.designProjectId;
@@ -37,9 +40,17 @@ export async function runDesignJob(job: Job): Promise<void> {
       await db.update(schema.projects).set({ designProjectId }).where(eq(schema.projects.id, project.id));
     }
 
-    // The built-in designer draws from the project's data, not just the prompt.
-    const ctx = provider.name === "builtin" ? (await getDesignContext(userId, project.id)).ctx : null;
-    const meta = (name: string, prompt: string): DesignMeta | undefined => (ctx ? { ctx, name, purpose: prompt.match(/What this screen must do: (.+)/)?.[1] ?? "" } : undefined);
+    // The built-in and Muse designers draw from the project's data, not just the prompt. Muse also links
+    // every screen of the project to the others, so it gets the full list.
+    const ctx = provider.name === "builtin" || provider.name === "muse" ? (await getDesignContext(userId, project.id)).ctx : null;
+    const all = await db
+      .select({ name: schema.designScreens.name })
+      .from(schema.designScreens)
+      .where(and(eq(schema.designScreens.projectId, project.id), eq(schema.designScreens.archived, false)))
+      .orderBy(asc(schema.designScreens.position));
+    const screens = [...new Set(all.map((s) => s.name))];
+    const meta = (name: string, prompt: string): DesignMeta | undefined =>
+      ctx ? { ctx, name, purpose: prompt.match(/What this screen must do: (.+)/)?.[1] ?? "", screens, userId: job.userId, projectId: project.id } : undefined;
 
     for (const [i, row] of rows.entries()) {
       await db.update(schema.researchJobs).set({ currentStage: `screen ${i + 1} of ${rows.length}` }).where(eq(schema.researchJobs.id, job.id));
@@ -60,7 +71,7 @@ export async function runDesignJob(job: Job): Promise<void> {
         succeeded++;
       } catch (err) {
         console.error(`[design] screen ${row.id} failed:`, err instanceof Error ? err.message : err);
-        lastError = safe(err);
+        lastError = safe(err, providerName);
         await db.update(schema.designScreens).set({ status: "failed", error: lastError }).where(eq(schema.designScreens.id, row.id));
         await refundCredits(userId, designCreditRef(row.id), "design screen failed");
       }
@@ -68,7 +79,7 @@ export async function runDesignJob(job: Job): Promise<void> {
   } catch (err) {
     // Setup failed (no provider, no project): fail and refund every screen that hasn't run.
     console.error(`[design] job ${job.id} failed:`, err instanceof Error ? err.message : err);
-    lastError = safe(err);
+    lastError = safe(err, providerName);
     for (const row of rows) {
       const [cur] = await db.select({ status: schema.designScreens.status }).from(schema.designScreens).where(eq(schema.designScreens.id, row.id));
       if (cur?.status === "succeeded") continue;

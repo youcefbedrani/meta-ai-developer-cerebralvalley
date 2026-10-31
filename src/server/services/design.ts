@@ -183,18 +183,23 @@ export async function buildDesignExport(userId: UserId, projectId: string): Prom
     "CLAUDE.md": strToU8(`# ${ctx.name}\n\nThe full brief is in PROMPT.md. Read it, then docs/ and design/, before writing code. Build only the MVP scope it describes.\n`),
     "AGENTS.md": strToU8(`# ${ctx.name}\n\nThe full brief is in PROMPT.md. Read it, then docs/ and design/, before writing code. Build only the MVP scope it describes.\n`),
     "README.md": strToU8(
-      [`# ${ctx.name}: project kit`, "", "Made with Startum. Designs generated with Google Stitch.", "", "## Build it with an AI coding tool", "- **Claude Code:** open this folder in a terminal, run `claude`, then type: *Read PROMPT.md and build it.*", "- **Cursor / Windsurf:** open the folder and ask the agent to follow PROMPT.md.", "- **Lovable, Bolt, v0:** paste PROMPT.md and attach the files in design/.", "", "## What's inside", "- `PROMPT.md`: the brief for the coding agent", "- `design/`: one HTML file per screen (open them in a browser)", "- `docs/`: MVP spec, brand and customers' words", ""].join("\n"),
+      [`# ${ctx.name}: project kit`, "", "Made with Startum.", "", "## Build it with an AI coding tool", "- **Claude Code:** open this folder in a terminal, run `claude`, then type: *Read PROMPT.md and build it.*", "- **Cursor / Windsurf:** open the folder and ask the agent to follow PROMPT.md.", "- **Lovable, Bolt, v0:** paste PROMPT.md and attach the files in design/.", "", "## What's inside", "- `PROMPT.md`: the brief for the coding agent", "- `design/`: one HTML file per screen (open them in a browser)", "- `docs/`: MVP spec, brand and customers' words", ""].join("\n"),
     ),
   };
   for (const f of files) out[`design/${f.file}`] = strToU8(f.html);
-  const [plan, business, validation] = await Promise.all([getLatestMvpPlan(userId, project.id), getLatestBusinessModel(userId, project.id), getValidationSummary(userId, project.id)]);
-  if (plan) out["docs/mvp-spec.md"] = strToU8(buildSpecMarkdown({ projectName: ctx.name, plan: plan.plan, business: business?.model ?? null, validation, decision: project.decision, generatedAt: plan.createdAt }));
+  for (const [path, content] of Object.entries(await designDocs(userId, project.id, ctx, project.decision))) out[`docs/${path}`] = strToU8(content);
+  return { filename: `${slug(ctx.name)}-project-kit.zip`, zip: zipSync(out, { level: 6 }), prompt };
+}
+
+/** The docs that go with a design hand-off: MVP spec, brand and customers' words (paths relative to docs/). */
+export async function designDocs(userId: UserId, projectId: string, ctx: DesignContext, decision: string | null): Promise<Record<string, string>> {
+  const docs: Record<string, string> = {};
+  const [project, plan, business, validation] = await Promise.all([requireProject(userId, projectId), getLatestMvpPlan(userId, projectId), getLatestBusinessModel(userId, projectId), getValidationSummary(userId, projectId)]);
+  if (plan) docs["mvp-spec.md"] = buildSpecMarkdown({ projectName: ctx.name, plan: plan.plan, business: business?.model ?? null, validation, decision, generatedAt: plan.createdAt });
   const brand = parseStoredBrand(project.brand);
   if (brand) {
-    out["docs/brand.md"] = strToU8(
-      [`# ${ctx.name} brand`, "", `Tagline: ${brand.tagline}`, `Tone: ${brand.voice.join(", ")}`, "", "## Colours", ...Object.entries(brand.palette).map(([k, v]) => `- ${k}: ${v}`), "", "## Fonts (Google Fonts)", `- Headings: ${brand.fonts.heading}`, `- Body: ${brand.fonts.body}`, "", "## CSS variables", "```css", cssVariables(brand), "```", ""].join("\n"),
-    );
+    docs["brand.md"] = [`# ${ctx.name} brand`, "", `Tagline: ${brand.tagline}`, `Tone: ${brand.voice.join(", ")}`, "", "## Colours", ...Object.entries(brand.palette).map(([k, v]) => `- ${k}: ${v}`), "", "## Fonts (Google Fonts)", `- Headings: ${brand.fonts.heading}`, `- Body: ${brand.fonts.body}`, "", "## CSS variables", "```css", cssVariables(brand), "```", ""].join("\n");
   }
-  if (ctx.customerWords.length) out["docs/customer-language.md"] = strToU8(["# What customers say", "", "Verbatim quotes collected from public posts. Use their words in headlines and copy.", "", ...ctx.customerWords.map((q) => `> ${q}\n`)].join("\n"));
-  return { filename: `${slug(ctx.name)}-project-kit.zip`, zip: zipSync(out, { level: 6 }), prompt };
+  if (ctx.customerWords.length) docs["customer-language.md"] = ["# What customers say", "", "Verbatim quotes collected from public posts. Use their words in headlines and copy.", "", ...ctx.customerWords.map((q) => `> ${q}\n`)].join("\n");
+  return docs;
 }

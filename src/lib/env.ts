@@ -50,7 +50,7 @@ const integrationSchema = z.object({
   /** Where uploaded audio is kept (interview recordings). Default ./.data/uploads; a volume in production. */
   UPLOAD_DIR: optionalString,
   SEARCH_PROVIDER: optionalString,
-  /** MVP design screens: "stitch" (Google Stitch SDK), "builtin" (no key needed) or "mock" (dev/tests only). */
+  /** MVP design screens: "muse" (Meta Muse Spark, uses the AI key), "stitch" (Google Stitch SDK), "builtin" (no key needed) or "mock" (dev/tests only). */
   DESIGN_PROVIDER: optionalString,
   STITCH_API_KEY: optionalString,
   SEARCH_API_KEY: optionalString,
@@ -154,6 +154,11 @@ export function getIntegrationStatus(
   }
   // The built-in designer needs no key.
   if (name === "design" && source.DESIGN_PROVIDER === "builtin") return { name, label: "MVP design (built-in designer)", configured: true, missing: [] };
+  // Muse Spark designs through the AI provider: configured exactly when AI is.
+  if (name === "design" && source.DESIGN_PROVIDER === "muse") {
+    const ai = getIntegrationStatus("ai", source);
+    return { name, label: "MVP design (Meta Muse Spark)", configured: ai.configured, missing: ai.missing };
+  }
   const usesEmulator = name === "firebase" && !!emptyToUndefined(source.FIREBASE_AUTH_EMULATOR_HOST);
   const required = [...def.vars, ...(usesEmulator ? [] : def.productionVars)];
   const missing = required.filter((key) => !emptyToUndefined(source[key]));
