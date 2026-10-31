@@ -58,7 +58,7 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
         <div className="relative flex-1">
           {/* Thin vertical rails from the landing page, behind the content only */}
           <div className="rails-bg pointer-events-none absolute inset-x-0 top-0 h-80" aria-hidden="true" />
-          <main className="relative mx-auto w-full max-w-6xl px-4 pb-28 pt-8 sm:px-8 lg:pt-10">{children}</main>
+          <main className="relative mx-auto w-full max-w-6xl px-4 pb-28 pt-8 sm:px-8 lg:pt-10 has-[[data-wide]]:max-w-[1440px] has-[[data-fill]]:pb-6">{children}</main>
         </div>
       </div>
       {!admin && features.modules.help ? <HelpWidget cost={CREDIT_COSTS.help_question} /> : null}

@@ -13,7 +13,7 @@ export default async function ProjectLayout({ children, params }: LayoutProps<"/
   if (!project) notFound();
 
   return (
-    <div className="space-y-6">
+    <div data-wide className="space-y-6">
       <div>
         <Link href="/app/projects" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ChevronLeft className="size-4" /> Projects

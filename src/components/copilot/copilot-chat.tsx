@@ -39,13 +39,17 @@ export function CopilotChat(props: {
   const [balance, setBalance] = useState(props.balance);
   const [text, setText] = useState("");
   const [pending, start] = useTransition();
-  const end = useRef<HTMLDivElement>(null);
+  const list = useRef<HTMLDivElement>(null);
   const tool = props.tools.find((t) => t.id === props.toolId) ?? props.tools[0];
   const groups = [...new Set(props.tools.map((t) => t.group))];
   const dayLeft = Math.max(0, usage.day.limit - usage.day.used);
   const blocked = !props.aiReady || dayLeft <= 0 || usage.month.used >= usage.month.limit;
 
-  useEffect(() => end.current?.scrollIntoView({ behavior: "smooth", block: "end" }), [messages.length]);
+  // Scroll the conversation itself (not the page) to the newest message.
+  useEffect(() => {
+    const el = list.current;
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+  }, [messages.length]);
 
   function send(message = text) {
     const content = message.trim();
@@ -72,9 +76,9 @@ export function CopilotChat(props: {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
+    <div data-fill className="grid gap-6 lg:h-[calc(100dvh-4.5rem)] lg:min-h-[32rem] lg:grid-cols-[260px_minmax(0,1fr)]">
       {/* Tools and history */}
-      <aside className="space-y-5">
+      <aside className="space-y-5 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
         <Link href="/app/copilot" className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-medium shadow-sm transition hover:bg-muted/50">
           <MessageSquarePlus className="size-4" /> New conversation
         </Link>
@@ -123,7 +127,7 @@ export function CopilotChat(props: {
       </aside>
 
       {/* Conversation */}
-      <section className="surface flex min-h-[70vh] flex-col overflow-hidden">
+      <section className="surface flex h-[calc(100dvh-7rem)] min-h-[28rem] flex-col overflow-hidden lg:h-auto lg:min-h-0">
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
           <div className="flex items-center gap-3">
             <span className="grid size-10 place-items-center rounded-xl bg-brand-gradient text-white shadow-glow"><Sparkles className="size-4" /></span>
@@ -147,7 +151,7 @@ export function CopilotChat(props: {
           </label>
         </header>
 
-        <div className="flex-1 space-y-5 overflow-y-auto px-5 py-6" aria-live="polite">
+        <div ref={list} className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-6" aria-live="polite">
           {messages.length === 0 ? (
             <div className="mx-auto max-w-lg py-8 text-center">
               <Bot className="mx-auto size-9 text-primary" />
@@ -164,7 +168,6 @@ export function CopilotChat(props: {
           ) : (
             messages.map((m) => <Bubble key={m.id} m={m} />)
           )}
-          <div ref={end} />
         </div>
 
         <footer className="border-t border-border p-4">

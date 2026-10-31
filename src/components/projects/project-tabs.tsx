@@ -24,7 +24,7 @@ export function ProjectTabs({ projectId }: { projectId: string }) {
   const pathname = usePathname();
   const base = `/app/projects/${projectId}`;
   return (
-    <nav className="flex gap-1 overflow-x-auto border-b border-border" aria-label="Project sections">
+    <nav className="flex flex-wrap border-b border-border" aria-label="Project sections">
       {TABS.map((t) => {
         const href = t.slug ? `${base}/${t.slug}` : base;
         const active = pathname === href;
@@ -34,12 +34,12 @@ export function ProjectTabs({ projectId }: { projectId: string }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative whitespace-nowrap px-3.5 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground",
+              "relative whitespace-nowrap px-2 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground",
               active && "text-foreground",
             )}
           >
             {t.label}
-            {active ? <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-brand-gradient" /> : null}
+            {active ? <span className="absolute inset-x-1 -bottom-px h-0.5 rounded-full bg-brand-gradient" /> : null}
           </Link>
         );
       })}
