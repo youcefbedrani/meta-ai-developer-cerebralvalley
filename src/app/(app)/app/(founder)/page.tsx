@@ -30,7 +30,7 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <PageHeader
-        title={<>Welcome{firstName ? `, ${firstName}` : ""}</>}
+        title={<>Welcome{firstName ? <>, <span data-no-translate>{firstName}</span></> : ""}</>}
         description="Every idea is a project. Research, competitors, experiments and plans all live inside it."
         actions={
           <Link href="/app/projects/new" className={cn(buttonVariants({ variant: "gradient" }), "h-10 px-4")}>

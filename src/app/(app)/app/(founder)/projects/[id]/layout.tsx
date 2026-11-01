@@ -19,7 +19,7 @@ export default async function ProjectLayout({ children, params }: LayoutProps<"/
           <ChevronLeft className="size-4" /> Projects
         </Link>
         <div className="mt-3 flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-[28px]">{project.name}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-[28px]" data-no-translate>{project.name}</h1>
           <StageBadge stage={project.stage} />
           {project.status === "archived" ? (
             <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">Archived</span>

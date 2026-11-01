@@ -1,8 +1,12 @@
 import { Coins, Megaphone, Wrench } from "lucide-react";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { MockModeBanner } from "@/components/app/mock-banner";
+import { PageTranslator } from "@/components/app/page-translator";
 import { MobileTopbar, Sidebar } from "@/components/app/sidebar";
+import { TopBar } from "@/components/app/top-bar";
 import { HelpWidget } from "@/components/help/help-widget";
+import { LOCALE_INFO, THEME_COOKIE, toLocale } from "@/lib/i18n";
 import { CREDIT_COSTS } from "@/lib/plans";
 import { cn } from "@/lib/utils";
 import { requireOnboardedUser } from "@/server/auth/current-user";
@@ -10,14 +14,17 @@ import { getBalance } from "@/server/billing/credits";
 import { isAdmin } from "@/server/marketplace/config";
 import { moduleAccess } from "@/server/platform/guard";
 import { getPlatformSettings } from "@/server/platform/settings";
+import { listNotifications } from "@/server/services/shell";
 
 /** Below this the user can no longer run research, so we suggest upgrading before they hit the wall. */
 const LOW_CREDITS = CREDIT_COSTS.research_job;
 
 export default async function AppLayout({ children }: LayoutProps<"/app">) {
   const user = await requireOnboardedUser();
-  const [settings, balance] = await Promise.all([getPlatformSettings(), getBalance(user.id)]);
+  const [settings, balance, notifications, jar] = await Promise.all([getPlatformSettings(), getBalance(user.id), listNotifications(user.id).catch(() => []), cookies()]);
   const admin = isAdmin(user);
+  const locale = toLocale(user.locale);
+  const theme = jar.get(THEME_COOKIE)?.value === "dark" ? "dark" : "light";
   const shellUser = { email: user.email, name: user.name, plan: user.plan };
   const features = { admin, modules: moduleAccess(settings, user) };
   const { maintenance, announcement } = settings;
@@ -35,9 +42,12 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar user={shellUser} features={features} />
-      <div className="flex min-w-0 flex-1 flex-col">
+    <div className="flex min-h-screen" dir={LOCALE_INFO[locale].dir} lang={locale}>
+      {/* Dark theme before first paint (the top bar keeps <html> in step afterwards). */}
+      {theme === "dark" ? <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('dark')" }} /> : null}
+      <Sidebar user={shellUser} features={features} locale={locale} />
+      <div className="flex min-w-0 flex-1 flex-col" data-translate-root>
+        <TopBar locale={locale} theme={theme} features={features} notifications={notifications} seenAt={user.notificationsSeenAt?.toISOString() ?? null} lowCredits={!admin && balance < LOW_CREDITS} />
         <MockModeBanner />
         {maintenance.enabled ? <p className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">Maintenance mode is on: users see a maintenance page. Only admins can use the app.</p> : null}
         {announcement.enabled && announcement.message ? (
@@ -54,14 +64,15 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
             </Link>
           </p>
         ) : null}
-        <MobileTopbar user={shellUser} features={features} />
+        <MobileTopbar user={shellUser} features={features} locale={locale} theme={theme} notifications={notifications} seenAt={user.notificationsSeenAt?.toISOString() ?? null} lowCredits={!admin && balance < LOW_CREDITS} />
         <div className="relative flex-1">
           {/* Thin vertical rails from the landing page, behind the content only */}
           <div className="rails-bg pointer-events-none absolute inset-x-0 top-0 h-80" aria-hidden="true" />
-          <main className="relative mx-auto w-full max-w-6xl px-4 pb-28 pt-8 sm:px-8 lg:pt-10 has-[[data-wide]]:max-w-[1440px] has-[[data-fill]]:pb-6">{children}</main>
+          <main className="relative mx-auto w-full max-w-6xl px-4 pb-28 pt-8 sm:px-8 lg:pt-8 has-[[data-wide]]:max-w-[1440px] has-[[data-fill]]:pb-6">{children}</main>
         </div>
       </div>
       {!admin && features.modules.help ? <HelpWidget cost={CREDIT_COSTS.help_question} /> : null}
+      <PageTranslator locale={locale} />
     </div>
   );
 }

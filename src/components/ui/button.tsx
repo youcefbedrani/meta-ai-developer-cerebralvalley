@@ -11,7 +11,7 @@ const buttonVariants = cva(
         gradient:
           "btn-shine rounded-[10px] bg-[var(--plum)] text-white shadow-glow hover:-translate-y-px active:scale-[0.98] hover:shadow-[0_14px_28px_-10px_rgb(65_23_94/0.6)] active:translate-y-0",
         outline:
-          "border-border bg-white shadow-[3px_3px_0_1px_#efebeb] hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_1px_#efebeb] hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
+          "border-border bg-white shadow-[3px_3px_0_1px_#efebeb] dark:shadow-[3px_3px_0_1px_#0c0612] hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_1px_#efebeb] dark:hover:shadow-[5px_5px_0_1px_#0c0612] hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:

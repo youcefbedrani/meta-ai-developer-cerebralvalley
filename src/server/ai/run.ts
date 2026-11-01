@@ -5,6 +5,7 @@ import { z } from "zod";
 import { getDb, schema } from "@/server/db/client";
 import { refundCredits, reserveCredits } from "@/server/billing/credits";
 import type { UserId } from "@/server/data/user-id";
+import { LOCALE_INFO, toLocale } from "@/lib/i18n";
 import { getUserById } from "@/server/data/users";
 import { isAdmin } from "@/server/marketplace/config";
 import { estimateTokens, recordSpend, reserveTokens, settleTokens, type TokenReservation } from "./budget";
@@ -110,6 +111,17 @@ async function reserveBudget(userId: UserId | null, system: string, prompt: stri
 }
 
 /**
+ * The client's language (users.locale): every AI result is written in it, while keys, enum values, URLs and names stay
+ * as specified so the app can still read the output. English adds nothing.
+ */
+async function languageRule(userId: UserId | null): Promise<string> {
+  if (!userId) return "";
+  const locale = toLocale((await getUserById(userId))?.locale);
+  if (locale === "en") return "";
+  return `\n\nLanguage: write every human-readable text value in ${LOCALE_INFO[locale].english}, whatever the language of the input. Keep JSON keys, enum values, URLs, code, numbers, product names and brand names exactly as they are. Quotes from real people stay in their original language.`;
+}
+
+/**
  * One structured AI call: budget check → model → JSON → Zod validation → usage log.
  * Does not touch credits (callers that bill use `runWithCredits`).
  */
@@ -132,9 +144,10 @@ export async function callStructured<S extends z.ZodType>(opts: CallOptions<S>):
   const gateway = resolved.provider === "openai-compatible";
   const strict = gateway && !!resolved.strictJsonSchema && strictCompatible(opts.schema);
   const promptSchema = gateway && (!resolved.jsonSchema || (!!resolved.strictJsonSchema && !strict));
+  const lang = await languageRule(opts.userId);
   const system = promptSchema
-    ? `${opts.system}\n\nReply with a single JSON object (no prose, no code fences) matching this JSON Schema:\n${JSON.stringify(z.toJSONSchema(opts.schema))}`
-    : opts.system;
+    ? `${opts.system}${lang}\n\nReply with a single JSON object (no prose, no code fences) matching this JSON Schema:\n${JSON.stringify(z.toJSONSchema(opts.schema))}`
+    : `${opts.system}${lang}`;
 
   // Token use across attempts (a gateway reply that isn't valid JSON is asked for once more).
   const used = { in: 0, out: 0, cached: 0 };
@@ -303,7 +316,7 @@ export async function callText(opts: {
   try {
     const result = await generateText({
       model: resolved.model,
-      system: opts.system,
+      system: `${opts.system}${await languageRule(opts.userId)}`,
       messages: opts.messages,
       maxOutputTokens: outputCap(resolved.provider, opts.maxOutputTokens),
       maxRetries: retriesFor(resolved.provider),
@@ -363,7 +376,7 @@ export async function callAgent<TOOLS extends ToolSet>(opts: {
   try {
     const result = await generateText({
       model: resolved.model,
-      system: opts.system,
+      system: `${opts.system}${await languageRule(opts.userId)}`,
       prompt: opts.prompt,
       tools: opts.tools,
       stopWhen: opts.stopWhen ? [stepCountIs(opts.maxSteps), opts.stopWhen] : stepCountIs(opts.maxSteps),

@@ -14,16 +14,20 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { BRAND } from "@/lib/brand";
+import { LOCALE_INFO, t, type Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { groupedNavItems, isActive, type NavFeatures } from "./nav";
+import { SearchButton, ShellControls, type TopBarProps } from "./top-bar";
 import { UserMenu, type ShellUser } from "./user-menu";
 
 function NavLinks({
   onNavigate,
   features,
+  locale,
 }: {
   onNavigate?: () => void;
   features: NavFeatures;
+  locale: Locale;
 }) {
   const pathname = usePathname();
   return (
@@ -32,7 +36,7 @@ function NavLinks({
         <div key={group.key} className="flex flex-col gap-0.5">
           {group.label ? (
             <p className="px-3 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/80">
-              {group.label}
+              {t(locale, group.label)}
             </p>
           ) : null}
           {group.items.map((item) => {
@@ -49,13 +53,13 @@ function NavLinks({
                 )}
               >
                 {active ? (
-                  <span className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-brand-gradient" />
+                  <span className="absolute inset-y-2 start-0 w-0.5 rounded-full bg-brand-gradient" />
                 ) : null}
                 <item.icon className={cn("size-4 transition-transform duration-200 group-hover:scale-110", active && "text-primary")} />
-                <span className="flex-1">{item.label}</span>
+                <span className="flex-1">{t(locale, item.label)}</span>
                 {item.soon ? (
                   <span className="rounded-full border border-border px-1.5 py-px text-[10px] uppercase tracking-wide text-muted-foreground">
-                    Soon
+                    {t(locale, "Soon")}
                   </span>
                 ) : null}
               </Link>
@@ -74,7 +78,7 @@ function Brand({ admin = false }: { admin?: boolean }) {
       className="flex items-center gap-2.5 px-2"
       aria-label={`${BRAND.name} home`}
     >
-      {admin ? <Wordmark className="text-[22px] text-foreground" /> : <HackathonLockup className="text-[20px] text-foreground" />}
+      {admin ? <Wordmark className="text-[22px] text-foreground" /> : <HackathonLockup className="text-[18px] text-foreground sm:text-[20px]" />}
       {admin ? (
         <span className="rounded-full bg-[var(--plum)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white">
           Admin
@@ -87,17 +91,19 @@ function Brand({ admin = false }: { admin?: boolean }) {
 export function Sidebar({
   user,
   features,
+  locale,
 }: {
   user: ShellUser;
   features: NavFeatures;
+  locale: Locale;
 }) {
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar p-3 lg:flex">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-e border-sidebar-border bg-sidebar p-3 lg:flex">
       <div className="py-3">
         <Brand admin={features.admin} />
       </div>
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto">
-        <NavLinks features={features} />
+        <NavLinks features={features} locale={locale} />
       </div>
       <UserMenu user={user} admin={features.admin} />
     </aside>
@@ -106,29 +112,35 @@ export function Sidebar({
 
 export function MobileTopbar({
   user,
-  features,
+  ...prefs
 }: {
   user: ShellUser;
-  features: NavFeatures;
-}) {
+} & TopBarProps) {
   const [open, setOpen] = useState(false);
+  const { features, locale } = prefs;
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur lg:hidden">
-      <Brand admin={features.admin} />
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-1 border-b border-border bg-background/80 px-2 backdrop-blur sm:px-3 lg:hidden" data-no-translate>
+      <div className="min-w-0 shrink overflow-hidden">
+        <Brand admin={features.admin} />
+      </div>
+      <div className="ms-auto flex shrink-0 items-center">
+        <SearchButton locale={locale} features={features} />
+        <ShellControls {...prefs} />
+      </div>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger
           render={
-            <Button variant="ghost" size="icon" aria-label="Open navigation" />
+            <Button variant="ghost" size="icon" aria-label={t(locale, "Open navigation")} />
           }
         >
           <Menu />
         </SheetTrigger>
-        <SheetContent side="left" className="flex w-72 flex-col bg-sidebar p-3">
+        <SheetContent side={LOCALE_INFO[locale].dir === "rtl" ? "right" : "left"} className="flex w-72 flex-col bg-sidebar p-3">
           <SheetTitle className="px-2 py-3">
             <Brand admin={features.admin} />
           </SheetTitle>
           <div className="mt-2 flex-1">
-            <NavLinks features={features} onNavigate={() => setOpen(false)} />
+            <NavLinks features={features} locale={locale} onNavigate={() => setOpen(false)} />
           </div>
           <UserMenu user={user} admin={features.admin} />
         </SheetContent>

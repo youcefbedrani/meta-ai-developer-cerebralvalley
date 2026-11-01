@@ -13,6 +13,8 @@ export type AppUser = {
   suspendedAt: Date | null;
   onboardedAt: Date | null;
   welcomeSeenAt: Date | null;
+  locale: string;
+  notificationsSeenAt: Date | null;
 };
 
 const columns = {
@@ -24,6 +26,8 @@ const columns = {
   marketplaceBannedAt: schema.users.marketplaceBannedAt,
   suspendedAt: schema.users.suspendedAt,
   onboardedAt: schema.users.onboardedAt,
+  locale: schema.users.locale,
+  notificationsSeenAt: schema.users.notificationsSeenAt,
   welcomeSeenAt: schema.users.welcomeSeenAt,
 };
 

@@ -118,6 +118,77 @@
   --sidebar-ring: #c762f6;
 }
 
+/*
+ * Dark theme (in the app only: the top bar puts .dark on <html>). Same plum and violet brand, on deep aubergine.
+ */
+.dark {
+  color-scheme: dark;
+  --hard-shadow: 6px 6px 0 2px #0c0612;
+  --hard-shadow-sm: 3px 3px 0 1px #0c0612;
+  --brand-glow: 0 8px 22px -8px rgb(199 98 246 / 0.45);
+
+  --background: #130b1b;
+  --foreground: #f1e9fa;
+  --card: #1c1227;
+  --card-foreground: #f1e9fa;
+  --popover: #201530;
+  --popover-foreground: #f1e9fa;
+  --muted: #261a33;
+  --muted-foreground: rgb(241 233 250 / 0.62);
+  --accent: #2b1e3b;
+  --accent-foreground: #f1e9fa;
+  --secondary: #261a33;
+  --secondary-foreground: #f1e9fa;
+
+  --primary: #9d72ff;
+  --primary-foreground: #ffffff;
+  --ring: #c762f6;
+
+  --border: #31233f;
+  --input: #3b2b4d;
+
+  --destructive: #f07a7a;
+  --success: #3ad19a;
+  --warning: #f2b84b;
+
+  --sidebar: #170e21;
+  --sidebar-foreground: #f1e9fa;
+  --sidebar-primary: #c762f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #261a33;
+  --sidebar-accent-foreground: #f1e9fa;
+  --sidebar-border: #2a1e37;
+}
+
+/* Arabic: Noto Sans Arabic covers only Arabic characters, so Latin text still falls through to Inter. */
+[lang="ar"] { font-family: var(--font-arabic), var(--font-sans), sans-serif; }
+
+/* Hard-coded light colours used across pages, mapped to the dark palette. */
+.dark .bg-white { background-color: var(--card); }
+.dark .bg-white\/80, .dark .bg-white\/90 { background-color: color-mix(in srgb, var(--card) 85%, transparent); }
+.dark .text-\[var\(--plum\)\] { color: #e4d2f7; }
+.dark .rails-bg { background-image: repeating-linear-gradient(90deg, transparent 0 79px, #1f1529 79px 80px); }
+.dark a.surface:hover, .dark button.surface:hover { box-shadow: 6px 6px 0 1px #0c0612; }
+.dark .bg-emerald-50 { background-color: rgb(16 185 129 / 0.14); }
+.dark .bg-amber-50 { background-color: rgb(245 158 11 / 0.14); }
+.dark .bg-violet-50 { background-color: rgb(139 92 246 / 0.16); }
+.dark .bg-rose-50, .dark .bg-red-50 { background-color: rgb(244 63 94 / 0.14); }
+.dark .bg-sky-50, .dark .bg-blue-50 { background-color: rgb(14 165 233 / 0.14); }
+.dark .bg-slate-50, .dark .bg-gray-50, .dark .bg-zinc-50 { background-color: var(--muted); }
+.dark .border-emerald-200 { border-color: rgb(16 185 129 / 0.35); }
+.dark .border-amber-200 { border-color: rgb(245 158 11 / 0.35); }
+.dark .border-violet-200 { border-color: rgb(139 92 246 / 0.4); }
+.dark .border-rose-200, .dark .border-red-200 { border-color: rgb(244 63 94 / 0.35); }
+.dark .text-emerald-700, .dark .text-emerald-800, .dark .text-green-700 { color: #5ee0ad; }
+.dark .text-emerald-600 { color: #4fd59f; }
+.dark .text-amber-700, .dark .text-amber-800, .dark .text-amber-900 { color: #f5c26b; }
+.dark .text-amber-600 { color: #f2b84b; }
+.dark .text-violet-700, .dark .text-violet-800, .dark .text-violet-900 { color: #c9adff; }
+.dark .text-rose-700, .dark .text-red-700, .dark .text-rose-600 { color: #ff8f9f; }
+.dark .text-sky-700, .dark .text-blue-700 { color: #7cc9f5; }
+.dark .text-slate-700, .dark .text-gray-700, .dark .text-slate-900, .dark .text-gray-900 { color: var(--foreground); }
+.dark .text-slate-500, .dark .text-gray-500, .dark .text-slate-600, .dark .text-gray-600 { color: var(--muted-foreground); }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

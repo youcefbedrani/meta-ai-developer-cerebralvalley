@@ -26,6 +26,7 @@ capabilities that only became possible with them.** Everything below was built b
 | 10 | **Design → clickable prototype → code** — Muse Spark designs every screen, links them into a Figma-style prototype, and after approval writes a runnable Next.js app | Muse Spark | Project → Design |
 | 11 | **Launch videos for organic social** — a vertical captioned video and a native post for TikTok, Instagram Reels, Facebook and LinkedIn; post from Startum or download | Muse Spark (storyboard + posts) + Muse Image (scenes) | Project → Launch videos |
 | 12 | **Traditional → Innovative** — upload a video, photos or PDFs of work done by hand; Muse Spark maps today's process with evidence and proposes the SaaS, automation or system that replaces it. An enterprise mode designs complex systems for oil & gas, banks, hospitals and more | Muse Spark (vision + structured output) + Muse Voice Transcribe | Traditional → Innovative |
+| 13 | **Startum in French, Spanish and Arabic** — the interface is translated on the fly and every AI result is written in the user's language, with right-to-left Arabic; plus a top bar with search, notifications and dark mode | Muse Spark Open (interface translation) + Muse Spark (results in the user's language) | Top bar → language |
 
 ### 1. Validation Autopilot (agentic)
 
@@ -247,6 +248,22 @@ $0.034: five system ideas, from an offline field-inspection app to fibre and sat
 The narration step reuses the interview transcriber (tested in section 2); it hasn't yet been run on a narrated scan video.
 
 Code: [`src/server/jobs/innovation.ts`](src/server/jobs/innovation.ts), [`src/server/innovation/media.ts`](src/server/innovation/media.ts), [`src/server/ai/prompts/innovation.ts`](src/server/ai/prompts/innovation.ts), [`src/components/innovation/scan-result.tsx`](src/components/innovation/scan-result.tsx)
+
+### 13. Startum in four languages
+
+- **AI results in the user's language:** the language saved on the account (English, French, Spanish or Arabic) is
+  added to every Muse Spark call, so research, ideas, scans, plans and copilot answers come back in it, while JSON
+  keys, enum values, URLs and names stay as the app expects.
+- **Interface translated by Muse Spark Open:** the sidebar and top bar have hand-written translations; the rest of
+  each page is translated on the fly. The browser collects the interface text it doesn't know, the server translates
+  it in batches on Meta's open-weights model (about 2.5 s for 20 strings, against about 30 s on the hosted API) and
+  keeps every translation in Redis, shared by all users, so each string is translated once per language. Names and
+  project titles are left as written.
+- **Arabic** switches the app to right-to-left with an Arabic font.
+- **Top bar:** search across pages, projects, ideas and scans (Ctrl K), notifications when research, designs,
+  videos or scans finish, and a dark theme.
+
+Code: [`src/components/app/page-translator.tsx`](src/components/app/page-translator.tsx), [`src/server/services/translate.ts`](src/server/services/translate.ts), [`src/lib/i18n.ts`](src/lib/i18n.ts), [`src/components/app/top-bar.tsx`](src/components/app/top-bar.tsx)
 
 ## How it fits together
 

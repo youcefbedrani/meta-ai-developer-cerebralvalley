@@ -76,7 +76,7 @@ export function CopilotChat(props: {
   }
 
   return (
-    <div data-fill className="grid gap-6 lg:h-[calc(100dvh-4.5rem)] lg:min-h-[32rem] lg:grid-cols-[260px_minmax(0,1fr)]">
+    <div data-fill className="grid gap-6 lg:h-[calc(100dvh-7.5rem)] lg:min-h-[32rem] lg:grid-cols-[260px_minmax(0,1fr)]">
       {/* Tools and history */}
       <aside className="space-y-5 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
         <Link href="/app/copilot" className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-medium shadow-sm transition hover:bg-muted/50">

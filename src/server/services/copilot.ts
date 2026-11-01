@@ -11,6 +11,7 @@ import { callText, withCredits } from "@/server/ai/run";
 import { getDb, schema } from "@/server/db/client";
 import { NotFoundError } from "@/server/data/errors";
 import { createProject, requireProject } from "@/server/data/projects";
+import { getUserById } from "@/server/data/users";
 import { listCompetitors } from "@/server/data/research";
 import type { UserId } from "@/server/data/user-id";
 import { enforceAiLimits } from "@/server/rate-limit";
@@ -46,8 +47,9 @@ export async function getCopilotBrief(userId: UserId, projectId: string | null |
   });
 }
 
-const cacheKey = (userId: string, tool: string, brief: string | null, message: string) =>
-  `copilot:answer:${createHash("sha256").update(JSON.stringify([userId, tool, brief ?? "", cacheNormalise(message)])).digest("hex")}`;
+/** The answer language (users.locale) is part of the key: switching language never serves an answer in the old one. */
+const cacheKey = (userId: string, locale: string, tool: string, brief: string | null, message: string) =>
+  `copilot:answer:${createHash("sha256").update(JSON.stringify([userId, locale, tool, brief ?? "", cacheNormalise(message)])).digest("hex")}`;
 
 async function ownedThread(userId: UserId, threadId: string) {
   const [t] = await getDb().select().from(schema.copilotThreads).where(and(eq(schema.copilotThreads.id, threadId), eq(schema.copilotThreads.userId, userId))).limit(1);
@@ -83,7 +85,8 @@ export async function sendCopilotMessage(userId: UserId, raw: unknown): Promise<
     });
 
   // Repeated first question: answer from the cache. No AI call, no credits, no tokens.
-  const key = history.length === 0 ? cacheKey(userId, tool.id, brief, input.message) : null;
+  const locale = (await getUserById(userId))?.locale ?? "en";
+  const key = history.length === 0 ? cacheKey(userId, locale, tool.id, brief, input.message) : null;
   if (key) {
     const hit = await getRedis().get(key);
     if (hit) return save({ content: hit, cached: true, tokensIn: 0, tokensOut: 0 });

@@ -126,6 +126,10 @@ export const users = pgTable("users", {
   onboardedAt: timestamp("onboarded_at", { withTimezone: true }),
   /** When the founder closed the one-time welcome popup (components/app/welcome-modal.tsx). */
   welcomeSeenAt: timestamp("welcome_seen_at", { withTimezone: true }),
+  /** App language (en, fr, es, ar): the interface and AI results use it. */
+  locale: text("locale").notNull().default("en"),
+  /** Notifications finished before this are shown as read. */
+  notificationsSeenAt: timestamp("notifications_seen_at", { withTimezone: true }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
