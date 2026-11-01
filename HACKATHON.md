@@ -25,6 +25,7 @@ capabilities that only became possible with them.** Everything below was built b
 | 9 | **Launch playbook** — idea to market in one plan: 6 stages with exit gates, founder-led sales playbook, SaaS metrics with code-computed revenue maths, retention, build sprints and AI-coding prompts | Muse Spark (structured output) | Project → Launch playbook |
 | 10 | **Design → clickable prototype → code** — Muse Spark designs every screen, links them into a Figma-style prototype, and after approval writes a runnable Next.js app | Muse Spark | Project → Design |
 | 11 | **Launch videos for organic social** — a vertical captioned video and a native post for TikTok, Instagram Reels, Facebook and LinkedIn; post from Startum or download | Muse Spark (storyboard + posts) + Muse Image (scenes) | Project → Launch videos |
+| 12 | **Traditional → Innovative** — upload a video, photos or PDFs of work done by hand; Muse Spark maps today's process with evidence and proposes the SaaS, automation or system that replaces it. An enterprise mode designs complex systems for oil & gas, banks, hospitals and more | Muse Spark (vision + structured output) + Muse Voice Transcribe | Traditional → Innovative |
 
 ### 1. Validation Autopilot (agentic)
 
@@ -220,11 +221,39 @@ connectors are implemented against each platform's API but not yet exercised wit
 
 Code: [`src/server/jobs/launch-video.ts`](src/server/jobs/launch-video.ts), [`src/server/video/render.ts`](src/server/video/render.ts), [`src/server/ai/prompts/launch-video.ts`](src/server/ai/prompts/launch-video.ts), [`src/server/social/providers.ts`](src/server/social/providers.ts), [`src/components/videos/launch-videos.tsx`](src/components/videos/launch-videos.tsx)
 
+### 12. Traditional → Innovative (vision)
+
+Most SaaS ideas start from watching someone do a job the slow way. This section lets a client show it instead of
+describing it.
+
+- **Upload:** a video of the work being done, photos or screenshots, PDFs (procedures, forms, reports) and/or a short
+  description. Up to 8 files; videos up to 100 MB.
+- **Read (worker):** ffmpeg samples up to 10 frames spread over the video; Muse Voice Transcribe turns the narration
+  into text; photos are normalised with sharp; PDFs are read page by page (unpdf).
+- **See (Muse Spark vision):** frames, photos, PDF text and transcript go to Muse Spark in one request. It maps the
+  current way of working step by step: how each step is done today, the tools, the pain, and the evidence it saw
+  ("frame 7s", "photo 1", "PDF p. 3"), plus the data handled, bottlenecks, risks and what the material doesn't show.
+- **Propose (Muse Spark):** 5–8 ideas, from a quick automation to a bold platform, each tied to the steps it replaces,
+  with an MVP, who pays, pricing (labelled as an assumption), who else has the problem and a test for this week.
+- **Enterprise mode:** pick an industry (oil & gas, banking, hospitals, logistics, telecom, public sector…), company
+  size and region. Muse Spark designs 4–6 systems with architecture, data, integrations (SAP, SCADA, core banking,
+  EHR), the role of AI and the human in the loop, compliance, a 60–90 day pilot, the sales cycle and the narrow wedge a
+  startup could sell first. Value is stated as a hypothesis, never invented figures.
+- **Start project:** any idea becomes a Startum project with a full brief, ready for research, design and testing.
+
+Measured: a garage front-desk scan (16 s video, a one-page procedure PDF, a photo) in 44 s for about $0.055: five
+steps mapped with frame and page evidence, seven ideas. An oil & gas scan (North Africa, text only) in 42 s for about
+$0.034: five system ideas, from an offline field-inspection app to fibre and satellite leak detection.
+The narration step reuses the interview transcriber (tested in section 2); it hasn't yet been run on a narrated scan video.
+
+Code: [`src/server/jobs/innovation.ts`](src/server/jobs/innovation.ts), [`src/server/innovation/media.ts`](src/server/innovation/media.ts), [`src/server/ai/prompts/innovation.ts`](src/server/ai/prompts/innovation.ts), [`src/components/innovation/scan-result.tsx`](src/components/innovation/scan-result.tsx)
+
 ## How it fits together
 
 ```mermaid
 flowchart LR
   V[Voice pitch] -->|Muse Voice Transcribe + Muse Spark| P[Project]
+  T[Video · photos · PDFs of manual work] -->|frames + Muse Voice + Muse Spark vision| TI[Today's process mapped<br/>software ideas] -->|Start project| P
   P --> A{{Validation Autopilot<br/>Muse Spark tool calling}}
   A --> R[Research · competitors · market voices]
   A --> W[Web search]
@@ -251,6 +280,8 @@ flowchart LR
 | One screen designed by Muse Spark | ~$0.03 |
 | Approved prototype → runnable code (3–4 screens) | $0.15–0.23 |
 | Launch video (storyboard, posts for 4 platforms, 4 scenes, rendered MP4) | ~$0.06 |
+| Traditional → Innovative scan (video + PDF + photo, process map, 7 ideas) | ~$0.055 |
+| Enterprise scan (5 system ideas with architecture and pilot) | ~$0.034 |
 
 Total spent building and testing everything above: under $10.
 

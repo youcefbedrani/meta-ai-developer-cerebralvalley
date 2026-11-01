@@ -9,8 +9,10 @@ export const PAIN_MINING_QUEUE = "pain-mining";
 export type PainMiningJobData = { sessionId: string; attempt: number };
 export const AUTOPILOT_QUEUE = "autopilot";
 export type AutopilotJobData = { runId: string };
+export const INNOVATION_QUEUE = "innovation";
+export type InnovationJobData = { scanId: string };
 
-const g = globalThis as unknown as { __researchQueue?: Queue<ResearchJobData>; __miningQueue?: Queue<PainMiningJobData>; __autopilotQueue?: Queue<AutopilotJobData> };
+const g = globalThis as unknown as { __researchQueue?: Queue<ResearchJobData>; __miningQueue?: Queue<PainMiningJobData>; __autopilotQueue?: Queue<AutopilotJobData>; __innovationQueue?: Queue<InnovationJobData> };
 
 /** BullMQ needs connections with maxRetriesPerRequest: null. */
 export function createQueueConnection(): Redis {
@@ -53,4 +55,10 @@ export async function enqueueAutopilot(data: AutopilotJobData): Promise<void> {
   if (autopilotOverride) return autopilotOverride(data);
   g.__autopilotQueue ??= new Queue<AutopilotJobData>(AUTOPILOT_QUEUE, { connection: createQueueConnection() });
   await g.__autopilotQueue.add("run", data, { jobId: data.runId, attempts: 1, removeOnComplete: 200, removeOnFail: 500 });
+}
+
+/** Traditional → Innovative scans: frames, transcripts and two Muse Spark calls (a minute or two). */
+export async function enqueueInnovation(data: InnovationJobData): Promise<void> {
+  g.__innovationQueue ??= new Queue<InnovationJobData>(INNOVATION_QUEUE, { connection: createQueueConnection() });
+  await g.__innovationQueue.add("run", data, { jobId: data.scanId, attempts: 1, removeOnComplete: 200, removeOnFail: 500 });
 }

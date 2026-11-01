@@ -1,5 +1,5 @@
 import type { ModuleKey } from "@/lib/platform-settings";
-import { BarChart3, BookOpen, Bot, CircleUser, Compass, CreditCard, FlaskConical, FolderKanban, History, LayoutDashboard, Lightbulb, Megaphone, Pickaxe, SearchCheck, Settings, SlidersHorizontal, Sparkles, Store, UserPlus, Users, type LucideIcon } from "lucide-react";
+import { BarChart3, BookOpen, Bot, CircleUser, Compass, CreditCard, Factory, FlaskConical, FolderKanban, History, LayoutDashboard, Lightbulb, Megaphone, Pickaxe, SearchCheck, Settings, SlidersHorizontal, Sparkles, Store, UserPlus, Users, type LucideIcon } from "lucide-react";
 
 export type NavItem = {
   href: string;
@@ -38,6 +38,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/app/copilot", label: "AI Copilot", icon: Sparkles, module: "copilot", group: "start" },
   { href: "/app/ideas", label: "Discover Ideas", icon: Lightbulb, module: "ideas", group: "discover" },
   { href: "/app/gold-mine", label: "Gold Mine", icon: Pickaxe, module: "goldMine", group: "discover" },
+  { href: "/app/innovation", label: "Traditional → Innovative", icon: Factory, module: "innovation", group: "discover" },
   { href: "/app/marketplace", label: "Marketplace", icon: Store, module: "marketplace", group: "discover" },
   { href: "/app/projects", label: "My Projects", icon: FolderKanban, group: "validate" },
   { href: "/app/research", label: "Research & Validate", icon: SearchCheck, module: "research", group: "validate" },

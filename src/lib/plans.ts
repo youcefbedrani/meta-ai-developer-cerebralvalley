@@ -81,6 +81,10 @@ export const CREDIT_COSTS = {
   codebase_fix: 3,
   /** A launch video for organic social: storyboard + posts (Muse Spark), 3–6 scenes (Muse Image), rendered MP4. */
   launch_video: 12,
+  /** Traditional → Innovative: what Muse Spark sees in your video, photos or PDFs, then 5–8 software ideas. */
+  innovation_scan: 10,
+  /** Traditional → Innovative for big companies: complex system ideas for an industry, with architecture and pilot. */
+  innovation_enterprise: 15,
   interview_script: 2,
   interview_analysis: 3,
   /** Interview recordings: per started 5 minutes of audio (Meta Muse Voice Transcribe). */

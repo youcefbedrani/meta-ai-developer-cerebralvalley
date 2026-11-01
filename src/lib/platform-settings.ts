@@ -10,6 +10,7 @@ import { MONTHLY_CREDITS } from "@/lib/plans";
 export const MODULES = [
   { key: "goldMine", label: "Gold Mine", href: "/app/gold-mine" },
   { key: "ideas", label: "Discover Ideas", href: "/app/ideas" },
+  { key: "innovation", label: "Traditional → Innovative", href: "/app/innovation" },
   { key: "research", label: "Research & Validate", href: "/app/research" },
   { key: "lab", label: "Validation Lab", href: "/app/lab" },
   { key: "marketing", label: "Marketing Studio", href: "/app/marketing" },
@@ -37,6 +38,8 @@ export const OPERATION_MODULE: Record<string, ModuleKey> = {
   codebase_edit: "design",
   codebase_fix: "design",
   launch_video: "marketing",
+  innovation_scan: "innovation",
+  innovation_enterprise: "innovation",
   interview_script: "lab",
   interview_analysis: "lab",
   voice_transcription: "lab",

@@ -1664,3 +1664,31 @@ export const socialPosts = pgTable(
   },
   (t) => [index("social_posts_video_idx").on(t.videoId, t.createdAt)],
 );
+
+/** Traditional → Innovative: uploads of how work is done today, what Muse Spark saw, and the ideas it proposed. */
+export const innovationScans = pgTable(
+  "innovation_scans",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    /** "process" (manual work in a business) or "enterprise" (complex problems in big companies). */
+    mode: text("mode").notNull(),
+    title: text("title").notNull().default(""),
+    /** Mode, notes, industry, company size, region (lib/validation/innovation.ts ScanInput). */
+    input: jsonb("input").$type<Record<string, unknown>>().notNull(),
+    /** Uploaded files and what the worker extracted from them (ScanMedia[]). */
+    media: jsonb("media").$type<Record<string, unknown>[]>().notNull().default([]),
+    status: jobStatusEnum("status").notNull().default("queued"),
+    stage: text("stage"),
+    observation: jsonb("observation").$type<Record<string, unknown>>(),
+    ideas: jsonb("ideas").$type<Record<string, unknown>[]>(),
+    creditsReserved: integer("credits_reserved").notNull().default(0),
+    error: text("error"),
+    startedAt: timestamp("started_at", { withTimezone: true }),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [index("innovation_scans_user_idx").on(t.userId, t.createdAt)],
+);
