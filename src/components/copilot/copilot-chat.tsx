@@ -200,7 +200,7 @@ export function CopilotChat(props: {
             </Button>
           </form>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs text-muted-foreground">
-            <span>{props.cost} credit per message · repeated questions are free · {balance.toLocaleString()} credits left{props.mock ? " · mock mode" : ""}</span>
+            <span>{props.cost} credit per message · repeated questions are free · {balance.toLocaleString("en-US")} credits left{props.mock ? " · mock mode" : ""}</span>
             <UsageMeter usage={usage} plan={props.plan} />
           </div>
         </footer>

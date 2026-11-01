@@ -58,6 +58,7 @@ const SHELL: Record<string, [string, string, string]> = {
   Ideas: ["Idées", "Ideas", "الأفكار"],
   Scans: ["Analyses", "Análisis", "التحليلات"],
   "No results": ["Aucun résultat", "Sin resultados", "لا توجد نتائج"],
+  "Searching…": ["Recherche…", "Buscando…", "جارٍ البحث…"],
   Notifications: ["Notifications", "Notificaciones", "الإشعارات"],
   "No notifications yet": ["Aucune notification pour l'instant", "Aún no hay notificaciones", "لا توجد إشعارات بعد"],
   "When research, designs, videos or scans finish, they show up here.": [

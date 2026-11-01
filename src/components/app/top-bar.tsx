@@ -115,6 +115,8 @@ function SearchDialog({ open, onOpenChange, locale, features }: { open: boolean;
   const router = useRouter();
   const [q, setQ] = useState("");
   const [hits, setHits] = useState<SearchHit[]>([]);
+  // The query the current hits answer: until it matches, the dialog says "Searching…" rather than "No results".
+  const [hitsFor, setHitsFor] = useState("");
   const [active, setActive] = useState(0);
   const [pending, start] = useTransition();
   const pages = useMemo(() => {
@@ -132,6 +134,7 @@ function SearchDialog({ open, onOpenChange, locale, features }: { open: boolean;
         start(async () => {
           const r = await searchAction(q);
           setHits(r.ok ? r.data : []);
+          setHitsFor(q);
         }),
       200,
     );
@@ -195,7 +198,7 @@ function SearchDialog({ open, onOpenChange, locale, features }: { open: boolean;
               </li>
             ))
           ) : (
-            <li className="flex items-center justify-center gap-2 px-2 py-8 text-sm text-muted-foreground"><FileSearch className="size-4" /> {t(locale, "No results")}</li>
+            <li className="flex items-center justify-center gap-2 px-2 py-8 text-sm text-muted-foreground"><FileSearch className="size-4" /> {t(locale, pending || (q.trim().length >= 2 && hitsFor !== q) ? "Searching…" : "No results")}</li>
           )}
         </ul>
       </DialogContent>

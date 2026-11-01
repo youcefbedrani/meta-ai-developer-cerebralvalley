@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { PAGE_REVIEW_MAX_MB, type CompetitorPageReview, type OwnPageReview, type PageReviewMode } from "@/lib/validation/page-review";
 import { cn } from "@/lib/utils";
 
+/** Fixed locale and time zone: the server and the browser render the same date. */
+const dateFmt = new Intl.DateTimeFormat("en", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+
 export type ReviewItem = { id: string; mode: PageReviewMode; width: number; height: number; createdAt: string; result: OwnPageReview | CompetitorPageReview };
 
 const SEVERITY = { high: "bg-destructive text-white", medium: "bg-warning text-white", low: "bg-muted-foreground text-white" } as const;
@@ -112,7 +115,7 @@ export function PageReviewPanel({ projectId, reviews, selected, cost, balance }:
               href={`/app/projects/${projectId}/review?r=${r.id}`}
               className={cn("rounded-full border px-3 py-1", r.id === selected?.id ? "border-primary text-foreground" : "border-border text-muted-foreground hover:text-foreground")}
             >
-              {r.mode === "own" ? "My page" : (r.result as CompetitorPageReview).company || "Competitor"} · {new Date(r.createdAt).toLocaleDateString()}
+              {r.mode === "own" ? "My page" : (r.result as CompetitorPageReview).company || "Competitor"} · {dateFmt.format(new Date(r.createdAt))}
             </Link>
           ))}
         </nav>

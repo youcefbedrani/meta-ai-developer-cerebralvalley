@@ -28,3 +28,20 @@ words a minute); the times match the cut.
 The footage is recorded by `.e2e/rec.mjs` (headless Chrome screencast, captions drawn on the page) from the scene list
 in `.e2e/scenes.mjs`, and the title cards are HTML pages recorded the same way. These helpers are local and not part of
 the app.
+
+## Full product tour (4:29)
+
+A longer walkthrough of all 13 hackathon features, for judges who want to see everything. The official submission
+video stays the 2:37 cut above (the limit is 3 minutes); link the tour from the README and the submission notes.
+Like the short cut, it shows only work built during the hackathon.
+
+| Time | Chapter | On screen |
+|---|---|---|
+| 0:00 | Hook + intro | Paperwork garage; Startum × Meta, five models |
+| 0:17 | 1 · Find the idea | Traditional → Innovative upload and scan · enterprise oil & gas · Copilot ideas with Create project / Validate · Pitch it out loud → a project whose Autopilot verdict is Pivot |
+| 1:37 | 2 · Validate | Validation Autopilot (Build, 62%) · voice interview with who-said-what and playable quotes · page review of a competitor's pricing page |
+| 2:30 | 3 · Brand & plan | Muse Image + SAM 3.1 brand · live waitlist page · launch playbook (code-computed revenue maths, six gated stages) |
+| 3:08 | 4 · Build & launch | Designed screens · clickable prototype · generated Next.js code · launch video and platform posts |
+| 3:47 | 5 · For everyone | Ctrl K search · notifications · Arabic right-to-left · dark mode |
+| 4:11 | Under the hood | Which Meta model does what; a full product journey ≈ $0.87 |
+| 4:20 | End card | ~10 minutes, under $1, 13 features |
