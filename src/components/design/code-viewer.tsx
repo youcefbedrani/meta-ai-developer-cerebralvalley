@@ -10,6 +10,10 @@ import { MetaMark } from "@/components/brand/hackathon-lockup";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+// A fixed locale and time zone, so the server and the browser render the same text.
+const dateTimeFmt = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" });
+const timeFmt = new Intl.DateTimeFormat("en", { timeStyle: "short", timeZone: "UTC" });
+
 type Issue = { file: string; line: number; message: string };
 type Check = { ok: boolean; issues: Issue[]; checkedAt: string } | null;
 type Version = { id: string; version: number | null; note: string | null; ok: boolean | null; createdAt: string };
@@ -116,7 +120,7 @@ export function CodeViewer(props: {
         <span className="mx-1 h-5 w-px bg-border" />
         <div className="min-w-0">
           <p className="text-sm font-medium">{name}: MVP code <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-[11px] font-normal text-muted-foreground">v{props.version}</span></p>
-          <p className="truncate text-xs text-muted-foreground">{props.note} · Next.js + Tailwind · {paths.length} files · {new Date(props.generatedAt).toLocaleString()}</p>
+          <p className="truncate text-xs text-muted-foreground">{props.note} · Next.js + Tailwind · {paths.length} files · {dateTimeFmt.format(new Date(props.generatedAt))} UTC</p>
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <div className="relative">
@@ -165,7 +169,7 @@ export function CodeViewer(props: {
               <span className="grid size-9 shrink-0 place-items-center rounded-full bg-success/15 text-success"><Check className="size-5" /></span>
               <div>
                 <p className="text-sm font-medium">Compiles: 0 problems</p>
-                <p className="text-xs text-muted-foreground">Every file type-checked, plus the React rules that break apps at runtime. Checked {new Date(check.checkedAt).toLocaleTimeString()}.</p>
+                <p className="text-xs text-muted-foreground">Every file type-checked, plus the React rules that break apps at runtime. Checked {timeFmt.format(new Date(check.checkedAt))} UTC.</p>
               </div>
             </div>
           ) : check ? (

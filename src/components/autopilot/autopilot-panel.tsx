@@ -224,7 +224,8 @@ function VerdictCard({ verdict, projectId }: { verdict: AutopilotVerdict; projec
           );
         })}
       </div>
-      {verdict.pivotIdea ? (
+      {/* Models sometimes write the word "null" (or "none") instead of leaving it empty. */}
+      {verdict.pivotIdea && !/^\s*(null|none|n\/a|-)?\s*$/i.test(verdict.pivotIdea) ? (
         <p className="mt-5 rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-sm">
           <span className="font-medium">Suggested pivot:</span> {verdict.pivotIdea}
         </p>
