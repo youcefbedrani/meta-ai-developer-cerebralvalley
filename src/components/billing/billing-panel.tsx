@@ -84,12 +84,15 @@ export function BillingPanel({
           ))}
         </div>
       </div>
-      {currentPlan !== "free" || subscription ? (
+      {currentPlan !== "free" && !subscription ? (
+        <p className="text-sm text-muted-foreground">You&apos;re on the {plans.find((p) => p.id === currentPlan)?.name} plan for free: every feature and its full monthly credits, no card needed.</p>
+      ) : null}
+      {subscription ? (
         <Button variant="outline" className="rounded-[10px]" disabled={!stripeConfigured || pending} onClick={() => go("portal", portalAction)}>
           {busy === "portal" ? <Loader2 className="animate-spin" /> : <CreditCard />} Manage billing, invoices & cancellation
         </Button>
       ) : null}
-      {!stripeConfigured ? <p className="text-xs text-muted-foreground">Billing isn&apos;t enabled yet, so everyone is on the Free plan for now.</p> : null}
+      {!stripeConfigured && currentPlan === "free" ? <p className="text-xs text-muted-foreground">Billing isn&apos;t enabled yet, so everyone is on the Free plan for now.</p> : null}
       {error ? (
         <p role="alert" className="text-sm text-destructive">
           {error}

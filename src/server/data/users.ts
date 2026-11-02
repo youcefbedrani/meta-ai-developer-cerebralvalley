@@ -2,6 +2,7 @@ import "server-only";
 import { asc, eq, sql } from "drizzle-orm";
 import { getDb, schema } from "@/server/db/client";
 import { unsafeToUserId, type UserId } from "./user-id";
+import { SIGNUP_PLAN } from "@/lib/plans";
 
 export type AppUser = {
   id: UserId;
@@ -66,7 +67,7 @@ export async function upsertUserFromVerifiedIdentity(identity: {
   }
   const [row] = await db
     .insert(schema.users)
-    .values({ firebaseUid: identity.firebaseUid, email: identity.email, name: identity.name ?? null })
+    .values({ firebaseUid: identity.firebaseUid, email: identity.email, name: identity.name ?? null, plan: SIGNUP_PLAN })
     .onConflictDoUpdate({
       target: schema.users.firebaseUid,
       set: { email: identity.email },

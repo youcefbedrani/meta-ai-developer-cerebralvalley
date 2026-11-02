@@ -46,6 +46,10 @@ export const PLANS = [
 
 export type PlanId = (typeof PLANS)[number]["id"];
 
+/** The plan every new account starts on: Studio, free, so new founders (and hackathon judges) can try every feature
+ * with a full credit allowance. No card and no subscription; the platform's daily AI spend cap still applies. */
+export const SIGNUP_PLAN: PlanId = "studio";
+
 /** AI credits granted at the start of each calendar month (UTC). Unused credits expire at month end. */
 export const MONTHLY_CREDITS: Record<PlanId, number> = {
   free: 75,
