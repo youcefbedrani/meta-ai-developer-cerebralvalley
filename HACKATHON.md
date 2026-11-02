@@ -9,6 +9,45 @@ capabilities that only became possible with them.** Everything below was built b
 
 - Pre-hackathon state: tag [`pre-hackathon-baseline`](../../tree/pre-hackathon-baseline) (commit `b63f4c9`)
 - Everything built during the hackathon: [`pre-hackathon-baseline...main`](../../compare/pre-hackathon-baseline...main) — every commit is prefixed `Hackathon:`
+- Live product: [startum.website](https://startum.website)
+
+## The five Meta models, and what each one does
+
+| Meta model | What it does in Startum | Features | Code |
+|---|---|---|---|
+| **Muse Spark** (`muse-spark-1.3`) | The brain. Runs the Validation Autopilot agent with ten tools, sees video frames, photos and screenshots, designs screens and writes code, and returns structured JSON through native `json_schema` output | Autopilot, Traditional → Innovative, Page review, Design → prototype → code, Launch playbook, launch-video storyboards, art direction for brand visuals, Copilot, and every pre-existing AI feature | [`agent.ts`](src/server/jobs/autopilot/agent.ts), [`run.ts`](src/server/ai/run.ts), [`providers.ts`](src/server/ai/providers.ts) |
+| **Muse Spark Open** (open weights, on Baseten) | The fast reader. Pulls facts and verbatim quotes out of research sources, competitor pages, forum threads and Reddit / Hacker News posts 3–6× faster than the hosted model, and translates the interface on the fly | Research, Competitors, Market voices, Gold Mine pain mining, French / Spanish / Arabic interface | `openWeightsRoute` in [`providers.ts`](src/server/ai/providers.ts), [`translate.ts`](src/server/services/translate.ts) |
+| **Muse Image** | The designer. Draws the logo mark, landing-page hero, one ad per platform and the 9:16 scenes of launch videos, in the brand's colours | Brand visuals, Launch videos | [`image.ts`](src/server/ai/image.ts), [`brand-visuals.ts`](src/server/services/brand-visuals.ts) |
+| **SAM 3.1** | The cutter. Segments the logo so it sits on a transparent background, then reused on landing pages and video end cards | Brand visuals, Launch videos | [`image.ts`](src/server/ai/image.ts) |
+| **Muse Voice Transcribe** | The listener. Transcribes customer interviews with speaker labels (diarization), spoken pitches, and the narration in videos of manual work | Voice interviews, Pitch it out loud, Traditional → Innovative | [`voice.ts`](src/server/ai/voice.ts), [`services/voice.ts`](src/server/services/voice.ts) |
+
+Before the hackathon Startum ran on other providers' models. In the live product every AI call now goes to Meta's models: the hosted
+Meta Model API for Muse Spark, Muse Image, SAM 3.1 and Muse Voice, and Muse Spark Open on Baseten.
+
+## Built during the hackathon vs. before
+
+**Built during the hackathon (Oct 26 – Nov 4, 2026)**, all in commits prefixed `Hackathon:`:
+
+- Moving every AI feature onto Meta's models, with native structured output and the open-weights route
+- Validation Autopilot (agent with ten tools, verified citations, Build / Pivot / Drop)
+- Voice interviews with diarization and quote playback; Pitch it out loud
+- Brand visuals (Muse Image + SAM 3.1)
+- Page review (vision)
+- Launch playbook
+- Design → clickable prototype → runnable Next.js code (replacing the earlier design flow)
+- Launch videos and posts for TikTok, Instagram, Facebook and LinkedIn
+- Traditional → Innovative, with enterprise mode
+- Copilot ideas → "Create project" / "Validate with Autopilot"
+- French, Spanish and Arabic (right-to-left), the top bar with search, notifications and dark mode
+
+New pages added during the hackathon: Traditional → Innovative, Autopilot, Launch playbook, Page review, Launch
+videos, Prototype and Code (compare the tag with `main`).
+
+**Already in Startum before the hackathon** (tag `pre-hackathon-baseline`), now running on Meta's models but not
+built during the event: Discover Ideas, Gold Mine, Research, Competitors, Market voices, the Validation Lab
+(interviews from text, waitlists, landing-page tests), Brand Kit, Plan, Marketing Studio with ad tests, the AI
+Copilot chat, and the Idea Marketplace. The demo video shows some of these to explain the full journey; the
+features above are the hackathon work.
 
 ## What we built, and which Meta model powers it
 
