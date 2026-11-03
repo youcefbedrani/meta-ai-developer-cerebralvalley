@@ -10,6 +10,7 @@ capabilities that only became possible with them.** Everything below was built b
 - Pre-hackathon state: tag [`pre-hackathon-baseline`](../../tree/pre-hackathon-baseline) (commit `b63f4c9`)
 - Everything built during the hackathon: [`pre-hackathon-baseline...main`](../../compare/pre-hackathon-baseline...main) — every commit is prefixed `Hackathon:`
 - Live product: [startum.website](https://startum.website)
+- Open source under the [MIT License](LICENSE)
 
 ## The five Meta models, and what each one does
 
