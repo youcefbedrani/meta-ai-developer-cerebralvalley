@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { AUTOPILOT_GOAL_MAX, AUTOPILOT_TOOLS, type AutopilotEvent, type AutopilotVerdict } from "@/lib/validation/autopilot";
 import { cn } from "@/lib/utils";
+import { StanceSwatch, VerdictGlance } from "@/components/viz/verdict-glance";
 
 type Run = {
   id: string;
@@ -196,12 +197,13 @@ function VerdictCard({ verdict, projectId }: { verdict: AutopilotVerdict; projec
         <span className="text-sm text-muted-foreground">{verdict.confidence}% confidence</span>
       </div>
       <h2 className="mt-3 text-xl font-semibold tracking-tight">{verdict.headline}</h2>
+      <VerdictGlance verdict={verdict} />
       <div className="mt-5 grid gap-5 md:grid-cols-2">
         {groups.map((g) => {
           const reasons = verdict.reasons.filter((r) => r.stance === g.stance);
           return (
             <div key={g.stance}>
-              <h3 className="text-sm font-medium">{g.title}</h3>
+              <h3 className="flex items-center gap-2 text-sm font-medium"><StanceSwatch stance={g.stance} /> {g.title}</h3>
               {reasons.length ? (
                 <ul className="mt-2 space-y-3">
                   {reasons.map((r, i) => (

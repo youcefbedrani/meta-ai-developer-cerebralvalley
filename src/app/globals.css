@@ -384,3 +384,14 @@ a.surface:hover, button.surface:hover { transform: translate(-2px, -2px); box-sh
 @media (prefers-reduced-motion: reduce) {
   .score-ring-arc { animation: none; }
 }
+
+/* Data visuals for AI results (src/components/viz): marks grow from their baseline, steps pop in one after another. */
+:root { --viz-for: #814bee; --viz-against: #e8833a; }
+.dark { --viz-for: #9d72ff; --viz-against: #d9772f; }
+@keyframes viz-grow-x { from { transform: scaleX(0); } }
+@keyframes viz-pop { from { opacity: 0; transform: translateY(6px) scale(.96); } }
+@keyframes viz-draw { from { transform: scaleX(0); } }
+.viz-grow-x { transform-origin: left center; animation: viz-grow-x .9s cubic-bezier(.2, .9, .2, 1) both; }
+.viz-pop { animation: viz-pop .5s cubic-bezier(.2, .9, .2, 1) both; }
+.viz-draw { transform-origin: left center; animation: viz-draw 1.2s cubic-bezier(.65, 0, .25, 1) both; }
+@media (prefers-reduced-motion: reduce) { .viz-grow-x, .viz-pop, .viz-draw { animation: none; } }

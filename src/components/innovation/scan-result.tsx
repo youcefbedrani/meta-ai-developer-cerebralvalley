@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { createProjectFromIdeaAction, deleteScanAction } from "@/app/(app)/app/(founder)/innovation/actions";
 import { MetaMark } from "@/components/brand/hackathon-lockup";
 import { Button } from "@/components/ui/button";
+import { ProcessMap } from "@/components/viz/process-map";
 import { cn } from "@/lib/utils";
 import { IDEA_TYPE_LABEL, isEnterpriseIdea, type EnterpriseIdea, type InnovationIdea, type InnovationMode, type MediaKind, type Observation, type ProcessIdea } from "@/lib/validation/innovation";
 
@@ -66,6 +67,9 @@ export function ScanResult({ scan, media, observation, ideas }: { scan: Scan; me
 
       <Evidence media={media} notes={scan.notes} />
       {observation ? <Today observation={observation} /> : null}
+      {observation && scan.mode !== "enterprise" && ideas.length ? (
+        <ProcessMap steps={observation.steps} ideas={ideas.filter((i): i is ProcessIdea => !isEnterpriseIdea(i))} />
+      ) : null}
       {ideas.length ? (
         <section className="space-y-3">
           <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight"><Sparkles className="size-5 text-primary" /> {scan.mode === "enterprise" ? "Innovative systems Muse Spark proposes" : "Software that replaces it"}</h2>
