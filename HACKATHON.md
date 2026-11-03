@@ -7,7 +7,7 @@ real market research, real customer quotes, competitor prices, plans, a brand an
 It existed before the hackathon. **During the hackathon we moved it onto Meta's models and built five new
 capabilities that only became possible with them.** Everything below was built between Oct 26 and Nov 4, 2026.
 
-- Pre-hackathon state: tag [`pre-hackathon-baseline`](../../tree/pre-hackathon-baseline) (commit `b63f4c9`)
+- Pre-hackathon state: tag [`pre-hackathon-baseline`](../../tree/pre-hackathon-baseline) (commit `fb035ea`)
 - Everything built during the hackathon: [`pre-hackathon-baseline...main`](../../compare/pre-hackathon-baseline...main) — every commit is prefixed `Hackathon:`
 - Live product: [startum.website](https://startum.website)
 - Open source under the [MIT License](LICENSE)
